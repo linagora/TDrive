@@ -22,7 +22,7 @@ export function formatCompany(
   };
 
   if (companyUserObject) {
-    res.status = "active"; // FIXME: Deactivated console user are removed from company on twake side
+    res.status = "active"; // FIXME: Deactivated console user are removed from company on tdrive side
     res.role = companyUserObject.role;
   }
 

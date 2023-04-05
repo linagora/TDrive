@@ -1,6 +1,6 @@
 import emojis_json from 'emojione/emoji.json';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import { emojiIndex } from 'emoji-mart';
 
 class Emojis {

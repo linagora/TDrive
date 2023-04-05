@@ -101,9 +101,9 @@ export default function MobileRedirect(props: { children: ReactNode }) {
     <>
       <div className="mobile_redirect_container">
         <div className="open_on_mobile">
-          <span className="open_on_mobile_title">Open Twake in...</span>
+          <span className="open_on_mobile_title">Open Tdrive in...</span>
           <a className="open_on_mobile_actions" href={backToWebUrl()}>
-            <Smartphone /> <span>Twake App</span>
+            <Smartphone /> <span>Tdrive App</span>
             <span style={{ flex: 1 }}></span>
             <Button className="action_button" type="primary">
               Open

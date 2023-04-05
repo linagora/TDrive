@@ -7,7 +7,7 @@ import { e2e_createDocument, e2e_getDocument } from "./utils";
 
 const url = "/internal/services/documents/v1";
 
-describe("the Drive Twake tabs feature", () => {
+describe("the Drive Tdrive tabs feature", () => {
   let platform: TestPlatform;
 
   class DriveFileMockClass {

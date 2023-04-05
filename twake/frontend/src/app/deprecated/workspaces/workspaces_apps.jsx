@@ -6,7 +6,7 @@ import ws from 'app/deprecated/websocket/websocket.js';
 import Collections from 'app/deprecated/CollectionsV1/Collections/Collections.js';
 import Groups from './groups.js';
 import Workspaces from './workspaces.jsx';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import Icon from 'app/components/icon/icon';
 import { getUser } from 'app/features/users/hooks/use-user-list';
 import Login from 'app/features/auth/login-service';
@@ -218,11 +218,11 @@ class WorkspacesApps extends Observable {
   getAppIcon(app, feather = false) {
     if (app && app?.identity?.code) {
       switch (app?.identity?.code.toLocaleLowerCase()) {
-        case 'twake_calendar':
+        case 'tdrive_calendar':
           return feather ? Calendar : 'calendar-alt';
-        case 'twake_drive':
+        case 'tdrive_drive':
           return feather ? Folder : 'folder';
-        case 'twake_tasks':
+        case 'tdrive_tasks':
           return feather ? CheckSquare : 'check-square';
         default:
           return app.identity?.icon || (feather ? Hexagon : 'puzzle-piece');

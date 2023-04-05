@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/node";
-import { TwakePlatform } from "./core/platform/platform";
+import { TdrivePlatform } from "./core/platform/platform";
 import config from "./core/config";
-import twake from "./twake";
+import tdrive from "./tdrive";
 
 if (config.get("sentry.dsn")) {
   Sentry.init({
@@ -10,7 +10,7 @@ if (config.get("sentry.dsn")) {
   });
 }
 
-const launch = async (): Promise<TwakePlatform> => twake.run(config.get("services"));
+const launch = async (): Promise<TdrivePlatform> => tdrive.run(config.get("services"));
 
 // noinspection JSIgnoredPromiseFromCall
 launch();

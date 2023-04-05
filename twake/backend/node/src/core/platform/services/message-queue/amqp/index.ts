@@ -12,7 +12,7 @@ import { AMQPMessageQueueManager } from "./manager";
 import { SkipCLI } from "../../../framework/decorators/skip";
 
 const logger = rootLogger.child({
-  component: "twake.core.platform.services.message-queue.amqp",
+  component: "tdrive.core.platform.services.message-queue.amqp",
 });
 
 export class AMQPMessageQueueService implements MessageQueueAdapter {

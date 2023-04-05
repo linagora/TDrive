@@ -3,7 +3,7 @@ import { logger as rootLogger } from "./logger";
 import { ExecutionContext } from "./api/crud-service";
 
 const logger = rootLogger.child({
-  component: "twake.core.platform.framework.event-bus",
+  component: "tdrive.core.platform.framework.event-bus",
 });
 
 /**

@@ -1,7 +1,7 @@
 {
-  "name": "@twake/twake-backend",
+  "name": "@tdrive/tdrive-backend",
   "version": "1.0.0",
-  "description": "Twake backend",
+  "description": "Tdrive backend",
   "scripts": {
     "build": "npm run build:clean && npm run build:ts && npm run build:copy-assets",
     "build:ts": "tsc",
@@ -44,16 +44,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Twake/twake-backend.git"
+    "url": "git+https://github.com/Tdrive/tdrive-backend.git"
   },
-  "author": "Twake",
+  "author": "Tdrive",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Twake/twake-backend/issues"
+    "url": "https://github.com/Tdrive/tdrive-backend/issues"
   },
-  "homepage": "https://github.com/Twake/twake-backend#readme",
+  "homepage": "https://github.com/Tdrive/tdrive-backend#readme",
   "bin": {
-    "twake-cli": "bin/twake-cli"
+    "tdrive-cli": "bin/tdrive-cli"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

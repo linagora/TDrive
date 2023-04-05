@@ -8,7 +8,7 @@ import Company, {
   getInstance as getCompanyInstance,
 } from "../../../services/user/entities/company";
 import CompanyUser from "../../../services/user/entities/company_user";
-import twake from "../../../twake";
+import tdrive from "../../../tdrive";
 import User, { getInstance as getUserInstance } from "../../../services/user/entities/user";
 import gr from "../../../services/global-resolver";
 
@@ -63,7 +63,7 @@ const command: yargs.CommandModule<{}, CLIArgs> = {
     const concurrentTasks = argv.concurrent;
     const nbUsersPerCompany = argv.user;
     const nbCompanies = argv.company;
-    const platform = await twake.run(services);
+    const platform = await tdrive.run(services);
     await gr.doInit(platform);
     const companies = getCompanies(nbCompanies);
     const createUser = async (userInCompany: {
@@ -114,8 +114,8 @@ const getCompanies = (size: number = 10): Company[] => {
   return [...Array(size).keys()].map(i =>
     getCompanyInstance({
       id: uuid(),
-      name: `twake${i}.app`,
-      displayName: `My Twake Company #${i}`,
+      name: `tdrive${i}.app`,
+      displayName: `My Tdrive Company #${i}`,
     }),
   );
 };

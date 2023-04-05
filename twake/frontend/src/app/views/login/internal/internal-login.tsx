@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Typography } from 'antd';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import Languages from 'app/features/global/services/languages-service';
 import InitService from 'app/features/global/services/init-service';
 import LoginService from 'app/features/auth/login-service';
@@ -39,7 +39,7 @@ export default () => {
   return (
     <div className="loginPage">
       {server_infos_loaded && !server_infos?.configuration?.branding?.name && (
-        <div className="twake_logo" />
+        <div className="tdrive_logo" />
       )}
 
       {LoginService.state === 'error' && <Error />}
@@ -49,17 +49,17 @@ export default () => {
       {LoginService.state === 'forgot_password' && <ForgotPassword />}
 
       <div className={'app_version_footer '}>
-        <div className="version_name fade_in">Twake {Globals.version.version_name}</div>
+        <div className="version_name fade_in">Tdrive {Globals.version.version_name}</div>
         <div style={{ height: 20 }}>
           {server_infos_loaded && server_infos?.configuration?.branding?.name && (
             <div className="smalltext fade_in">
               {server_infos?.configuration?.branding?.name &&
                 Languages.t('scenes.login.footer.branding', [
                   server_infos?.configuration?.branding?.name,
-                  server_infos?.configuration?.branding.link || 'twake.app',
+                  server_infos?.configuration?.branding.link || 'tdrive.app',
                 ])}
-              <Typography.Link onClick={() => window.open('https://twakeapp.com', 'blank')}>
-                {Languages.t('scenes.login.footer.go_to_twake')}
+              <Typography.Link onClick={() => window.open('https://tdriveapp.com', 'blank')}>
+                {Languages.t('scenes.login.footer.go_to_tdrive')}
               </Typography.Link>
               {' - ' + Globals.version.version}
             </div>
@@ -67,9 +67,9 @@ export default () => {
           {server_infos_loaded && !server_infos?.configuration?.branding?.name && (
             <Typography.Link
               className="fade_in"
-              onClick={() => window.open('https://twakeapp.com', 'blank')}
+              onClick={() => window.open('https://tdriveapp.com', 'blank')}
             >
-              {Languages.t('scenes.login.footer.go_to_twake')}
+              {Languages.t('scenes.login.footer.go_to_tdrive')}
             </Typography.Link>
           )}
         </div>

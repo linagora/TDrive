@@ -47,7 +47,7 @@ export default class User {
   @Column("last_activity", "number")
   last_activity: number;
 
-  @Column("creation_date", "twake_datetime")
+  @Column("creation_date", "tdrive_datetime")
   creation_date: number;
 
   @Column("notification_preference", "encoded_json")
@@ -74,10 +74,10 @@ export default class User {
   @Column("password", "string")
   password: string;
 
-  @Column("deleted", "twake_boolean")
+  @Column("deleted", "tdrive_boolean")
   deleted: boolean;
 
-  @Column("mail_verified", "twake_boolean")
+  @Column("mail_verified", "tdrive_boolean")
   mail_verified: boolean;
 
   @Column("phone", "string")

@@ -22,7 +22,7 @@ const Template: ComponentStory<any> = (props: {
           avatar={
             <Avatar
               type="square"
-              avatar="https://s3.eu-west-3.amazonaws.com/twake.eu-west-3/public/uploads/grouplogo/dffc6bb54e7b5d6ee45d2d877839aa88.png"
+              avatar="https://s3.eu-west-3.amazonaws.com/tdrive.eu-west-3/public/uploads/grouplogo/dffc6bb54e7b5d6ee45d2d877839aa88.png"
             />
           }
           title="Home"
@@ -33,7 +33,7 @@ const Template: ComponentStory<any> = (props: {
           avatar={
             <Avatar
               type="square"
-              avatar="https://s3.eu-west-3.amazonaws.com/twake.eu-west-3/public/uploads/wslogo/2bb1d89d73e9597140d48fc095737f23.png"
+              avatar="https://s3.eu-west-3.amazonaws.com/tdrive.eu-west-3/public/uploads/wslogo/2bb1d89d73e9597140d48fc095737f23.png"
             />
           }
           title="Software"

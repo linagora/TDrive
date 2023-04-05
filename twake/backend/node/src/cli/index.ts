@@ -24,5 +24,5 @@ yargs
   .alias("help", "h")
   .help("help")
   .version()
-  .epilogue("for more information, go to https://twake.app")
+  .epilogue("for more information, go to https://tdrive.app")
   .example("$0 <command> --help", "show help of the issue command").argv;

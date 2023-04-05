@@ -1,5 +1,5 @@
 import yargs from "yargs";
-import twake from "../../../twake";
+import tdrive from "../../../tdrive";
 import { mkdirSync, writeFileSync } from "fs";
 import { Pagination } from "../../../core/platform/framework/api/crud-service";
 import WorkspaceUser from "../../../services/workspaces/entities/workspace_user";
@@ -52,7 +52,7 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
     },
   },
   handler: async argv => {
-    const platform = await twake.run(services);
+    const platform = await tdrive.run(services);
     await gr.doInit(platform);
 
     const company = await gr.services.companies.getCompany({ id: argv.id });

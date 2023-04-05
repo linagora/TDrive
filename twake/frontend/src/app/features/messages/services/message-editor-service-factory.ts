@@ -19,5 +19,5 @@ class MessageEditorServiceFactory {
 }
 
 const factory = new MessageEditorServiceFactory();
-(window as any).TwakeMessageEditorServiceFactory = factory;
+(window as any).TdriveMessageEditorServiceFactory = factory;
 export default factory;

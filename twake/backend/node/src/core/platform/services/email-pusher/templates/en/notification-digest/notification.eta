@@ -1,6 +1,6 @@
 <div style="margin-bottom:16px;display:flex;flex-direction:row;">
     <div style="width:60px;align-items:end;padding:0;display:flex">
-        <img style="width:48px;height:48px;border-radius:24px;" src="<%= it.message.user.picture || 'https://staging-web.twake.app/public/identicon/47.png' %>" alt="<%= it.message.user.first_name %>" />
+        <img style="width:48px;height:48px;border-radius:24px;" src="<%= it.message.user.picture || 'https://staging-web.tdrive.app/public/identicon/47.png' %>" alt="<%= it.message.user.first_name %>" />
     </div>
     <div style="flex:1;position:realtive;border-radius:18px;padding:0 12px;background:#F6F6F6;">
         <div style="padding:12px 0">

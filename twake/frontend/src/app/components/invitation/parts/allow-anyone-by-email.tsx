@@ -36,7 +36,7 @@ export default (): React.ReactElement => {
     <>
       <Subtitle className="mt-4 block">Automatically invite my business</Subtitle>
       <Info className="block">
-        If this is enabled, anyone creating a Twake account with your business email will
+        If this is enabled, anyone creating a Tdrive account with your business email will
         automatically be added to this company and this workspace.
       </Info>
       <div className="flex flex-row space-x-2 mt-1 bg-zinc-200 px-3 py-2 rounded-md border-transparent w-full h-9">

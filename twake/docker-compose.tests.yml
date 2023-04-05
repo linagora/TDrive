@@ -71,4 +71,4 @@ services:
     volumes:
       - ./docker-data/logs/nginx/:/var/log/nginx
       - ./docker-data/letsencrypt/:/etc/letsencrypt/
-      - ./frontend/:/twake-react/
+      - ./frontend/:/tdrive-react/

@@ -3,10 +3,10 @@ import { Configuration } from "./configuration";
 
 const config = new Configuration("logger");
 
-export type TwakeLogger = pino.Logger;
+export type TdriveLogger = pino.Logger;
 
 export const logger = pino({
-  name: "TwakeApp",
+  name: "TdriveApp",
   level: config.get("level", "info") || "info",
   prettyPrint:
     process.env.NODE_ENV?.indexOf("test") > -1
@@ -17,5 +17,5 @@ export const logger = pino({
       : false,
 });
 
-export const getLogger = (name?: string): TwakeLogger =>
-  logger.child({ name: `twake${name ? "." + name : ""}` });
+export const getLogger = (name?: string): TdriveLogger =>
+  logger.child({ name: `tdrive${name ? "." + name : ""}` });

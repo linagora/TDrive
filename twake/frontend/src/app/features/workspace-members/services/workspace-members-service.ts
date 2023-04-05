@@ -13,7 +13,7 @@ import Numbers from 'app/features/global/utils/Numbers';
 import WorkspaceUserRights from 'app/features/workspaces/services/workspace-user-rights-service';
 import CurrentUser from 'app/deprecated/user/CurrentUser';
 import AlertManager from 'app/features/global/services/alert-manager-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 const prefixRoute = '/internal/services/workspaces/v1';
 

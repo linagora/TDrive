@@ -49,8 +49,8 @@ export class ConsoleInternalClient implements ConsoleServiceClient {
     throw Error("ConsoleInternalClient.createCompany is not implemented");
   }
 
-  async addUserToTwake(user: CreateConsoleUser): Promise<User> {
-    logger.info("Internal: addUserToTwake");
+  async addUserToTdrive(user: CreateConsoleUser): Promise<User> {
+    logger.info("Internal: addUserToTdrive");
     const userToCreate = getUserInstance({
       id: uuidv1(),
       email_canonical: user.email,

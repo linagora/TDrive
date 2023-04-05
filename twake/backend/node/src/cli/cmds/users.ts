@@ -1,7 +1,7 @@
 import { CommandModule } from "yargs";
 
 const command: CommandModule = {
-  describe: "Manage Twake Users",
+  describe: "Manage Tdrive Users",
   command: "users <command>",
   builder: yargs =>
     yargs.commandDir("users_cmds", {

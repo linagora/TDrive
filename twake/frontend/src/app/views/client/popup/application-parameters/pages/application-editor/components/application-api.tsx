@@ -53,7 +53,7 @@ export const ApplicationAPI = ({
       </Row>
       <Row className="bottom-margin">
         <Input
-          placeholder={'https://domain.com/api/twake/events'}
+          placeholder={'https://domain.com/api/tdrive/events'}
           defaultValue={application.api?.hooks_url}
           onChange={e => {
             e.target.value &&

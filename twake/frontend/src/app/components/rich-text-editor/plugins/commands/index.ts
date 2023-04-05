@@ -35,7 +35,7 @@ const resolver = (
   getCompanyApplications(Groups.currentGroupId).forEach((app: Application) => {
     if (app) {
       commands = commands.concat(
-        (app.display?.twake?.chat?.commands || []).map(c => ({
+        (app.display?.tdrive?.chat?.commands || []).map(c => ({
           command: `/${app?.identity?.code} ${c.command}`,
           description: c.description,
         })),

@@ -78,7 +78,7 @@ export default (props: PropsType): JSX.Element => {
   }, [company.stats?.total_members]);
 
   return (
-    <div className="add-user-from-twake-console">
+    <div className="add-user-from-tdrive-console">
       <Typography.Title level={3}>
         {Languages.t('scenes.app.workspaces.create_company.invitations.title_2')}{' '}
       </Typography.Title>
@@ -99,7 +99,7 @@ export default (props: PropsType): JSX.Element => {
         />
       </div>
       <div className="current-user-state small-text small-top-margin">
-        {Languages.t('scenes.app.popup.adduserfromtwakeconsole.current_users_state', [
+        {Languages.t('scenes.app.popup.adduserfromtdriveconsole.current_users_state', [
           emails.length || 0,
         ])}
       </div>

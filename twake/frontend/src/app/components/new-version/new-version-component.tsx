@@ -5,7 +5,7 @@ import Api from 'app/features/global/framework/api-service';
 import Banner from 'app/components/banner/banner';
 import Emojione from 'app/components/emojione/emojione';
 import Languages from 'app/features/global/services/languages-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import ModalManager from 'app/components/modal/modal-manager';
 import NewVersionModal from './new-version-modal';
 import { ServerInfoType } from 'app/features/global/services/init-service';

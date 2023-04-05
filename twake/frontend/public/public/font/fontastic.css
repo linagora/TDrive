@@ -1,18 +1,18 @@
 @charset "UTF-8";
 
 @font-face {
-  font-family: 'twake-fontastic';
-  src: url('fontastic/twake-fontastic.eot');
-  src: url('fontastic/twake-fontastic.eot?#iefix') format('embedded-opentype'),
-    url('fontastic/twake-fontastic.woff') format('woff'),
-    url('fontastic/twake-fontastic.ttf') format('truetype'),
-    url('fontastic/twake-fontastic.svg#twake-fontastic') format('svg');
+  font-family: 'tdrive-fontastic';
+  src: url('fontastic/tdrive-fontastic.eot');
+  src: url('fontastic/tdrive-fontastic.eot?#iefix') format('embedded-opentype'),
+    url('fontastic/tdrive-fontastic.woff') format('woff'),
+    url('fontastic/tdrive-fontastic.ttf') format('truetype'),
+    url('fontastic/tdrive-fontastic.svg#tdrive-fontastic') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [data-icon]:before {
-  font-family: 'twake-fontastic' !important;
+  font-family: 'tdrive-fontastic' !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -26,7 +26,7 @@
 
 [class^='icon-']:before,
 [class*=' icon-']:before {
-  font-family: 'twake-fontastic' !important;
+  font-family: 'tdrive-fontastic' !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;

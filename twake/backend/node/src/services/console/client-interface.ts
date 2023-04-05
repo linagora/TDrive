@@ -31,11 +31,11 @@ export interface ConsoleServiceClient {
   addUserToCompany(company: ConsoleCompany, user: CreateConsoleUser): Promise<CreatedConsoleUser>;
 
   /**
-   * Add user to twake in general (for non-console version)
+   * Add user to tdrive in general (for non-console version)
    *
    * @param user
    */
-  addUserToTwake(user: CreateInternalUser): Promise<User>;
+  addUserToTdrive(user: CreateInternalUser): Promise<User>;
 
   /**
    * Update user role

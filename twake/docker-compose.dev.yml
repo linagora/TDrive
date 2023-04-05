@@ -19,7 +19,7 @@ services:
       - DEV=dev
       - DB_DRIVER=cassandra
       - DB_CASSANDRA_URI=scylladb:9042
-      - DB_CASSANDRA_KEYSPACE=twake
+      - DB_CASSANDRA_KEYSPACE=tdrive
       - PUBSUB_URLS=amqp://guest:guest@rabbitmq:5672
     build:
       context: .
@@ -66,6 +66,6 @@ services:
     volumes:
       - ./docker-data/logs/nginx/:/var/log/nginx
       - ./docker-data/letsencrypt/:/etc/letsencrypt/
-      - ./frontend/:/twake-react/
-      - ./docker-data/drive-preview/:/twake-core/web/medias/
-      - ./docker-data/uploads/:/twake-core/web/upload/
+      - ./frontend/:/tdrive-react/
+      - ./docker-data/drive-preview/:/tdrive-core/web/medias/
+      - ./docker-data/uploads/:/tdrive-core/web/upload/

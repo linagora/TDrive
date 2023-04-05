@@ -1,7 +1,7 @@
 import yargs from "yargs";
-import twake from "../../../twake";
+import tdrive from "../../../tdrive";
 import ora from "ora";
-import { TwakePlatform } from "../../../core/platform/platform";
+import { TdrivePlatform } from "../../../core/platform/platform";
 import { DatabaseServiceAPI } from "../../../core/platform/services/database/api";
 import { Pagination } from "../../../core/platform/framework/api/crud-service";
 
@@ -21,7 +21,7 @@ class SearchIndexAll {
   database: DatabaseServiceAPI;
   search: SearchServiceAPI;
 
-  constructor(readonly platform: TwakePlatform) {
+  constructor(readonly platform: TdrivePlatform) {
     this.database = this.platform.getProvider<DatabaseServiceAPI>("database");
     this.search = this.platform.getProvider<SearchServiceAPI>("search");
   }
@@ -122,7 +122,7 @@ const command: yargs.CommandModule<unknown, unknown> = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handler: async argv => {
     const spinner = ora({ text: "Reindex repository - " }).start();
-    const platform = await twake.run(services);
+    const platform = await tdrive.run(services);
     await gr.doInit(platform);
     const migrator = new SearchIndexAll(platform);
 

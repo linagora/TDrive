@@ -55,7 +55,7 @@ export default class TwacodeTester extends Component {
 
           <div className="smalltext">
             {Languages.t(
-              'scenes.app.popup.appsparameters.pages.instruction_message_twakecode',
+              'scenes.app.popup.appsparameters.pages.instruction_message_tdrivecode',
               [],
               'Commencez par écrire votre message sous le format JSON.',
             )}
@@ -94,7 +94,7 @@ export default class TwacodeTester extends Component {
             {this.state.display_json_error && (
               <span>
                 {Languages.t(
-                  'scenes.app.popup.appsparameters.pages.error_Json_Ttwakecode',
+                  'scenes.app.popup.appsparameters.pages.error_Json_Ttdrivecode',
                   [],
                   'Il y a une erreur dans votre JSON.',
                 )}

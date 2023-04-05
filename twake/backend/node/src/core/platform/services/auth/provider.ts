@@ -1,7 +1,7 @@
-import { TwakeServiceProvider } from "../../framework/api";
+import { TdriveServiceProvider } from "../../framework/api";
 import { AccessToken, JWTObject, uuid } from "../../../../utils/types";
 
-export default interface AuthServiceAPI extends TwakeServiceProvider {
+export default interface AuthServiceAPI extends TdriveServiceProvider {
   /**
    * Get the authentication types
    */

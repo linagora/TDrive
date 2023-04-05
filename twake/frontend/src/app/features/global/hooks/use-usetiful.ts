@@ -2,7 +2,7 @@
 import { useEffect } from 'react';
 
 import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import Logger from 'app/features/global/framework/logger-service';
 
 let initiatedService = false;

@@ -4,18 +4,18 @@ export default {
   front_root_url: (document.location.protocol || "http") + '//' + document.location.host,
   api_root_url: (document.location.protocol || "http") + '//' + document.location.host,
   websocket_url: (document.location.protocol || "http").replace("http", "ws") + '//' + document.location.host,
-  mobile_appstore: 'https://apps.apple.com/fr/app/twake/id1588764852?l=en',
-  mobile_googleplay: 'https://play.google.com/store/apps/details?id=com.twake.twake&gl=FR'
+  mobile_appstore: 'https://apps.apple.com/fr/app/tdrive/id1588764852?l=en',
+  mobile_googleplay: 'https://play.google.com/store/apps/details?id=com.tdrive.tdrive&gl=FR'
 };
 
 /*
 export default {
   env_dev: false,
-  front_root_url: 'https://web.twake.app',
-  api_root_url: 'https://api.twake.app',
-  websocket_url: 'wss://api.twake.app'
+  front_root_url: 'https://web.tdrive.app',
+  api_root_url: 'https://api.tdrive.app',
+  websocket_url: 'wss://api.tdrive.app'
 };
 
 In this form:
-"export default { env_dev: false, front_root_url: 'https://web.twake.app', api_root_url: 'https://web.twake.app', websocket_url: 'wss://web.twake.app' };"
+"export default { env_dev: false, front_root_url: 'https://web.tdrive.app', api_root_url: 'https://web.tdrive.app', websocket_url: 'wss://web.tdrive.app' };"
 */

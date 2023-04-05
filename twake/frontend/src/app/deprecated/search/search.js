@@ -11,7 +11,7 @@ import DriveService from 'app/deprecated/Apps/Drive/Drive.js';
 import CalendarService from 'app/deprecated/Apps/Calendar/Calendar.js';
 import TasksService from 'app/deprecated/Apps/Tasks/Tasks.js';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 class SearchService extends Observable {
   constructor() {

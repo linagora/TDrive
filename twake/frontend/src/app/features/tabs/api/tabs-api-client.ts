@@ -1,6 +1,6 @@
 import { TabType } from 'app/features/tabs/types/tab';
 import Api from '../../global/framework/api-service';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { WebsocketRoom } from '../../global/types/websocket-types';
 
 type TabKey = {
@@ -9,7 +9,7 @@ type TabKey = {
   channelId: string;
 };
 
-@TwakeService('TabsAPIClientService')
+@TdriveService('TabsAPIClientService')
 class TabsAPIClient {
   private readonly prefixUrl: string = '/internal/services/channels/v1';
   private realtime: Map<string, WebsocketRoom[]> = new Map();

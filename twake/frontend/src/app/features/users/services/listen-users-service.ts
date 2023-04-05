@@ -3,7 +3,7 @@
 import ws from 'app/deprecated/websocket/websocket';
 import Collections from 'app/deprecated/CollectionsV1/Collections/Collections';
 import UserService from './current-user-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import userAsyncGet from 'app/features/users/utils/async-get';
 
 type Timeout = ReturnType<typeof setTimeout>;

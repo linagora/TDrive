@@ -4,11 +4,11 @@ import { ConsoleServiceClient } from "./client-interface";
 import { ConsoleClientFactory } from "./client-factory";
 import User from "../user/entities/user";
 import gr from "../global-resolver";
-import { Configuration, TwakeServiceProvider } from "../../core/platform/framework";
+import { Configuration, TdriveServiceProvider } from "../../core/platform/framework";
 import assert from "assert";
 import { ExecutionContext } from "../../core/platform/framework/api/crud-service";
 
-export class ConsoleServiceImpl implements TwakeServiceProvider {
+export class ConsoleServiceImpl implements TdriveServiceProvider {
   version: "1";
 
   consoleType: ConsoleType;

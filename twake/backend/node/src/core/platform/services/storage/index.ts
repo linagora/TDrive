@@ -1,7 +1,7 @@
 import { createCipheriv, createDecipheriv, Decipher } from "crypto";
 import { Stream, Readable } from "stream";
 import Multistream from "multistream";
-import { Consumes, logger, TwakeService } from "../../framework";
+import { Consumes, logger, TdriveService } from "../../framework";
 import LocalConnectorService, { LocalConfiguration } from "./connectors/local/service";
 import S3ConnectorService, { S3Configuration } from "./connectors/S3/service";
 import StorageAPI, {
@@ -17,7 +17,7 @@ type EncryptionConfiguration = {
   iv: string | null;
 };
 @Consumes([])
-export default class StorageService extends TwakeService<StorageAPI> implements StorageAPI {
+export default class StorageService extends TdriveService<StorageAPI> implements StorageAPI {
   name = "storage";
   version = "1";
 

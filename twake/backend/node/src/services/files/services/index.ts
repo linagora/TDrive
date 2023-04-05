@@ -227,5 +227,5 @@ export class FileServiceImpl {
 }
 
 function getFilePath(entity: File): string {
-  return `/twake/files/${entity.company_id}/${entity.user_id || "anonymous"}/${entity.id}`;
+  return `/tdrive/files/${entity.company_id}/${entity.user_id || "anonymous"}/${entity.id}`;
 }

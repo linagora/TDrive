@@ -9,18 +9,18 @@ import UserOnline, {
   UserOnlinePrimaryKey,
 } from "../entities/user-online";
 import gr from "../../global-resolver";
-import { getLogger, TwakeLogger, TwakeServiceProvider } from "../../../core/platform/framework";
+import { getLogger, TdriveLogger, TdriveServiceProvider } from "../../../core/platform/framework";
 import { getUserRoom } from "../../../services/user/realtime";
 import User from "../../../services/user/entities/user";
 import { WebsocketUserEvent } from "../../../core/platform/services/websocket/types";
 import { ExecutionContext } from "../../../core/platform/framework/api/crud-service";
 
-export default class OnlineServiceImpl implements TwakeServiceProvider {
+export default class OnlineServiceImpl implements TdriveServiceProvider {
   version = "1";
   service: OnlineServiceAPI;
   private pubsubService: OnlinePubsubService;
   onlineRepository: Repository<UserOnline>;
-  private logger: TwakeLogger;
+  private logger: TdriveLogger;
 
   constructor() {
     this.logger = getLogger("online.service");
@@ -130,7 +130,7 @@ export default class OnlineServiceImpl implements TwakeServiceProvider {
     context?: ExecutionContext,
   ): Promise<Array<[string, boolean]>> {
     const users = [];
-    //This foreach is needed for $in operators https://github.com/linagora/Twake/issues/1246
+    //This foreach is needed for $in operators https://github.com/linagora/Tdrive/issues/1246
     for (let i = 0; i < ids.length; i += 100) {
       users.push(
         ...(

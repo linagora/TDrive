@@ -54,7 +54,7 @@ export const transformValueToDbString = (
     return v;
   }
 
-  if (type === "twake_boolean") {
+  if (type === "tdrive_boolean") {
     return Boolean(v);
   }
 
@@ -91,7 +91,7 @@ export const transformValueFromDbString = (v: any, type: string, options: any = 
       return null;
     }
   }
-  if (type === "twake_boolean" || type === "boolean") {
+  if (type === "tdrive_boolean" || type === "boolean") {
     return Boolean(v).valueOf();
   }
   if (type === "number") {

@@ -1,4 +1,4 @@
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import {
   Message,
   MessageExtended,
@@ -40,7 +40,7 @@ export interface FileSearchOptions extends BaseSearchOptions {
   next_page_token?: string;
 }
 
-@TwakeService('MessageAPIClientService')
+@TdriveService('MessageAPIClientService')
 class MessageAPIClient {
   private readonly prefixUrl: string = '/internal/services/messages/v1';
   private realtime: Map<string, WebsocketRoom[]> = new Map();

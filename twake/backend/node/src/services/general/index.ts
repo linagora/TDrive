@@ -1,12 +1,12 @@
 import WebServerAPI from "../../core/platform/services/webserver/provider";
-import { Consumes, Prefix, TwakeService } from "../../core/platform/framework";
+import { Consumes, Prefix, TdriveService } from "../../core/platform/framework";
 import { GeneralServiceAPI } from "./api";
 import web from "./web/index";
 import { ServerConfiguration } from "./types";
 
 @Prefix("/internal/services/general/v1")
 @Consumes(["webserver"])
-export default class GeneralService extends TwakeService<GeneralServiceAPI> {
+export default class GeneralService extends TdriveService<GeneralServiceAPI> {
   version = "1";
   name = "general";
   service: GeneralServiceAPI;

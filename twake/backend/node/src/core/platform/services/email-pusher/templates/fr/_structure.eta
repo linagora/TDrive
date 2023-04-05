@@ -5,8 +5,8 @@
    privacy: "Confidentialité",
    terms: "CGU",
    links: {
-       help: "https://twake.app/",
-       privacy: "https://twake.app/fr/privacy-policy/",
-       terms: "https://twake.app/fr/terms-of-service/"
+       help: "https://tdrive.app/",
+       privacy: "https://tdrive.app/fr/privacy-policy/",
+       terms: "https://tdrive.app/fr/terms-of-service/"
    }
 })) %>

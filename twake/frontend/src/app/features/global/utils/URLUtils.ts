@@ -1,5 +1,5 @@
 import environment from 'app/environment/environment';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 export function addApiUrlIfNeeded(url: string, asCssUrl?: boolean): string {
   function _wrap(url: string): string {

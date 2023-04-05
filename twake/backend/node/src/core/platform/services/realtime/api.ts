@@ -1,9 +1,9 @@
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import { WebSocketUser, WebSocket } from "../../services/websocket/types";
 import RealtimeEntityManager from "./services/entity-manager";
 import { RealtimeEntityEvent } from "./types";
 
-export interface RealtimeServiceAPI extends TwakeServiceProvider {
+export interface RealtimeServiceAPI extends TdriveServiceProvider {
   /**
    * Get the realtime event bus instance
    */

@@ -56,7 +56,7 @@ export class AMQPMessageQueueManager implements MessageQueueClientManager {
 
   private create(connection: AmqpConnectionManager): Promise<AmqpMessageQueueClient> {
     logger.info(`${LOG_PREFIX} Creating AMQP Channel`);
-    const channel = connection.createChannel({ name: "Twake" });
+    const channel = connection.createChannel({ name: "Tdrive" });
 
     channel.on("close", () => {
       logger.info(`${LOG_PREFIX} Channel is closed`);

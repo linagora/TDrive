@@ -1,6 +1,6 @@
-import { TwakeContext } from "./context";
+import { TdriveContext } from "./context";
 
 export interface Initializable {
   // TODO: Flag to tell if a service which fails to initialize must break all
-  init?(context?: TwakeContext): Promise<this>;
+  init?(context?: TdriveContext): Promise<this>;
 }

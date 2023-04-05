@@ -1,5 +1,5 @@
-import { TwakeServiceProvider } from "./service-provider";
+import { TdriveServiceProvider } from "./service-provider";
 
-export interface TwakeContext {
-  getProvider<T extends TwakeServiceProvider>(name: string): T;
+export interface TdriveContext {
+  getProvider<T extends TdriveServiceProvider>(name: string): T;
 }

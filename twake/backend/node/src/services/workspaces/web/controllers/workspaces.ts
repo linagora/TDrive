@@ -26,7 +26,7 @@ import {
 } from "../../../../core/platform/framework/api/crud-service";
 import CompanyUser from "../../../user/entities/company_user";
 import gr from "../../../global-resolver";
-import { getLogger, TwakeLogger } from "../../../../core/platform/framework";
+import { getLogger, TdriveLogger } from "../../../../core/platform/framework";
 
 export class WorkspacesCrudController
   implements
@@ -37,7 +37,7 @@ export class WorkspacesCrudController
       ResourceDeleteResponse
     >
 {
-  private logger: TwakeLogger;
+  private logger: TdriveLogger;
   private getCompanyUserRole(companyId: string, userId: string, context?: ExecutionContext) {
     return gr.services.companies
       .getCompanyUser({ id: companyId }, { id: userId }, context)

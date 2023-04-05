@@ -1,4 +1,4 @@
-import { TwakeService, Consumes, Prefix, ServiceName } from "../../framework";
+import { TdriveService, Consumes, Prefix, ServiceName } from "../../framework";
 import web from "./web/index";
 import AuthServiceAPI, { JwtConfiguration } from "./provider";
 import { AuthService as AuthServiceImpl } from "./service";
@@ -7,7 +7,7 @@ import WebServerAPI from "../webserver/provider";
 @Prefix("/api/auth")
 @Consumes(["webserver"])
 @ServiceName("auth")
-export default class AuthService extends TwakeService<AuthServiceAPI> {
+export default class AuthService extends TdriveService<AuthServiceAPI> {
   name = "auth";
   service: AuthServiceAPI;
 

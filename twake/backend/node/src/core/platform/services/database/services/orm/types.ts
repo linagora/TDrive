@@ -39,9 +39,9 @@ export type ColumnType =
   | "blob"
   | "boolean"
   // backward compatibility
-  | "twake_boolean"
-  | "twake_int"
-  | "twake_datetime";
+  | "tdrive_boolean"
+  | "tdrive_int"
+  | "tdrive_datetime";
 
 export type EntityTarget<Entity> = ObjectType<Entity>;
 

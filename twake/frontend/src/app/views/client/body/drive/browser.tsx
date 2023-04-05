@@ -4,7 +4,7 @@ import { Base, BaseSmall, Subtitle, Title } from 'app/atoms/text';
 import Menu from 'app/components/menus/menu';
 import { getFilesTree } from 'app/components/uploads/file-tree-utils';
 import UploadZone from 'app/components/uploads/upload-zone';
-import { setTwakeTabToken } from 'app/features/drive/api-client/api-client';
+import { setTdriveTabToken } from 'app/features/drive/api-client/api-client';
 import { useDriveItem } from 'app/features/drive/hooks/use-drive-item';
 import { DriveRealtimeObject } from 'app/features/drive/hooks/use-drive-realtime';
 import { useDriveUpload } from 'app/features/drive/hooks/use-drive-upload';
@@ -34,15 +34,15 @@ export const DriveCurrentFolderAtom = atomFamily<string, string>({
 export default memo(
   ({
     initialParentId,
-    twakeTabContextToken,
+    tdriveTabContextToken,
     inPublicSharing,
   }: {
     initialParentId?: string;
-    twakeTabContextToken?: string;
+    tdriveTabContextToken?: string;
     inPublicSharing?: boolean;
   }) => {
     const companyId = useRouterCompany();
-    setTwakeTabToken(twakeTabContextToken || null);
+    setTdriveTabToken(tdriveTabContextToken || null);
 
     const [parentId, _setParentId] = useRecoilState(
       DriveCurrentFolderAtom(initialParentId || 'root'),

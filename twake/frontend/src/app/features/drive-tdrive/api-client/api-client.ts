@@ -1,9 +1,9 @@
 import Api from '../../global/framework/api-service';
-import { DriveTwakeTab } from '../types';
+import { DriveTdriveTab } from '../types';
 
-export class DriveTwakeApiClient {
+export class DriveTdriveApiClient {
   static async getTab(companyId: string, tabId: string) {
-    return await Api.get<DriveTwakeTab>(
+    return await Api.get<DriveTdriveTab>(
       `/internal/services/documents/v1/companies/${companyId}/tabs/${tabId}`,
     );
   }
@@ -15,7 +15,7 @@ export class DriveTwakeApiClient {
     itemId: string,
     level: 'write' | 'read',
   ) {
-    return await Api.post<DriveTwakeTab, DriveTwakeTab>(
+    return await Api.post<DriveTdriveTab, DriveTdriveTab>(
       `/internal/services/documents/v1/companies/${companyId}/tabs/${tabId}`,
       {
         company_id: companyId,

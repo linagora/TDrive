@@ -105,7 +105,7 @@ export class PushReactionNotification
 
     const companyName = company?.name || "";
     const workspaceName = workspace_id === "direct" ? "Direct" : workspace?.name || "";
-    const userName = this.getUserName(user) || "Twake";
+    const userName = this.getUserName(user) || "Tdrive";
 
     if (Channel.isDirectChannel(channel)) {
       title = `${userName} in ${companyName}`;

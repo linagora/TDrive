@@ -41,7 +41,7 @@ export function secureOperators<Entity>(
     keyspace: string;
   } = {
     secret: "",
-    keyspace: "twake",
+    keyspace: "tdrive",
   },
 ): FindOptions {
   const instance = new (entityType as any)();

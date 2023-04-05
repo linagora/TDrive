@@ -16,7 +16,7 @@ class Application {
   }
 
   /**
-   * Start the Twake application: Starting all the required services for the given user
+   * Start the Tdrive application: Starting all the required services for the given user
    */
   async start(user: UserType): Promise<void> {
     if (this.started) {

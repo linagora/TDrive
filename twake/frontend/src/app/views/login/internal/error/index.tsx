@@ -11,7 +11,7 @@ export default () => {
       <div className="error_message skew_in_top_nobounce">
         <div className="title">
           <Emojione type="❌" size={32} />{' '}
-          {Languages.t('scenes.login_error', [], 'There was an error while logging you into Twake')}
+          {Languages.t('scenes.login_error', [], 'There was an error while logging you into Tdrive')}
         </div>
         <div className="subtitle">{LoginService.parsed_error_code}</div>
 

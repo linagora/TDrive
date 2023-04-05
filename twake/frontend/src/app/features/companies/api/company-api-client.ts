@@ -1,7 +1,7 @@
 import { CompanyType } from 'app/features/companies/types/company';
 import { WorkspaceType } from 'app/features/workspaces/types/workspace';
 import Api from '../../global/framework/api-service';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { WebsocketRoom } from '../../global/types/websocket-types';
 
 const PREFIX = '/internal/services/users/v1';
@@ -12,7 +12,7 @@ export type UpdateWorkspaceBody = {
   resource: WorkspaceUpdateResource;
 };
 
-@TwakeService('CompanyAPIClientService')
+@TdriveService('CompanyAPIClientService')
 class CompanyAPIClient {
   private realtime: Map<string, WebsocketRoom> = new Map();
 

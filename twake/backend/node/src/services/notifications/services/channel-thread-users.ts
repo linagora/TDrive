@@ -12,9 +12,9 @@ import {
 } from "../entities";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import gr from "../../global-resolver";
-import { Initializable, TwakeServiceProvider } from "../../../core/platform/framework";
+import { Initializable, TdriveServiceProvider } from "../../../core/platform/framework";
 
-export class ChannelThreadUsersServiceImpl implements TwakeServiceProvider, Initializable {
+export class ChannelThreadUsersServiceImpl implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<ChannelThreadUsers>;
 

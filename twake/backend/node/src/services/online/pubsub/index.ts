@@ -1,11 +1,11 @@
-import { getLogger, Initializable, TwakeLogger } from "../../../core/platform/framework";
+import { getLogger, Initializable, TdriveLogger } from "../../../core/platform/framework";
 import { UsersOnlineMessage } from "../api";
 import { ONLINE_TOPIC } from "../constants";
 import { UserOnlineProcessor } from "./processor";
 import gr from "../../global-resolver";
 
 export class OnlinePubsubService implements Initializable {
-  private logger: TwakeLogger;
+  private logger: TdriveLogger;
   constructor() {
     this.logger = getLogger("online.pubsub.OnlinePubsubService");
   }

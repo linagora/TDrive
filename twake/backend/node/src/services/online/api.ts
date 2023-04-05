@@ -1,4 +1,4 @@
-import { TwakeServiceProvider } from "../../core/platform/framework";
+import { TdriveServiceProvider } from "../../core/platform/framework";
 import UserOnline, { UserOnlinePrimaryKey } from "./entities/user-online";
 
 export type OnlineEvent = {
@@ -18,7 +18,7 @@ export type OnlineGetResponse = {
   data: Array<[string, boolean]>;
 };
 
-export interface OnlineServiceAPI extends TwakeServiceProvider {
+export interface OnlineServiceAPI extends TdriveServiceProvider {
   isOnline(userId: string): Promise<boolean>;
   setLastSeenOnline(userIds: Array<string>, lastSeen: number, is_connected: boolean): Promise<void>;
   get(userId: UserOnlinePrimaryKey): Promise<UserOnline>;

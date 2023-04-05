@@ -11,7 +11,7 @@ import {
   CompanyExecutionContext,
   DriveExecutionContext,
   DriveItemDetails,
-  DriveTwakeTab,
+  DriveTdriveTab,
   ItemRequestParams,
   RequestParams,
   SearchDocumentsBody,
@@ -338,7 +338,7 @@ export class DocumentsController {
     request: FastifyRequest<{
       Params: { tab_id: string; company_id: string };
     }>,
-  ): Promise<DriveTwakeTab> => {
+  ): Promise<DriveTdriveTab> => {
     const context = getCompanyExecutionContext(request);
     const { tab_id } = request.params;
 
@@ -348,9 +348,9 @@ export class DocumentsController {
   setTab = async (
     request: FastifyRequest<{
       Params: { tab_id: string; company_id: string };
-      Body: DriveTwakeTab;
+      Body: DriveTdriveTab;
     }>,
-  ): Promise<DriveTwakeTab> => {
+  ): Promise<DriveTdriveTab> => {
     const context = getCompanyExecutionContext(request);
     const { tab_id } = request.params;
 

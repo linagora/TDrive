@@ -5,10 +5,10 @@ import StatisticsEntity, {
 } from "../entities/statistics";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import gr from "../../global-resolver";
-import { Initializable, TwakeServiceProvider } from "../../../core/platform/framework";
+import { Initializable, TdriveServiceProvider } from "../../../core/platform/framework";
 import { ExecutionContext } from "../../../core/platform/framework/api/crud-service";
 
-export class StatisticsServiceImpl implements TwakeServiceProvider, Initializable {
+export class StatisticsServiceImpl implements TdriveServiceProvider, Initializable {
   version: "1";
   private repository: Repository<StatisticsEntity>;
 

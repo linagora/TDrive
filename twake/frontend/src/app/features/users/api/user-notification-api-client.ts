@@ -1,9 +1,9 @@
 import Api from '../../global/framework/api-service';
 import { NotificationType } from 'app/features/users/types/notification-types';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { WebsocketRoom } from 'app/features/global/types/websocket-types';
 
-@TwakeService('UserNotificationAPIClientService')
+@TdriveService('UserNotificationAPIClientService')
 class UserNotificationAPIClient {
   private realtime: WebsocketRoom = { room: '', token: '' };
 

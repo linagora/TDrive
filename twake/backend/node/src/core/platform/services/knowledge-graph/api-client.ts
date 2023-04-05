@@ -8,13 +8,13 @@ import gr from "../../../../services/global-resolver";
 import Company from "../../../../services/user/entities/company";
 import User from "../../../../services/user/entities/user";
 import Workspace from "../../../../services/workspaces/entities/workspace";
-import { getLogger, TwakeLogger } from "../../framework";
+import { getLogger, TdriveLogger } from "../../framework";
 
 export default class KnowledgeGraphAPIClient {
   protected readonly version = "1.0.0";
   protected readonly axiosInstance: AxiosInstance = axios.create();
   readonly apiUrl: string;
-  readonly logger: TwakeLogger = getLogger("knowledge-graph-api-client");
+  readonly logger: TdriveLogger = getLogger("knowledge-graph-api-client");
 
   constructor(apiUrl: string) {
     this.apiUrl = apiUrl;
@@ -141,7 +141,7 @@ export default class KnowledgeGraphAPIClient {
   private async send(data: any) {
     return await this.axiosInstance.post<
       KnowledgeGraphCreateBodyRequest<KnowledgeGraphCreateMessageObjectData[]>
-    >(`${this.apiUrl}/topics/twake`, data, {
+    >(`${this.apiUrl}/topics/tdrive`, data, {
       headers: {
         "Content-Type": "application/vnd.kafka.json.v2+json",
         Accept: "application/vnd.kafka.v2+json",

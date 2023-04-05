@@ -1,3 +1,3 @@
-export interface TwakeServiceProvider {
+export interface TdriveServiceProvider {
   version: string;
 }

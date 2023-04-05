@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import ora from "ora";
 import Table from "cli-table";
-import twake from "../../../twake";
+import tdrive from "../../../tdrive";
 import gr from "../../../services/global-resolver";
 /**
  * Merge command parameters. Check the builder definition below for more details.
@@ -34,7 +34,7 @@ const command: yargs.CommandModule<ListParams, ListParams> = {
   handler: async argv => {
     const table = new Table({ head: ["user ID", "Date Added"], colWidths: [40, 40] });
     const spinner = ora({ text: "Retrieving workspace users" }).start();
-    const platform = await twake.run(services);
+    const platform = await tdrive.run(services);
     await gr.doInit(platform);
     const users = await gr.services.workspaces.getUsers({ workspaceId: argv.id });
 

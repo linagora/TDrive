@@ -5,7 +5,7 @@ import sha256 from 'crypto-js/sha256';
 /** SecuredConnection
  * Create websockets encrypted connection
  */
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 export default class SecuredConnection {
   constructor(route, options, callback, http_options, collectionId) {

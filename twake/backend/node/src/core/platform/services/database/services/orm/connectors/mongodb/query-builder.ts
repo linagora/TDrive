@@ -12,7 +12,7 @@ export function buildSelectQuery<Entity>(
     keyspace: string;
   } = {
     secret: "",
-    keyspace: "twake",
+    keyspace: "tdrive",
   },
 ): any {
   const instance = new (entityType as any)();

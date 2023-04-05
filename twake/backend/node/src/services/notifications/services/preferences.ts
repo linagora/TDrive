@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { Initializable, TwakeServiceProvider } from "../../../core/platform/framework";
+import { Initializable, TdriveServiceProvider } from "../../../core/platform/framework";
 import {
   CrudException,
   DeleteResult,
@@ -18,7 +18,7 @@ type UserNotificationPreferencesPrimaryKey = {
   user_id: string;
 };
 
-export class NotificationPreferencesService implements TwakeServiceProvider, Initializable {
+export class NotificationPreferencesService implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<UserNotificationPreferences>;
 
@@ -59,7 +59,7 @@ export class NotificationPreferencesService implements TwakeServiceProvider, Ini
     );
   }
 
-  /** We can define preferences for specifically a workspace or for all a company or all Twake
+  /** We can define preferences for specifically a workspace or for all a company or all Tdrive
    * This function will ensure we get all with inherit and all
    */
   async getMerged(

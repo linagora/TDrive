@@ -1,4 +1,4 @@
-import { TwakeService, logger, ServiceName, Consumes } from "../../framework";
+import { TdriveService, logger, ServiceName, Consumes } from "../../framework";
 import {
   DatabaseEntitiesRemovedEvent,
   DatabaseEntitiesSavedEvent,
@@ -15,7 +15,7 @@ import SearchRepository from "./repository";
 
 @ServiceName("search")
 @Consumes(["database"])
-export default class Search extends TwakeService<SearchServiceAPI> {
+export default class Search extends TdriveService<SearchServiceAPI> {
   version = "1";
   name = "search";
   service: SearchAdapterInterface;

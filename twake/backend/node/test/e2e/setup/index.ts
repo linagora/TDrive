@@ -1,7 +1,7 @@
 import { resolve as pathResolve } from "path";
 import { v1 as uuidv1 } from "uuid";
 import { FastifyInstance } from "fastify";
-import { TwakePlatform, TwakePlatformConfiguration } from "../../../src/core/platform/platform";
+import { TdrivePlatform, TdrivePlatformConfiguration } from "../../../src/core/platform/platform";
 import WebServerAPI from "../../../src/core/platform/services/webserver/provider";
 import { DatabaseServiceAPI } from "../../../src/core/platform/services/database/api";
 import AuthServiceAPI from "../../../src/core/platform/services/auth/provider";
@@ -28,7 +28,7 @@ type User = {
 
 export interface TestPlatform {
   currentUser: User;
-  platform: TwakePlatform;
+  platform: TdrivePlatform;
   workspace: Workspace;
   app: FastifyInstance;
   database: DatabaseServiceAPI;
@@ -51,11 +51,11 @@ export async function init(
   prePlatformStartCallback?: (fastify: FastifyInstance) => void,
 ): Promise<TestPlatform> {
   if (!testPlatform) {
-    const configuration: TwakePlatformConfiguration = {
+    const configuration: TdrivePlatformConfiguration = {
       services: config.get("services"),
       servicesPath: pathResolve(__dirname, "../../../src/services/"),
     };
-    const platform = new TwakePlatform(configuration);
+    const platform = new TdrivePlatform(configuration);
     await platform.init();
     await globalResolver.doInit(platform);
 

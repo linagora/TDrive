@@ -9,7 +9,7 @@ export type IdentifyObjectType = IdentityType & {
 };
 
 export type TrackedEventType = IdentityType & {
-  // event starts with prefix `twake:`
+  // event starts with prefix `tdrive:`
   event: string;
   properties?: { [key: string]: unknown };
   timestamp?: Date;

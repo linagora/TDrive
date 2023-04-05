@@ -1,5 +1,5 @@
 import Api from '../../global/framework/api-service';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import {
   ChannelMemberRole,
   ChannelMemberType,
@@ -10,7 +10,7 @@ import { ChannelMemberReadSectionType } from '../types/channel-member-read-secti
 type ChannelMembersSaveRequest = { resource: Partial<ChannelMemberType> };
 type ChannelMembersSaveResponse = { resource: ChannelMemberType };
 
-@TwakeService('ChannelMembersAPIClientService')
+@TdriveService('ChannelMembersAPIClientService')
 class ChannelCurrentMemberAPIClientService {
   private readonly prefix = '/internal/services/channels/v1/companies';
   private realtime: Map<

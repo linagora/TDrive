@@ -1,6 +1,6 @@
-import { TwakeServiceProvider } from "./service-provider";
+import { TdriveServiceProvider } from "./service-provider";
 
-export interface TwakeServiceInterface<T extends TwakeServiceProvider> {
+export interface TdriveServiceInterface<T extends TdriveServiceProvider> {
   doInit(): Promise<this>;
   doStart(): Promise<this>;
   doStop(): Promise<this>;

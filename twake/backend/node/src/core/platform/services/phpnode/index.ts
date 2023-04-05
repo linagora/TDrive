@@ -10,7 +10,7 @@ import {
   ChannelParameters,
   CreateChannelBody,
 } from "../../../../services/channels/web/types";
-import { Consumes, TwakeService } from "../../framework";
+import { Consumes, TdriveService } from "../../framework";
 import WebServerAPI from "../webserver/provider";
 import WebSocketAPI from "../websocket/provider";
 import PhpNodeAPI from "./provider";
@@ -18,7 +18,7 @@ import { RealtimeServiceAPI } from "../realtime/api";
 import gr from "../../../../services/global-resolver";
 
 @Consumes(["webserver", "websocket", "user", "channels"])
-export default class PhpNodeService extends TwakeService<PhpNodeAPI> implements PhpNodeAPI {
+export default class PhpNodeService extends TdriveService<PhpNodeAPI> implements PhpNodeAPI {
   name = "phpnode";
   version = "1";
   private server: FastifyInstance<Server, IncomingMessage, ServerResponse>;

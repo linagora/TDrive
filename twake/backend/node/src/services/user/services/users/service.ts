@@ -63,7 +63,7 @@ export class UserServiceImpl {
 
     this.cache = new NodeCache({ stdTTL: 0.2, checkperiod: 120 });
 
-    //If user deleted from Twake, remove it from all companies
+    //If user deleted from Tdrive, remove it from all companies
     localEventBus.subscribe<ResourceEventsPayload>("user:deleted", async data => {
       if (data?.user?.id) gr.services.companies.ensureDeletedUserNotInCompanies(data.user);
     });
@@ -161,7 +161,7 @@ export class UserServiceImpl {
       const partialId = user.id.toString().split("-")[0];
 
       user.username_canonical = `deleted-user-${partialId}`;
-      user.email_canonical = `${partialId}@twake.removed`;
+      user.email_canonical = `${partialId}@tdrive.removed`;
       user.first_name = "";
       user.last_name = "";
       user.phone = "";

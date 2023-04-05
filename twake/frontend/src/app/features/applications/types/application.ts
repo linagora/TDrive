@@ -1,6 +1,6 @@
 /**
  * DEPRECATED
- * We should remove this when we are sure that new application format is implemented everywhere in Twake
+ * We should remove this when we are sure that new application format is implemented everywhere in Tdrive
  */
 export type AppType = { [key: string]: unknown };
 
@@ -111,7 +111,7 @@ export type StandalonePlugin = {
 };
 
 export type ApplicationDisplay = {
-  twake?: {
+  tdrive?: {
     version?: number;
 
     /**

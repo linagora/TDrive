@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import ModalManager from 'app/components/modal/modal-manager';
 import UserService from 'app/features/users/services/current-user-service';
-import WelcomeOnTwake from './popups/welcome-on-twake';
+import WelcomeOnTdrive from './popups/welcome-on-tdrive';
 import DepreciatedCollections from 'app/deprecated/CollectionsV1/Collections/Collections.js';
 import InitService from 'app/features/global/services/init-service';
 import Groups from 'app/deprecated/workspaces/groups.js';
@@ -46,7 +46,7 @@ const CompanyStatusComponent = (): JSX.Element => {
 
     if (isNewUser) {
       localStorage.setItem(`onboarding_${companyId}`, 'completed');
-      return ModalManager.open(<WelcomeOnTwake email={user.email} />, {
+      return ModalManager.open(<WelcomeOnTdrive email={user.email} />, {
         position: 'center',
         size: { width: '600px' },
       });

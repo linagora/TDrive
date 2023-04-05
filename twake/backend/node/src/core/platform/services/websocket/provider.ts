@@ -1,10 +1,10 @@
 import { EventEmitter } from "events";
 import socketIO from "socket.io";
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import { User } from "../../../../utils/types";
 import { WebsocketUserEvent, WebSocket, WebSocketUser } from "./types";
 
-export default interface WebSocketAPI extends TwakeServiceProvider, EventEmitter {
+export default interface WebSocketAPI extends TdriveServiceProvider, EventEmitter {
   getIo(): socketIO.Server;
 
   isConnected(user: User): boolean;

@@ -39,7 +39,7 @@ export default class ComponentsTester extends React.Component {
       <div className="componentTester">
         <div className="section">
           <div className="title">Test des composants</div>
-          <div className="subtitle">ctrl+alt+e pour revenir à Twake</div>
+          <div className="subtitle">ctrl+alt+e pour revenir à Tdrive</div>
         </div>
 
         <GroupInputs />

@@ -33,9 +33,9 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
   const currentWorkspaceId = useRouterWorkspace();
   const companyApplications = useCompanyApplications();
   const [_, setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
-  const twakeDriveApplicationId =
+  const tdriveDriveApplicationId =
     companyApplications.applications.find(application => {
-      return application.identity.code === 'twake_drive';
+      return application.identity.code === 'tdrive_drive';
     })?.id || '';
   const file = props.driveItem;
   const name = file?.name;
@@ -96,7 +96,7 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
           theme="outline"
           className="w-9 px-1.5 ml-2 rounded-full border-none"
           onClick={() => {
-            openDriveItem(file, currentWorkspaceId, twakeDriveApplicationId);
+            openDriveItem(file, currentWorkspaceId, tdriveDriveApplicationId);
             setParentId(file.parent_id);
             setOpen(false);
           }}

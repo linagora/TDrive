@@ -1,18 +1,18 @@
 import {
-  TwakeContext,
-  TwakeService,
-  TwakeServiceConfiguration,
-  TwakeServiceOptions,
-  TwakeServiceProvider,
+  TdriveContext,
+  TdriveService,
+  TdriveServiceConfiguration,
+  TdriveServiceOptions,
+  TdriveServiceProvider,
 } from "./api";
 import { Configuration } from "./configuration";
 
-class StaticTwakeServiceFactory {
+class StaticTdriveServiceFactory {
   public async create<
-    T extends TwakeService<TwakeServiceProvider> = TwakeService<TwakeServiceProvider>,
+    T extends TdriveService<TdriveServiceProvider> = TdriveService<TdriveServiceProvider>,
   >(
-    module: { new (options?: TwakeServiceOptions<TwakeServiceConfiguration>): T },
-    context: TwakeContext,
+    module: { new (options?: TdriveServiceOptions<TdriveServiceConfiguration>): T },
+    context: TdriveContext,
     configuration?: string,
   ): Promise<T> {
     let config;
@@ -29,4 +29,4 @@ class StaticTwakeServiceFactory {
   }
 }
 
-export const TwakeServiceFactory = new StaticTwakeServiceFactory();
+export const TdriveServiceFactory = new StaticTdriveServiceFactory();

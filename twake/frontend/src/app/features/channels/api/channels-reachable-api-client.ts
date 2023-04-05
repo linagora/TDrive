@@ -5,10 +5,10 @@ import {
 } from 'app/features/channels/types/channels-reachable-types';
 import Api from '../../global/framework/api-service';
 import { ChannelType } from 'app/features/channels/types/channel';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { ChannelMemberType } from 'app/features/channel-members/types/channel-member-types';
 
-@TwakeService('ChannelsReachableAPIClientService')
+@TdriveService('ChannelsReachableAPIClientService')
 class ChannelsReachableAPIClientService {
   private readonly prefix = '/internal/services/channels/v1/companies';
 

@@ -1,4 +1,4 @@
-import { logger, TwakeService } from "../../framework";
+import { logger, TdriveService } from "../../framework";
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { FastifyInstance, fastify } from "fastify";
 import sensible from "fastify-sensible";
@@ -14,7 +14,7 @@ import swaggerPlugin from "fastify-swagger";
 import { SkipCLI } from "../../framework/decorators/skip";
 import fs from "fs";
 // import { throws } from "assert";
-export default class WebServerService extends TwakeService<WebServerAPI> implements WebServerAPI {
+export default class WebServerService extends TdriveService<WebServerAPI> implements WebServerAPI {
   name = "webserver";
   version = "1";
   private server: FastifyInstance<Server, IncomingMessage, ServerResponse>;
@@ -73,12 +73,12 @@ export default class WebServerService extends TwakeService<WebServerAPI> impleme
       routePrefix: "/internal/docs",
       swagger: {
         info: {
-          title: "Twake Swagger",
-          description: "Automatically generate Twake Swagger API",
+          title: "Tdrive Swagger",
+          description: "Automatically generate Tdrive Swagger API",
           version: "0.1.0",
         },
         externalDocs: {
-          url: "http://linagora.github.io/Twake",
+          url: "http://linagora.github.io/Tdrive",
           description: "Find more info here",
         },
         host: "localhost",

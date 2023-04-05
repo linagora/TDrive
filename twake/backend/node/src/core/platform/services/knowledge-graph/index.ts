@@ -1,4 +1,4 @@
-import { Configuration, Consumes, getLogger, TwakeLogger, TwakeService } from "../../framework";
+import { Configuration, Consumes, getLogger, TdriveLogger, TdriveService } from "../../framework";
 import { localEventBus } from "../../framework/event-bus";
 import KnowledgeGraphAPI from "./provider";
 import Workspace from "../../../../services/workspaces/entities/workspace";
@@ -15,13 +15,13 @@ import gr from "../../../../services/global-resolver";
 
 @Consumes([])
 export default class KnowledgeGraphService
-  extends TwakeService<KnowledgeGraphAPI>
+  extends TdriveService<KnowledgeGraphAPI>
   implements KnowledgeGraphAPI
 {
   readonly name = "knowledge-graph";
   readonly version = "1.0.0";
   protected kgAPIClient: KnowledgeGraphAPIClient = this.getKnowledgeGraphApiClient();
-  logger: TwakeLogger = getLogger("knowledge-graph-service");
+  logger: TdriveLogger = getLogger("knowledge-graph-service");
 
   async doInit(): Promise<this> {
     const use = this.getConfigurationEntry<boolean>("use");

@@ -1,7 +1,7 @@
 {
-  "name": "twake",
+  "name": "tdrive",
   "version": "2020.3.107",
-  "repository": "https://github.com/Twake/Twake",
+  "repository": "https://github.com/Tdrive/Tdrive",
   "license": "AGPL-3.0",
   "scripts": {
     "dev:frontend": "craco start",

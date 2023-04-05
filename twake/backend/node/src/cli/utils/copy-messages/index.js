@@ -13,14 +13,14 @@ var fromClient = new cassandra.Client({
   localDataCenter: "datacenter1",
   contactPoints: fromContactPoints,
   authProvider: fromAuthProvider,
-  keyspace: "twake",
+  keyspace: "tdrive",
 });
 
 var toClient = new cassandra.Client({
   localDataCenter: "datacenter1",
   contactPoints: toContactPoints,
   authProvider: toAuthProvider,
-  keyspace: "twake",
+  keyspace: "tdrive",
   queryOptions: {
     consistency: cassandra.types.consistencies.quorum,
   },
@@ -48,7 +48,7 @@ let copiedThreads = 0;
 (async () => {
   await new Promise(r => {
     fromClient.eachRow(
-      "SELECT id from twake.threads",
+      "SELECT id from tdrive.threads",
       [],
       { prepare: true, fetchSize: 50 },
       async function (n, row) {
@@ -60,7 +60,7 @@ let copiedThreads = 0;
 
         await new Promise(r2 => {
           fromClient.eachRow(
-            "SELECT JSON * from twake.messages where thread_id = ? order by id desc",
+            "SELECT JSON * from tdrive.messages where thread_id = ? order by id desc",
             [threadId],
             { prepare: true, fetchSize: 1000 },
             async function (n, row) {
@@ -69,7 +69,7 @@ let copiedThreads = 0;
               copiedMessages++;
 
               await toClient.execute(
-                "INSERT INTO twake.messages JSON '" + message.replace(/'/g, "'$&") + "'",
+                "INSERT INTO tdrive.messages JSON '" + message.replace(/'/g, "'$&") + "'",
                 [],
                 { prepare: true },
               );

@@ -552,11 +552,11 @@
   	}
 
   	function initPdf() {
-  		Twake.call(
+  		Tdrive.call(
   			"/drive/autoopen",
   			undefined,
   			function (file) {
-  				Twake.call(
+  				Tdrive.call(
   					"/self/title",
   					{title: file.name},
   					function () {
@@ -594,7 +594,7 @@
     }
 
   	function openFile() {
-  		Twake.call("/drive/explorer", {mode: "open", directoryId: 0, extensions: ["pdf"]}, (res) => openPdf(res));
+  		Tdrive.call("/drive/explorer", {mode: "open", directoryId: 0, extensions: ["pdf"]}, (res) => openPdf(res));
   	}
 
     function getUrlParameter(name) {

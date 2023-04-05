@@ -3,11 +3,11 @@ import {
   WorkspacePendingUserType,
   WorkspaceUserType,
 } from 'app/features/workspaces/types/workspace';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 
 const PREFIX = '/internal/services/workspaces/v1/companies';
 
-@TwakeService('WorkspaceUserAPIClientService')
+@TdriveService('WorkspaceUserAPIClientService')
 class WorkspaceUserAPIClientService {
   /**
    * Get all workspace users

@@ -1,5 +1,5 @@
 import SearchRepository from "../../../core/platform/services/search/repository";
-import { getLogger, logger, TwakeLogger } from "../../../core/platform/framework";
+import { getLogger, logger, TdriveLogger } from "../../../core/platform/framework";
 import { CrudException, ListResult } from "../../../core/platform/framework/api/crud-service";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import { PublicFile } from "../../../services/files/entities/file";
@@ -9,9 +9,9 @@ import gr from "../../global-resolver";
 import { DriveFile, TYPE } from "../entities/drive-file";
 import { FileVersion, TYPE as FileVersionType } from "../entities/file-version";
 import {
-  DriveTwakeTab as DriveTwakeTabEntity,
-  TYPE as DriveTwakeTabRepoType,
-} from "../entities/drive-twake-tab";
+  DriveTdriveTab as DriveTdriveTabEntity,
+  TYPE as DriveTdriveTabRepoType,
+} from "../entities/drive-tdrive-tab";
 import {
   DriveExecutionContext,
   DocumentsMessageQueueRequest,
@@ -20,7 +20,7 @@ import {
   SearchDocumentsOptions,
   TrashType,
   CompanyExecutionContext,
-  DriveTwakeTab,
+  DriveTdriveTab,
 } from "../types";
 import {
   addDriveItemToArchive,
@@ -51,10 +51,10 @@ export class DocumentsService {
   repository: Repository<DriveFile>;
   searchRepository: SearchRepository<DriveFile>;
   fileVersionRepository: Repository<FileVersion>;
-  driveTwakeTabRepository: Repository<DriveTwakeTabEntity>;
+  driveTdriveTabRepository: Repository<DriveTdriveTabEntity>;
   ROOT: RootType = "root";
   TRASH: TrashType = "trash";
-  logger: TwakeLogger = getLogger("Documents Service");
+  logger: TdriveLogger = getLogger("Documents Service");
 
   async init(): Promise<this> {
     try {
@@ -67,10 +67,10 @@ export class DocumentsService {
         FileVersionType,
         FileVersion,
       );
-      this.driveTwakeTabRepository =
-        await globalResolver.database.getRepository<DriveTwakeTabEntity>(
-          DriveTwakeTabRepoType,
-          DriveTwakeTabEntity,
+      this.driveTdriveTabRepository =
+        await globalResolver.database.getRepository<DriveTdriveTabEntity>(
+          DriveTdriveTabRepoType,
+          DriveTdriveTabEntity,
         );
     } catch (error) {
       logger.error("Error while initializing Documents Service", error);
@@ -769,8 +769,8 @@ export class DocumentsService {
     return new ListResult(result.type, filteredResult, result.nextPage);
   };
 
-  getTab = async (tabId: string, context: CompanyExecutionContext): Promise<DriveTwakeTab> => {
-    const tab = await this.driveTwakeTabRepository.findOne(
+  getTab = async (tabId: string, context: CompanyExecutionContext): Promise<DriveTdriveTab> => {
+    const tab = await this.driveTdriveTabRepository.findOne(
       { company_id: context.company.id, tab_id: tabId },
       {},
       context,
@@ -784,7 +784,7 @@ export class DocumentsService {
     itemId: string,
     level: "read" | "write",
     context: CompanyExecutionContext,
-  ): Promise<DriveTwakeTab> => {
+  ): Promise<DriveTdriveTab> => {
     const hasAccess = await checkAccess(itemId, null, "manage", this.repository, context);
 
     if (!hasAccess) {
@@ -801,8 +801,8 @@ export class DocumentsService {
       context,
     );
 
-    await this.driveTwakeTabRepository.save(
-      Object.assign(new DriveTwakeTabEntity(), {
+    await this.driveTdriveTabRepository.save(
+      Object.assign(new DriveTdriveTabEntity(), {
         company_id: context.company.id,
         tab_id: tabId,
         channel_id: channelId,

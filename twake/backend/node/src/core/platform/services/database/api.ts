@@ -1,10 +1,10 @@
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import { Connector } from "./services/orm/connectors";
 import Manager from "./services/orm/manager";
 import Repository from "./services/orm/repository/repository";
 import { EntityTarget } from "./services/orm/types";
 
-export interface DatabaseServiceAPI extends TwakeServiceProvider {
+export interface DatabaseServiceAPI extends TdriveServiceProvider {
   /**
    * Get the database connector
    */

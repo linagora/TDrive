@@ -44,7 +44,7 @@ import { countRepositoryItems } from "../../../utils/counters";
 import {
   Initializable,
   RealtimeSaved,
-  TwakeServiceProvider,
+  TdriveServiceProvider,
 } from "../../../core/platform/framework";
 import { ResourcePath } from "../../../core/platform/services/realtime/types";
 import { getRoomName, getWorkspacePath } from "../realtime";
@@ -69,7 +69,7 @@ import WorkspaceInviteDomain, {
   getInstance as getWorkspaceInviteDomainInstance,
 } from "../entities/workspace_invite_domain";
 
-export class WorkspaceServiceImpl implements TwakeServiceProvider, Initializable {
+export class WorkspaceServiceImpl implements TdriveServiceProvider, Initializable {
   version: "1";
   private workspaceUserRepository: Repository<WorkspaceUser>;
   private workspaceRepository: Repository<Workspace>;

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Initializable, TwakeServiceProvider } from "../../../core/platform/framework";
+import { Initializable, TdriveServiceProvider } from "../../../core/platform/framework";
 import { Paginable, Pagination } from "../../../core/platform/framework/api/crud-service";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import { Channel } from "../../../services/channels/entities";
@@ -8,7 +8,7 @@ import gr from "../../global-resolver";
 import { UserNotificationBadge } from "../entities";
 import { getInstance, TYPE, UserNotificationDigest } from "../entities/user-notification-digest";
 
-export class UserNotificationDigestService implements TwakeServiceProvider, Initializable {
+export class UserNotificationDigestService implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<UserNotificationDigest>;
 

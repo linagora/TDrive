@@ -10,7 +10,7 @@ import ConsoleService from 'app/features/console/services/console-service';
 import Api from 'app/features/global/framework/api-service';
 import LocalStorage from 'app/features/global/framework/local-storage-service';
 import Logger from 'app/features/global/framework/logger-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import WindowService from 'app/features/global/utils/window';
 import RouterServices from 'app/features/router/services/router-service';
 import workspacesUsers from 'app/features/workspace-members/services/workspace-members-service';

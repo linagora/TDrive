@@ -10,7 +10,7 @@ var client = new cassandra.Client({
   localDataCenter: "datacenter1",
   contactPoints: contactPoints,
   authProvider: authProvider,
-  keyspace: "twake",
+  keyspace: "tdrive",
 });
 
 //Copy object to other table

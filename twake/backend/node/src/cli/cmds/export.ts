@@ -1,7 +1,7 @@
 import { CommandModule } from "yargs";
 
 const command: CommandModule = {
-  describe: "Export Twake data",
+  describe: "Export Tdrive data",
   command: "export <command>",
   builder: yargs =>
     yargs.commandDir("export_cmds", {

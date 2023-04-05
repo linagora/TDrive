@@ -4,9 +4,9 @@ import { getBrowserInformation } from './common';
 import { detect } from './detect';
 
 /**
- * Checks if the twake desktop app is installed in the system.
+ * Checks if the tdrive desktop app is installed in the system.
  *
- * @returns {Promise<boolean>} true if the twake app is installed
+ * @returns {Promise<boolean>} true if the tdrive app is installed
  */
 export async function detectDesktopAppPresence(
   path?: string,
@@ -34,5 +34,5 @@ export async function detectDesktopAppPresence(
     `Desktop app detection: target browser: ${targetBrowser?.name} on ${targetBrowser?.os}`,
   );
 
-  return await detect(path || 'twake://check');
+  return await detect(path || 'tdrive://check');
 }

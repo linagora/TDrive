@@ -26,7 +26,7 @@ export type CompanyStatsObjectType = {
   total_members: number;
   total_guests: number;
   total_messages: number;
-  //Will be completed with Twake specific stats
+  //Will be completed with Tdrive specific stats
 };
 
 export type CompanyPlanObjectType = {

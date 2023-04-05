@@ -5,12 +5,12 @@ import {
   MessageWithReplies,
 } from 'app/features/messages/types/message';
 import Api from 'app/features/global/framework/api-service';
-import { TwakeService } from 'app/features/global/framework/registry-decorator-service';
+import { TdriveService } from 'app/features/global/framework/registry-decorator-service';
 
 /**
  * This service is to create and update a thread
  */
-@TwakeService('MessageThreadAPIClient')
+@TdriveService('MessageThreadAPIClient')
 class MessageThreadAPIClient {
   private readonly prefixUrl: string = '/internal/services/messages/v1';
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types */
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import { ListResult } from "../../framework/api/crud-service";
 import {
   FindFilter as OrmFindFilter,
@@ -57,7 +57,7 @@ export interface SearchAdapterInterface {
   ): Promise<ListResult<IndexedEntity>>;
 }
 
-export interface SearchServiceAPI extends TwakeServiceProvider {
+export interface SearchServiceAPI extends TdriveServiceProvider {
   getRepository<Entity>(table: string, entityType: EntityTarget<Entity>): SearchRepository<Entity>;
   upsert(entities: any[]): Promise<void>;
   remove(entities: any[]): Promise<void>;

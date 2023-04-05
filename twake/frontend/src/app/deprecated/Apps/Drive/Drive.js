@@ -8,7 +8,7 @@ import { getCompanyApplications } from 'app/features/applications/state/company-
 import Groups from 'app/deprecated/workspaces/groups.js';
 import _ from 'lodash';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 class Drive extends Observable {
   constructor() {
@@ -521,23 +521,23 @@ class Drive extends Observable {
 
     const apps = getCompanyApplications(Groups.currentGroupId).filter(
       app =>
-        app.display?.twake?.files?.editor?.preview_url ||
-        app.display?.twake?.files?.editor?.edition_url,
+        app.display?.tdrive?.files?.editor?.preview_url ||
+        app.display?.tdrive?.files?.editor?.edition_url,
     );
 
     //Primary exts
     apps.forEach(app => {
       if (
-        (app.display?.twake?.files?.editor?.extensions || []).indexOf(
+        (app.display?.tdrive?.files?.editor?.extensions || []).indexOf(
           ((current.extension || '') + (current.url ? '.url' : '')).toLocaleLowerCase(),
         ) >= 0
       ) {
-        if (app.display?.twake?.files?.editor?.edition_url) {
+        if (app.display?.tdrive?.files?.editor?.edition_url) {
           editor_candidate.push({ app });
         }
-        if (app.display?.twake?.files?.editor?.preview_url) {
+        if (app.display?.tdrive?.files?.editor?.preview_url) {
           preview_candidate.push({
-            url: app.display?.twake?.files?.editor?.preview_url,
+            url: app.display?.tdrive?.files?.editor?.preview_url,
             app: app,
           });
         }
@@ -587,16 +587,16 @@ class Drive extends Observable {
     //Secondary ext
     apps.forEach(app => {
       if (
-        (app.display?.twake?.files?.editor?.extensions || []).indexOf(
+        (app.display?.tdrive?.files?.editor?.extensions || []).indexOf(
           ((current.extension || '') + (current.url ? '.url' : '')).toLocaleLowerCase(),
         ) >= 0
       ) {
-        if (app.display?.twake?.files?.editor?.edition_url) {
+        if (app.display?.tdrive?.files?.editor?.edition_url) {
           editor_candidate.push({ app });
         }
-        if (app.display?.twake?.files?.editor?.preview_url) {
+        if (app.display?.tdrive?.files?.editor?.preview_url) {
           preview_candidate.push({
-            url: app.display?.twake?.files?.editor?.preview_url,
+            url: app.display?.tdrive?.files?.editor?.preview_url,
             app: app,
           });
         }

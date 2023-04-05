@@ -1,4 +1,4 @@
-import { TwakeServiceProvider, Initializable } from "src/core/platform/framework/api";
+import { TdriveServiceProvider, Initializable } from "src/core/platform/framework/api";
 import Repository from "src/core/platform/services/database/services/orm/repository/repository";
 import { Tag, TagsType, TagsPrimaryKey } from "../entities";
 import gr from "../../global-resolver";
@@ -13,7 +13,7 @@ import { plainToClass } from "class-transformer";
 import { createTagEntity, TYPE } from "../entities/tags";
 import { logger } from "../../../core/platform/framework";
 
-export class TagsService implements TwakeServiceProvider, Initializable {
+export class TagsService implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<Tag>;
 

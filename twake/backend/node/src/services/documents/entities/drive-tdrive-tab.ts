@@ -1,13 +1,13 @@
 import { Type } from "class-transformer";
 import { Column, Entity } from "../../../core/platform/services/database/services/orm/decorators";
 
-export const TYPE = "drive_twake_tab";
+export const TYPE = "drive_tdrive_tab";
 
 @Entity(TYPE, {
   primaryKey: [["company_id"], "tab_id"],
   type: TYPE,
 })
-export class DriveTwakeTab {
+export class DriveTdriveTab {
   @Type(() => String)
   @Column("company_id", "string")
   company_id: string;

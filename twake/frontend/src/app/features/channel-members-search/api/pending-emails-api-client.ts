@@ -1,8 +1,8 @@
 import Api from "app/features/global/framework/api-service";
-import { TwakeService } from "app/features/global/framework/registry-decorator-service";
+import { TdriveService } from "app/features/global/framework/registry-decorator-service";
 import { ChannelPendingEmail, ChannelPendingEmailResponse, ParamsChannelMember, PayloadChannelPendingEmail, ResponseChannelPendingEmail, ResponseDeletePendingEmailResponse } from "../types/channel-members";
 
-@TwakeService('ChannelPendingEmailMemberAPIClientService')
+@TdriveService('ChannelPendingEmailMemberAPIClientService')
 class ChannelPendingEmailApiClient {
     private readonly apiBaseUrl: string = '/internal/services/channels/v1/companies';
 

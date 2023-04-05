@@ -1,4 +1,4 @@
-import { Consumes, ServiceName, TwakeService } from "../../framework";
+import { Consumes, ServiceName, TdriveService } from "../../framework";
 import WebServerAPI from "../webserver/provider";
 import WebSocketAPI from "./provider";
 import { WebSocketService } from "./services";
@@ -7,7 +7,7 @@ import FastifyIO from "fastify-socket.io";
 
 @Consumes(["webserver"])
 @ServiceName("websocket")
-export default class WebSocket extends TwakeService<WebSocketAPI> {
+export default class WebSocket extends TdriveService<WebSocketAPI> {
   private service: WebSocketService;
   name = "websocket";
   version = "1";

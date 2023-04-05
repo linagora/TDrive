@@ -1,8 +1,8 @@
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { FastifyInstance } from "fastify";
-import { TwakeServiceProvider } from "../../framework/api";
+import { TdriveServiceProvider } from "../../framework/api";
 
-export default interface WebServerAPI extends TwakeServiceProvider {
+export default interface WebServerAPI extends TdriveServiceProvider {
   /**
    * Get the fastify webserver instance
    */

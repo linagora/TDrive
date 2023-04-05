@@ -1,8 +1,8 @@
 import { FastifyInstance, FastifyRequest, RouteHandlerMethod } from "fastify";
 import { IncomingMessage, ServerResponse, Server } from "http";
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 
-export default interface PhpNodeAPI extends TwakeServiceProvider {
+export default interface PhpNodeAPI extends TdriveServiceProvider {
   accessControl(
     request: FastifyRequest,
     server: FastifyInstance<Server, IncomingMessage, ServerResponse>,

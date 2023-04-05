@@ -10,7 +10,7 @@ import Number from 'app/features/global/utils/Numbers';
 import AlertManager from 'app/features/global/services/alert-manager-service';
 import Languages from 'app/features/global/services/languages-service';
 import JWTStorage from 'app/features/auth/jwt-storage-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
 import UserAPIClient from '../../features/users/api/user-api-client';
 import { getUser } from 'app/features/users/hooks/use-user-list';

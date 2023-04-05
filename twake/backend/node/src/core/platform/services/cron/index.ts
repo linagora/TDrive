@@ -1,10 +1,10 @@
 import * as cron from "node-cron";
 import uuid from "node-uuid";
 
-import { TwakeService } from "../../framework";
+import { TdriveService } from "../../framework";
 import { CronAPI, CronJob, CronExpression, CronTask } from "./api";
 
-export default class CronService extends TwakeService<CronAPI> implements CronAPI {
+export default class CronService extends TdriveService<CronAPI> implements CronAPI {
   name = "cron";
   version = "1";
   private tasks = new Array<CronTask>();

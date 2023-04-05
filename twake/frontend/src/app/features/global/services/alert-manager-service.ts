@@ -2,7 +2,7 @@
 import { Modal } from 'antd';
 
 import Languages from 'app/features/global/services/languages-service';
-import { TwakeService } from '../framework/registry-decorator-service';
+import { TdriveService } from '../framework/registry-decorator-service';
 
 const { confirm, info } = Modal;
 
@@ -10,7 +10,7 @@ type Options = {
   title?: string;
   text?: string;
 };
-@TwakeService('Alert')
+@TdriveService('Alert')
 class AlertServiceService {
   alert(onClose: () => void, options?: Options) {
     info({

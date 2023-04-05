@@ -23,7 +23,7 @@ export const ApplicationAccess = ({
   return (
     <>
       <Row>
-        <Title level={3}>{Languages.t('twake.application.access.title')}</Title>
+        <Title level={3}>{Languages.t('tdrive.application.access.title')}</Title>
       </Row>
       <Row className="small-bottom-margin">
         <ApplicationHelp />
@@ -47,7 +47,7 @@ export const ApplicationAccess = ({
               />
             ) : (
               <Text type="secondary">
-                {Languages.t('twake.application.access.no_default_scopes_available', [key])}
+                {Languages.t('tdrive.application.access.no_default_scopes_available', [key])}
               </Text>
             )}
           </div>

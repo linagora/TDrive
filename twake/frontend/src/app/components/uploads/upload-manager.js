@@ -3,7 +3,7 @@ import Number from 'app/features/global/utils/Numbers';
 import DriveService from 'app/deprecated/Apps/Drive/Drive.js';
 import Collections from 'app/deprecated/CollectionsV1/Collections/Collections.js';
 import Resumable from 'app/features/files/utils/resumable.js';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import Api from 'app/features/global/framework/api-service';
 import JWTStorage from 'app/features/auth/jwt-storage-service';
 

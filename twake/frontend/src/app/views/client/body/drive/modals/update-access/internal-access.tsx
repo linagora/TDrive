@@ -87,7 +87,7 @@ export const InternalAccessManager = ({ id, disabled }: { id: string; disabled: 
               <Base>Channel access</Base>
               <br />
               <Info>
-                {channelEntities.length} channel(s) from Twake chat have access to this item.
+                {channelEntities.length} channel(s) from Tdrive chat have access to this item.
               </Info>
             </div>
             <div className="shrink-0 ml-2">
@@ -112,7 +112,7 @@ export const InternalAccessManager = ({ id, disabled }: { id: string; disabled: 
                         //Do nothing
                       },
                       {
-                        text: 'You will need to go to Twake chat to give back access to this item.',
+                        text: 'You will need to go to Tdrive chat to give back access to this item.',
                       },
                     );
                   } else {

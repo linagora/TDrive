@@ -18,11 +18,11 @@ describe("The QueryBuilder module", () => {
         ChannelMemberNotificationPreference,
         filters,
         {},
-        { keyspace: "twake" },
+        { keyspace: "tdrive" },
       );
 
       expect(result).toEqual(
-        "SELECT * FROM twake.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1;",
+        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1;",
       );
     });
 
@@ -37,11 +37,11 @@ describe("The QueryBuilder module", () => {
         {
           $lt: [["last_read", 1000]],
         },
-        { keyspace: "twake" },
+        { keyspace: "tdrive" },
       );
 
       expect(result).toEqual(
-        "SELECT * FROM twake.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1 AND last_read < 1000;",
+        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1 AND last_read < 1000;",
       );
     });
 
@@ -55,11 +55,11 @@ describe("The QueryBuilder module", () => {
         ChannelMemberNotificationPreference,
         filters,
         {},
-        { keyspace: "twake" },
+        { keyspace: "tdrive" },
       );
 
       expect(result).toEqual(
-        "SELECT * FROM twake.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1 AND user_id IN (u1,u2,u3);",
+        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1 AND user_id IN (u1,u2,u3);",
       );
     });
 
@@ -73,11 +73,11 @@ describe("The QueryBuilder module", () => {
         ChannelMemberNotificationPreference,
         filters,
         {},
-        { keyspace: "twake" },
+        { keyspace: "tdrive" },
       );
 
       expect(result).toEqual(
-        "SELECT * FROM twake.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1;",
+        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1;",
       );
     });
   });

@@ -53,7 +53,7 @@ export type DriveItemVersion = {
   id: string;
 
   //The file itself, using the existing new node "file" entity
-  provider: string | 'drive' | 'internal'; //Equivalent to "source" in twake/backend/node/src/services/messages/entities/message-files.ts
+  provider: string | 'drive' | 'internal'; //Equivalent to "source" in tdrive/backend/node/src/services/messages/entities/message-files.ts
   drive_item_id: string;
   file_metadata: FileMetadata; //New field
 

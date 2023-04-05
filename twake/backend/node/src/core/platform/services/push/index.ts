@@ -1,11 +1,11 @@
-import { TwakeService, logger, ServiceName } from "../../framework";
+import { TdriveService, logger, ServiceName } from "../../framework";
 import { PushServiceAPI } from "./api";
 import { PushConnector } from "./connectors/connector";
 import FcmPushConnector from "./connectors/fcm/service";
 import { PushConfiguration, PushMessageNotification, PushMessageOptions } from "./types";
 
 @ServiceName("push")
-export default class Push extends TwakeService<PushServiceAPI> {
+export default class Push extends TdriveService<PushServiceAPI> {
   version = "1";
   name = "push";
   service: PushConnector;

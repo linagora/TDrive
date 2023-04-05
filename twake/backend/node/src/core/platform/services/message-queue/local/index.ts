@@ -10,7 +10,7 @@ import {
 import MessageQueueProxy from "../proxy";
 
 const logger = rootLogger.child({
-  component: "twake.core.platform.services.message-queue.local",
+  component: "tdrive.core.platform.services.message-queue.local",
 });
 
 /**

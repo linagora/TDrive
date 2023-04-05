@@ -1,4 +1,4 @@
-import { Consumes, ServiceName, TwakeService } from "../../framework";
+import { Consumes, ServiceName, TdriveService } from "../../framework";
 import { SkipCLI } from "../../framework/decorators/skip";
 import { localEventBus } from "../../framework/event-bus";
 import WebSocketAPI from "../../services/websocket/provider";
@@ -12,7 +12,7 @@ import { RealtimeBaseBusEvent, RealtimeLocalBusEvent } from "./types";
 @Consumes(["websocket", "auth"])
 @ServiceName("realtime")
 export default class RealtimeService
-  extends TwakeService<RealtimeServiceAPI>
+  extends TdriveService<RealtimeServiceAPI>
   implements RealtimeServiceAPI
 {
   private roomManager: RoomManagerImpl;

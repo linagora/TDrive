@@ -89,7 +89,7 @@ export const DynamicComponent = ({
       if (url.indexOf('?') > 0) {
         separator = '&';
       }
-      url += separator + 'twake_user=' + UserService.getCurrentUser().id;
+      url += separator + 'tdrive_user=' + UserService.getCurrentUser().id;
     }
     return (
       // eslint-disable-next-line react/jsx-no-target-blank

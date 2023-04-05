@@ -2,7 +2,7 @@ import { ChannelType } from 'app/features/channels/types/channel';
 import { MessageFileType, MessageWithReplies } from 'app/features/messages/types/message';
 import { UserType } from 'app/features/users/types/user';
 import Api from '../../global/framework/api-service';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 
 const MESSAGES_PREFIX = '/internal/services/messages/v1/companies';
 
@@ -22,7 +22,7 @@ export type MessageFileDetails = MessageFileType & {
   };
 };
 
-@TwakeService('ViewerAPIClientService')
+@TdriveService('ViewerAPIClientService')
 class ViewerAPIClient {
   async getMessageFile(companyId: string, messageId: string, msgFileId: string) {
     const route = `${MESSAGES_PREFIX}/${companyId}/messages/${messageId}/files/${msgFileId}`;

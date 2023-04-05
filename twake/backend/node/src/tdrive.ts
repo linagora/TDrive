@@ -1,21 +1,21 @@
 import path from "path";
-import { TwakePlatform, TwakePlatformConfiguration } from "./core/platform/platform";
+import { TdrivePlatform, TdrivePlatformConfiguration } from "./core/platform/platform";
 
 import globalResolver from "./services/global-resolver";
 
 /**
- * Instantiate and start a new TwakePlatform with the given services.
+ * Instantiate and start a new TdrivePlatform with the given services.
  */
-async function run(services: string[] = []): Promise<TwakePlatform> {
-  let platform: TwakePlatform;
+async function run(services: string[] = []): Promise<TdrivePlatform> {
+  let platform: TdrivePlatform;
 
-  const start = async (): Promise<TwakePlatform> => {
+  const start = async (): Promise<TdrivePlatform> => {
     try {
-      const configuration: TwakePlatformConfiguration = {
+      const configuration: TdrivePlatformConfiguration = {
         services,
         servicesPath: path.resolve(__dirname, "./services/"),
       };
-      platform = new TwakePlatform(configuration);
+      platform = new TdrivePlatform(configuration);
       await platform.init();
       await platform.start();
       await globalResolver.doInit(platform);

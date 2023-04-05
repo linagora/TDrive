@@ -3,8 +3,8 @@ import {
   Initializable,
   RealtimeDeleted,
   RealtimeSaved,
-  TwakeContext,
-  TwakeServiceProvider,
+  TdriveContext,
+  TdriveServiceProvider,
 } from "../../../core/platform/framework";
 import { ResourcePath } from "../../../core/platform/services/realtime/types";
 import {
@@ -28,11 +28,11 @@ import Repository from "../../../core/platform/services/database/services/orm/re
 import gr from "../../global-resolver";
 import _, { pick, uniq } from "lodash";
 
-export class UserNotificationBadgeService implements TwakeServiceProvider, Initializable {
+export class UserNotificationBadgeService implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<UserNotificationBadge>;
 
-  async init(context: TwakeContext): Promise<this> {
+  async init(context: TdriveContext): Promise<this> {
     this.repository = await gr.database.getRepository<UserNotificationBadge>(
       UserNotificationBadgeType,
       UserNotificationBadge,

@@ -1,17 +1,17 @@
-import { TwakeContainer, TwakeServiceProvider, TwakeComponent } from "./framework";
+import { TdriveContainer, TdriveServiceProvider, TdriveComponent } from "./framework";
 import * as ComponentUtils from "./framework/utils/component-utils";
 import path from "path";
 
-export class TwakePlatform extends TwakeContainer {
-  constructor(protected options: TwakePlatformConfiguration) {
+export class TdrivePlatform extends TdriveContainer {
+  constructor(protected options: TdrivePlatformConfiguration) {
     super();
   }
 
-  api(): TwakeServiceProvider {
+  api(): TdriveServiceProvider {
     return null;
   }
 
-  async loadComponents(): Promise<Map<string, TwakeComponent>> {
+  async loadComponents(): Promise<Map<string, TdriveComponent>> {
     return await ComponentUtils.loadComponents(
       [this.options.servicesPath, path.resolve(__dirname, "./services/")],
       this.options.services,
@@ -21,7 +21,7 @@ export class TwakePlatform extends TwakeContainer {
     );
   }
 
-  async loadComponent(name: string): Promise<TwakeComponent> {
+  async loadComponent(name: string): Promise<TdriveComponent> {
     return (
       await ComponentUtils.loadComponents(
         [this.options.servicesPath, path.resolve(__dirname, "./services/")],
@@ -34,7 +34,7 @@ export class TwakePlatform extends TwakeContainer {
   }
 }
 
-export class TwakePlatformConfiguration {
+export class TdrivePlatformConfiguration {
   /**
    * The services to load in the container
    */

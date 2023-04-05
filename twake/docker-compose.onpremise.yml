@@ -56,6 +56,6 @@ services:
     volumes:
       - ./docker-data/logs/nginx/:/var/log/nginx
       - ./docker-data/letsencrypt/:/etc/letsencrypt/
-      - ./docker-data/drive-preview/:/twake-core/web/medias/
-      - ./docker-data/uploads/:/twake-core/web/upload/
+      - ./docker-data/drive-preview/:/tdrive-core/web/medias/
+      - ./docker-data/uploads/:/tdrive-core/web/upload/
       - ./docker-data/ssl:/etc/nginx/ssl

@@ -1,15 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types */
 import {
   logger,
-  TwakeComponent,
-  TwakeContext,
-  TwakeServiceFactory,
-  TwakeServiceState,
+  TdriveComponent,
+  TdriveContext,
+  TdriveServiceFactory,
+  TdriveServiceState,
 } from "../index";
 import { Loader } from "./loader";
 
 export async function buildDependenciesTree(
-  components: Map<string, TwakeComponent>,
+  components: Map<string, TdriveComponent>,
   loadComponent: (name: string) => any,
 ): Promise<void> {
   for (const [name, component] of components) {
@@ -62,15 +62,15 @@ export async function buildDependenciesTree(
 export async function loadComponents(
   paths: string[],
   names: string[] = [],
-  context: TwakeContext,
-): Promise<Map<string, TwakeComponent>> {
-  const result = new Map<string, TwakeComponent>();
+  context: TdriveContext,
+): Promise<Map<string, TdriveComponent>> {
+  const result = new Map<string, TdriveComponent>();
   const loader = new Loader(paths);
 
-  const components: TwakeComponent[] = await Promise.all(
+  const components: TdriveComponent[] = await Promise.all(
     names.map(async name => {
       const clazz = await loader.load(name);
-      const component = new TwakeComponent(name, { clazz, name });
+      const component = new TdriveComponent(name, { clazz, name });
       result.set(name, component);
 
       return component;
@@ -79,7 +79,7 @@ export async function loadComponents(
 
   await Promise.all(
     components.map(async component => {
-      const service = await TwakeServiceFactory.create(
+      const service = await TdriveServiceFactory.create(
         component.getServiceDefinition().clazz,
         context,
         component.getServiceDefinition().name,
@@ -93,8 +93,8 @@ export async function loadComponents(
 }
 
 export async function switchComponentsToState(
-  components: Map<string, TwakeComponent>,
-  state: TwakeServiceState.Initialized | TwakeServiceState.Started | TwakeServiceState.Stopped,
+  components: Map<string, TdriveComponent>,
+  state: TdriveServiceState.Initialized | TdriveServiceState.Started | TdriveServiceState.Stopped,
 ): Promise<void> {
   const states = [];
 

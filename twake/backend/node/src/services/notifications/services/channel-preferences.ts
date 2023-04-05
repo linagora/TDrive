@@ -11,12 +11,12 @@ import {
   ChannelMemberNotificationPreferencePrimaryKey,
 } from "../entities";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
-import { Initializable, logger, TwakeServiceProvider } from "../../../core/platform/framework";
+import { Initializable, logger, TdriveServiceProvider } from "../../../core/platform/framework";
 import gr from "../../global-resolver";
 
 const TYPE = "channel_members_notification_preferences";
 
-export class ChannelMemberPreferencesServiceImpl implements TwakeServiceProvider, Initializable {
+export class ChannelMemberPreferencesServiceImpl implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<ChannelMemberNotificationPreference>;
 

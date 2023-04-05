@@ -74,7 +74,7 @@ export async function formatUser(
       companies,
     };
 
-    // Fixme: this is for retro compatibility, should be deleted after march 2022 if mobile did implement it https://github.com/linagora/Twake-Mobile/issues/1265
+    // Fixme: this is for retro compatibility, should be deleted after march 2022 if mobile did implement it https://github.com/linagora/Tdrive-Mobile/issues/1265
     resUser.preference = resUser.preferences;
 
     let name: string = resUser?.username;

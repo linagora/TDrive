@@ -21,8 +21,8 @@ export const useEditors = (
   const { applications } = useCompanyApplications();
   const apps = applications.filter(
     app =>
-      app.display?.twake?.files?.editor?.preview_url ||
-      app.display?.twake?.files?.editor?.edition_url,
+      app.display?.tdrive?.files?.editor?.preview_url ||
+      app.display?.tdrive?.files?.editor?.edition_url,
   );
 
   const preview_candidate: EditorType[] = [];
@@ -44,16 +44,16 @@ export const useEditors = (
   //Primary exts
   apps.forEach(app => {
     if (
-      (app.display?.twake?.files?.editor?.extensions || []).indexOf(
+      (app.display?.tdrive?.files?.editor?.extensions || []).indexOf(
         ((extension || '') + (options?.url ? '.url' : '')).toLocaleLowerCase(),
       ) >= 0
     ) {
-      if (app.display?.twake?.files?.editor?.edition_url) {
+      if (app.display?.tdrive?.files?.editor?.edition_url) {
         editor_candidate.push({ app });
       }
-      if (app.display?.twake?.files?.editor?.preview_url) {
+      if (app.display?.tdrive?.files?.editor?.preview_url) {
         preview_candidate.push({
-          url: app.display?.twake?.files?.editor?.preview_url,
+          url: app.display?.tdrive?.files?.editor?.preview_url,
           app: app,
         });
       }
@@ -66,7 +66,7 @@ export const useEditors = (
       return;
     }
 
-    window.open(getFileUrl(app.display?.twake?.files?.editor?.edition_url, fileId, driveId));
+    window.open(getFileUrl(app.display?.tdrive?.files?.editor?.edition_url, fileId, driveId));
   };
 
   const getPreviewUrl = (fileId: string): string => {

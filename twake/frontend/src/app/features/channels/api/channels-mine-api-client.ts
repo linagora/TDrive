@@ -1,6 +1,6 @@
 import Api from '../../global/framework/api-service';
 import { ChannelType } from 'app/features/channels/types/channel';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { WebsocketRoom } from '../../global/types/websocket-types';
 
 type ChannelsMineGetResponse = { resources: ChannelType[]; websockets: WebsocketRoom[] };
@@ -10,7 +10,7 @@ type ChannelsMineDeleteBaseResponse = {
   message: string;
 };
 
-@TwakeService('ChannelsMineAPIClientService')
+@TdriveService('ChannelsMineAPIClientService')
 class ChannelsMineAPIClient {
   private readonly prefix = '/internal/services/channels/v1/companies';
   private readonly realtime: Map<string, WebsocketRoom[]> = new Map();

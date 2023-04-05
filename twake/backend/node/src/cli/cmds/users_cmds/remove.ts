@@ -1,6 +1,6 @@
 import yargs from "yargs";
 import ora from "ora";
-import twake from "../../../twake";
+import tdrive from "../../../tdrive";
 import Table from "cli-table";
 import { exit } from "process";
 import gr from "../../../services/global-resolver";
@@ -49,7 +49,7 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
     });
     const spinner = ora({ text: "Retrieving user" }).start();
 
-    const platform = await twake.run(services);
+    const platform = await tdrive.run(services);
     await gr.doInit(platform);
 
     const user = await gr.services.users.get({ id: argv.id });

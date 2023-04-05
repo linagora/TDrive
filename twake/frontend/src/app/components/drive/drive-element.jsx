@@ -339,7 +339,7 @@ export default class DriveElement extends React.Component {
               }
               app = app.app;
               DriveService.getFileUrlForEdition(
-                app.display?.twake?.files?.editor?.edition_url,
+                app.display?.tdrive?.files?.editor?.edition_url,
                 app,
                 this.state.element?.id,
                 url => {

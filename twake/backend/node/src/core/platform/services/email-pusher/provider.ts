@@ -1,4 +1,4 @@
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import {
   EmailBuilderDataPayload,
   EmailBuilderRenderedResult,
@@ -6,7 +6,7 @@ import {
   EmailPusherPayload,
 } from "./types";
 
-export default interface EmailPusherAPI extends TwakeServiceProvider {
+export default interface EmailPusherAPI extends TdriveServiceProvider {
   build(
     template: EmailBuilderTemplateName,
     language: string,

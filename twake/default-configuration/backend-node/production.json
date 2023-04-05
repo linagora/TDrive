@@ -24,7 +24,7 @@
     "cassandra": {
       "contactPoints": ["scylladb:9042"],
       "localDataCenter": "datacenter1",
-      "keyspace": "twake",
+      "keyspace": "tdrive",
       "wait": false,
       "retries": 10,
       "delay": 200

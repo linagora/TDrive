@@ -1,4 +1,4 @@
-export enum TwakeServiceState {
+export enum TdriveServiceState {
   Ready = "READY",
   Initializing = "INITIALIZING",
   Initialized = "INITIALIZED",

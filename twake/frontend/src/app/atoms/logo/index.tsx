@@ -16,7 +16,7 @@ export const Logo = (props: PropsType): React.ReactElement => {
       <img
         className="mx-auto w-auto"
         src={`/public/img/logo/${size}x${size}.png`}
-        alt="Twake logo"
+        alt="Tdrive logo"
       />
     </div>
   );

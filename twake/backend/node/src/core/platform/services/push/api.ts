@@ -1,7 +1,7 @@
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import { PushMessageNotification, PushMessageOptions } from "./types";
 
-export interface PushServiceAPI extends TwakeServiceProvider {
+export interface PushServiceAPI extends TdriveServiceProvider {
   push(
     devices: string[],
     notification: PushMessageNotification,

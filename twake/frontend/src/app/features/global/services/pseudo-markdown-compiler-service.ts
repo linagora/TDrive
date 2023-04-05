@@ -6,7 +6,7 @@ import Collections from 'app/deprecated/CollectionsV1/Collections/Collections.js
 import PseudoMarkdownDictionary from 'components/twacode/pseudo-markdown-dictionary';
 import anchorme from 'anchorme';
 import emojis_original_service from 'emojione';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 class PseudoMarkdownCompiler {
   saved_messages: { [key: string]: any } = {};

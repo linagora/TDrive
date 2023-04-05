@@ -1,7 +1,7 @@
 import Api from '../../global/framework/api-service';
 import { CompanyType } from 'app/features/companies/types/company';
 import { WorkspaceType } from 'app/features/workspaces/types/workspace';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { WebsocketRoom } from '../../global/types/websocket-types';
 import _ from 'lodash';
 
@@ -21,7 +21,7 @@ type UpdateWorkspaceInviteDomainResponse = {
   status: string;
 }
 
-@TwakeService('WorkspaceAPIClientService')
+@TdriveService('WorkspaceAPIClientService')
 class WorkspaceAPIClient {
   private realtime: Map<string, WebsocketRoom[]> = new Map();
 

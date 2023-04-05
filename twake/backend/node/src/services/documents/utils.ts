@@ -318,7 +318,7 @@ export const checkAccess = async (
   item: DriveFile | null,
   level: DriveFileAccessLevel,
   repository: Repository<DriveFile>,
-  context: CompanyExecutionContext & { public_token?: string; twake_tab_token?: string },
+  context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
 ): Promise<boolean> => {
   if (context.user?.server_request) {
     return true;
@@ -346,7 +346,7 @@ export const getAccessLevel = async (
   id: string,
   item: DriveFile | null,
   repository: Repository<DriveFile>,
-  context: CompanyExecutionContext & { public_token?: string; twake_tab_token?: string },
+  context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
 ): Promise<DriveFileAccessLevel | "none"> => {
   if (!id || id === "root")
     return !context?.user?.id ? "none" : (await isCompanyGuest(context)) ? "read" : "manage";
@@ -393,9 +393,9 @@ export const getAccessLevel = async (
       if (matchingUser) return matchingUser.level;
 
       //Channels
-      if (context.twake_tab_token) {
+      if (context.tdrive_tab_token) {
         try {
-          const [channelId] = context.twake_tab_token.split("+"); //First item will be the channel id
+          const [channelId] = context.tdrive_tab_token.split("+"); //First item will be the channel id
           const matchingChannel = accessEntities.find(
             a => a.type === "channel" && a.id === channelId,
           );

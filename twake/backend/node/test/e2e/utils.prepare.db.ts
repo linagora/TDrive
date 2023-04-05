@@ -73,7 +73,7 @@ export class TestDbService {
 
   async createCompany(id?: uuid, name?: string): Promise<Company> {
     if (!name) {
-      name = `TwakeAutotests-test-company-${this.rand()}`;
+      name = `TdriveAutotests-test-company-${this.rand()}`;
     }
     this.company = await gr.services.companies.createCompany(
       getCompanyInstance({
@@ -88,7 +88,7 @@ export class TestDbService {
 
   async createWorkspace(
     workspacePk: WorkspacePrimaryKey,
-    name = `TwakeAutotests-test-workspace-${this.rand()}`,
+    name = `TdriveAutotests-test-workspace-${this.rand()}`,
   ): Promise<Workspace> {
     if (!workspacePk.company_id) throw new Error("company_id is not defined for workspace");
 
@@ -139,7 +139,7 @@ export class TestDbService {
     user.username_canonical = options.username || `test${random}`;
     user.first_name = options.firstName || `test${random}_first_name`;
     user.last_name = options.lastName || `test${random}_last_name`;
-    user.email_canonical = options.email || `test${random}@twake.app`;
+    user.email_canonical = options.email || `test${random}@tdrive.app`;
     user.identity_provider_id = user.id;
     user.cache = options.cache || user.cache || { companies: [] };
 

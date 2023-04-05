@@ -1,7 +1,7 @@
 import { IConfig } from "config";
 import configuration from "../../config";
-import { TwakeServiceConfiguration } from "./api";
-export class Configuration implements TwakeServiceConfiguration {
+import { TdriveServiceConfiguration } from "./api";
+export class Configuration implements TdriveServiceConfiguration {
   configuration: IConfig;
   serviceConfiguration: IConfig;
 

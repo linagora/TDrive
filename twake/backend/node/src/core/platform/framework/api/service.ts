@@ -1,27 +1,27 @@
 import { BehaviorSubject } from "rxjs";
-import { TwakeServiceInterface } from "./service-interface";
-import { TwakeServiceProvider } from "./service-provider";
-import { TwakeServiceState } from "./service-state";
-import { TwakeServiceConfiguration } from "./service-configuration";
-import { TwakeContext } from "./context";
-import { TwakeServiceOptions } from "./service-options";
+import { TdriveServiceInterface } from "./service-interface";
+import { TdriveServiceProvider } from "./service-provider";
+import { TdriveServiceState } from "./service-state";
+import { TdriveServiceConfiguration } from "./service-configuration";
+import { TdriveContext } from "./context";
+import { TdriveServiceOptions } from "./service-options";
 import { CONSUMES_METADATA, PREFIX_METADATA } from "./constants";
 import { getLogger, logger } from "../logger";
-import { TwakeLogger } from "..";
+import { TdriveLogger } from "..";
 
 const pendingServices: any = {};
 
-export abstract class TwakeService<T extends TwakeServiceProvider>
-  implements TwakeServiceInterface<TwakeServiceProvider>
+export abstract class TdriveService<T extends TdriveServiceProvider>
+  implements TdriveServiceInterface<TdriveServiceProvider>
 {
-  state: BehaviorSubject<TwakeServiceState>;
+  state: BehaviorSubject<TdriveServiceState>;
   readonly name: string;
-  protected readonly configuration: TwakeServiceConfiguration;
-  context: TwakeContext;
-  logger: TwakeLogger;
+  protected readonly configuration: TdriveServiceConfiguration;
+  context: TdriveContext;
+  logger: TdriveLogger;
 
-  constructor(protected options?: TwakeServiceOptions<TwakeServiceConfiguration>) {
-    this.state = new BehaviorSubject<TwakeServiceState>(TwakeServiceState.Ready);
+  constructor(protected options?: TdriveServiceOptions<TdriveServiceConfiguration>) {
+    this.state = new BehaviorSubject<TdriveServiceState>(TdriveServiceState.Ready);
     // REMOVE ME, we should import config from framework folder instead
     this.configuration = options?.configuration;
     this.logger = getLogger(`core.platform.services.${this.name}Service`);
@@ -38,7 +38,7 @@ export abstract class TwakeService<T extends TwakeServiceProvider>
   }
 
   async init(): Promise<this> {
-    if (this.state.value !== TwakeServiceState.Ready) {
+    if (this.state.value !== TdriveServiceState.Ready) {
       logger.info("Service %s is already initialized", this.name);
       return this;
     }
@@ -46,9 +46,9 @@ export abstract class TwakeService<T extends TwakeServiceProvider>
     try {
       logger.info("Initializing service %s", this.name);
       pendingServices[this.name] = true;
-      this.state.next(TwakeServiceState.Initializing);
+      this.state.next(TdriveServiceState.Initializing);
       await this.doInit();
-      this.state.next(TwakeServiceState.Initialized);
+      this.state.next(TdriveServiceState.Initialized);
       logger.info("Service %s is initialized", this.name);
       delete pendingServices[this.name];
       logger.info("Pending services: %s", JSON.stringify(Object.keys(pendingServices)));
@@ -72,8 +72,8 @@ export abstract class TwakeService<T extends TwakeServiceProvider>
 
   async start(): Promise<this> {
     if (
-      this.state.value === TwakeServiceState.Starting ||
-      this.state.value === TwakeServiceState.Started
+      this.state.value === TdriveServiceState.Starting ||
+      this.state.value === TdriveServiceState.Started
     ) {
       logger.info("Service %s is already started", this.name);
       return this;
@@ -81,9 +81,9 @@ export abstract class TwakeService<T extends TwakeServiceProvider>
 
     try {
       logger.info("Starting service %s", this.name);
-      this.state.next(TwakeServiceState.Starting);
+      this.state.next(TdriveServiceState.Starting);
       await this.doStart();
-      this.state.next(TwakeServiceState.Started);
+      this.state.next(TdriveServiceState.Started);
       logger.info("Service %s is started", this.name);
 
       return this;
@@ -98,23 +98,23 @@ export abstract class TwakeService<T extends TwakeServiceProvider>
 
   async stop(): Promise<this> {
     if (
-      this.state.value === TwakeServiceState.Stopping ||
-      this.state.value === TwakeServiceState.Stopped
+      this.state.value === TdriveServiceState.Stopping ||
+      this.state.value === TdriveServiceState.Stopped
     ) {
       logger.info("Service %s is already stopped", this.name);
       return this;
     }
 
-    if (this.state.value !== TwakeServiceState.Started) {
+    if (this.state.value !== TdriveServiceState.Started) {
       logger.info("Service %s can not be stopped until started", this.name);
       return this;
     }
 
     try {
       logger.info("Stopping service %s", this.name);
-      this.state.next(TwakeServiceState.Stopping);
+      this.state.next(TdriveServiceState.Stopping);
       await this.doStop();
-      this.state.next(TwakeServiceState.Stopped);
+      this.state.next(TdriveServiceState.Stopped);
       logger.info("Service %s is stopped", this.name);
 
       return this;

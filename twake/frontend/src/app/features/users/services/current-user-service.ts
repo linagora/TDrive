@@ -5,7 +5,7 @@ import Collections, { Collection } from 'app/deprecated/CollectionsV1/Collection
 import Api from 'app/features/global/framework/api-service';
 import Languages from 'app/features/global/services/languages-service';
 import { UserType } from 'app/features/users/types/user';
-import { TwakeService } from 'app/features/global/framework/registry-decorator-service';
+import { TdriveService } from 'app/features/global/framework/registry-decorator-service';
 import { addApiUrlIfNeeded } from 'app/features/global/utils/URLUtils';
 import { getUser } from '../hooks/use-user-list';
 import { getGradient } from 'app/atoms/avatar';
@@ -17,7 +17,7 @@ type SearchQueryType = {
   timeout_search?: ReturnType<typeof setTimeout>;
 };
 
-@TwakeService('UserServiceImpl')
+@TdriveService('UserServiceImpl')
 class User {
   private users_repository: Collection;
   private searchQueries: SearchQueryType;

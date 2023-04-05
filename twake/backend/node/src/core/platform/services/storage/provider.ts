@@ -1,5 +1,5 @@
 import { Stream, Readable } from "stream";
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 import { ExecutionContext } from "../../framework/api/crud-service";
 
 export type WriteMetadata = {
@@ -51,7 +51,7 @@ export interface StorageConnectorAPI {
   remove(path: string, options?: DeleteOptions, context?: ExecutionContext): Promise<boolean>;
 }
 
-export default interface StorageAPI extends TwakeServiceProvider, StorageConnectorAPI {
+export default interface StorageAPI extends TdriveServiceProvider, StorageConnectorAPI {
   getConnector(): StorageConnectorAPI;
   getConnectorType(): string;
 }

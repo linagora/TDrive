@@ -1,6 +1,6 @@
-import { TwakeService } from "../../core/platform/framework";
+import { TdriveService } from "../../core/platform/framework";
 
-export default class StatisticService extends TwakeService<undefined> {
+export default class StatisticService extends TdriveService<undefined> {
   version = "1";
   name = "statistics";
 

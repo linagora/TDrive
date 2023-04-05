@@ -1,4 +1,4 @@
-import { getLogger, TwakeLogger, TwakeService } from "../../framework";
+import { getLogger, TdriveLogger, TdriveService } from "../../framework";
 import EmailPusherAPI from "./provider";
 import {
   EmailBuilderDataPayload,
@@ -15,12 +15,12 @@ import { existsSync } from "fs";
 import axios from "axios";
 
 export default class EmailPusherClass
-  extends TwakeService<EmailPusherAPI>
+  extends TdriveService<EmailPusherAPI>
   implements EmailPusherAPI
 {
   readonly name = "email-pusher";
   readonly version: "1.0.0";
-  logger: TwakeLogger = getLogger("email-pusher-service");
+  logger: TdriveLogger = getLogger("email-pusher-service");
   apiKey: string;
   apiUrl: string;
   sender: string;

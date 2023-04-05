@@ -2,7 +2,7 @@ import { createDecipheriv } from "crypto";
 import { CryptoResult } from ".";
 
 const PREFIX = "encrypted_";
-const DEFAULT_IV = "twake_constantiv";
+const DEFAULT_IV = "tdrive_constantiv";
 
 export default {
   decrypt,

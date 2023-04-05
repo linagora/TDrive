@@ -30,9 +30,9 @@ Authorization: Bearer {{authTokenUser1}}
 {
   "resource": {
     "name": "My private channel",
-    "icon": "twake logo",
-    "description": "This channel allow twake's team to chat easily",
-    "channel_group": "twake",
+    "icon": "tdrive logo",
+    "description": "This channel allow tdrive's team to chat easily",
+    "channel_group": "tdrive",
     "visibility": "private",
     "is_default": true,
     "archived": false

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { TwakeService } from 'app/features/global/framework/registry-decorator-service';
+import { TdriveService } from 'app/features/global/framework/registry-decorator-service';
 import InitService, {
   ConsoleConfiguration,
   InternalConfiguration,
@@ -18,7 +18,7 @@ import JWT, { JWTDataType } from 'app/features/auth/jwt-storage-service';
 import UserAPIClient from '../../features/users/api/user-api-client';
 import Application from 'app/features/applications/services/application-service';
 import LocalStorage from 'app/features/global/framework/local-storage-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 type AccountType = 'remote' | 'internal';
 export type LoginState =
@@ -32,7 +32,7 @@ export type LoginState =
   | 'logout';
 type InitState = '' | 'initializing' | 'initialized';
 
-@TwakeService('AuthService')
+@TdriveService('AuthService')
 class AuthService {
   private provider: AuthProvider<any, any, any> | null = null;
   private logger: Logger.Logger;

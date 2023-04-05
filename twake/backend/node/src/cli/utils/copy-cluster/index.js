@@ -3,18 +3,18 @@ var cassandra = require("cassandra-driver");
 
 var fromAuthProvider = new cassandra.auth.PlainTextAuthProvider("", "");
 var fromContactPoints = [""];
-var fromKeyspace = "twake";
+var fromKeyspace = "tdrive";
 
 var toAuthProvider = new cassandra.auth.PlainTextAuthProvider("", "");
 var toContactPoints = [""];
-var toKeyspace = "twake";
+var toKeyspace = "tdrive";
 
 var forceUpdateAll = false;
 var ignoreTables = ["notification"];
 var countersTables = ["statistics", "stats_counter", "channel_counters", "scheduled_queue_counter"];
 
 var specialConversions = {
-  "twake.group_user.date_added": value => {
+  "tdrive.group_user.date_added": value => {
     return new Date(value).getTime();
   },
 };

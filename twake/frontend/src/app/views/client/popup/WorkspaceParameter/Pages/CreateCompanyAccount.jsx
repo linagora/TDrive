@@ -116,7 +116,7 @@ export default class CreateCompanyAccount extends Component {
             {Languages.t(
               'scenes.apps.account.message_temporary',
               [],
-              'A temporary account works like a normal Twake account, but you generate its password and you will be able to reset it if necessary.',
+              'A temporary account works like a normal Tdrive account, but you generate its password and you will be able to reset it if necessary.',
             )}
             <br />
             {Languages.t(

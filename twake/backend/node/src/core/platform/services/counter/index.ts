@@ -1,9 +1,9 @@
-import { TwakeService } from "../../framework";
+import { TdriveService } from "../../framework";
 import { CounterProvider } from "./provider";
 import { CounterAPI } from "./types";
 import Repository from "../database/services/orm/repository/repository";
 
-export default class CounterService extends TwakeService<CounterAPI> implements CounterAPI {
+export default class CounterService extends TdriveService<CounterAPI> implements CounterAPI {
   name = "counter";
   version = "1";
 

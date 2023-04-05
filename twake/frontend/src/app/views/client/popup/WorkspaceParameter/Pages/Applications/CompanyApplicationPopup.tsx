@@ -57,9 +57,9 @@ const InformationsDescriptions = ({ application }: { application: Application })
         <Text type="secondary">{createdDate}</Text>
       </Item>
 
-      <Item label="Compatible with Twake" span={3}>
+      <Item label="Compatible with Tdrive" span={3}>
         <Text type="secondary">
-          {application.identity.compatibility.includes('twake')
+          {application.identity.compatibility.includes('tdrive')
             ? 'Yes'
             : `No, this integration is compatible with ${application.identity.compatibility
                 .map(v => capitalize(v))

@@ -1,5 +1,5 @@
 import { ScheduledTask } from "node-cron";
-import { TwakeServiceProvider } from "../../framework";
+import { TdriveServiceProvider } from "../../framework";
 
 export type CronJob = () => void;
 
@@ -18,7 +18,7 @@ export type CronTask = {
   stop: () => void;
 };
 
-export interface CronAPI extends TwakeServiceProvider {
+export interface CronAPI extends TdriveServiceProvider {
   /**
    * Schedule a Job
    *

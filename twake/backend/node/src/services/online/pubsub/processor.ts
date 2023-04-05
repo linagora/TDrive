@@ -1,5 +1,5 @@
 import _ from "lodash";
-import { getLogger, TwakeLogger } from "../../../core/platform/framework";
+import { getLogger, TdriveLogger } from "../../../core/platform/framework";
 import { MessageQueueHandler } from "../../../core/platform/services/message-queue/api";
 import { websocketEventBus } from "../../../core/platform/services/realtime/bus";
 import {
@@ -10,7 +10,7 @@ import { UsersOnlineMessage } from "../api";
 import { ONLINE_TOPIC } from "../constants";
 
 export class UserOnlineProcessor implements MessageQueueHandler<UsersOnlineMessage, void> {
-  private logger: TwakeLogger;
+  private logger: TdriveLogger;
   readonly topics = {
     in: ONLINE_TOPIC,
   };

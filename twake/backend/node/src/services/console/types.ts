@@ -22,7 +22,7 @@ export interface CreateConsoleCompany {
   limits?: {
     members?: number; //Old console version
     guests?: number; //Old console version
-    twake: {
+    tdrive: {
       members: number;
       guests: number;
       storage: number;
@@ -141,7 +141,7 @@ export type ConsoleHookCompany = {
   limits: {
     members?: number; //Old console version
     guests?: number; //Old console version
-    twake: {
+    tdrive: {
       members: number;
       guests: number;
       storage: number;
@@ -169,7 +169,7 @@ export type ConsoleHookUser = {
       roleCode: CompanyUserRole;
       status: "active" | "deactivated";
       applications: {
-        code: "twake";
+        code: "tdrive";
       }[];
     },
   ];

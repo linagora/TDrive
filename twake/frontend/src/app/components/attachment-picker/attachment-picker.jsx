@@ -127,9 +127,9 @@ export default class AttachmentPicker extends Component {
                     type: 'menu',
                     icon: 'folder',
                     text: Languages.t(
-                      'components.attachmentpicker.from_twake',
+                      'components.attachmentpicker.from_tdrive',
                       [],
-                      'From Twake Documents',
+                      'From Tdrive Documents',
                     ),
                     submenu: [
                       {

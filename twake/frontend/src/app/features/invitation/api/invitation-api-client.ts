@@ -1,5 +1,5 @@
 import Api from 'app/features/global/framework/api-service';
-import { TwakeService } from 'app/features/global/framework/registry-decorator-service';
+import { TdriveService } from 'app/features/global/framework/registry-decorator-service';
 import { InvitationType as InvitationRoleType, InvitedUser } from '../state/invitation';
 import Logger from 'app/features/global/framework/logger-service';
 
@@ -30,7 +30,7 @@ type WorkspaceInvitationTokenPayloadType = {
   channels: string[];
 };
 
-@TwakeService('InvitationApiClientService')
+@TdriveService('InvitationApiClientService')
 class InvitationApiClient {
   private readonly apiBaseUrl: string = '/internal/services/workspaces/v1/companies';
   logger: Logger.Logger;

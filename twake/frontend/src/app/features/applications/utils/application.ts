@@ -25,7 +25,7 @@ const defaultApplicationPayload: Application = {
     hooks: [],
   },
   display: {
-    twake: {
+    tdrive: {
       version: 1,
 
       files: {

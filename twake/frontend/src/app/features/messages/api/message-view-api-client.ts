@@ -1,5 +1,5 @@
 import { MessageWithReplies } from 'app/features/messages/types/message';
-import { TwakeService } from 'app/features/global/framework/registry-decorator-service';
+import { TdriveService } from 'app/features/global/framework/registry-decorator-service';
 import Api from 'app/features/global/framework/api-service';
 import { WebsocketRoom } from 'app/features/global/types/websocket-types';
 import Numbers from 'app/features/global/utils/Numbers';
@@ -12,7 +12,7 @@ import Numbers from 'app/features/global/utils/Numbers';
  *  - my active threads view
  *  - ...
  */
-@TwakeService('MessageViewAPIClientService')
+@TdriveService('MessageViewAPIClientService')
 class MessageViewAPIClient {
   private readonly prefixUrl: string = '/internal/services/messages/v1';
   private realtime: Map<string, WebsocketRoom[]> = new Map();

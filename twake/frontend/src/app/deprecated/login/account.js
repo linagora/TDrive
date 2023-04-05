@@ -5,7 +5,7 @@ import Login from '../../features/auth/login-service';
 import { getUser } from '../../features/users/hooks/use-user-list';
 
 /**
- * This service is depreciated as Twake will exclusively use Console in the future
+ * This service is depreciated as Tdrive will exclusively use Console in the future
  */
 class Account {
   notify() {

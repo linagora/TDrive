@@ -388,7 +388,7 @@ export class WorkspaceUsersCrudController
   ): Promise<WorkspaceUserInvitationResponse> {
     const context = getExecutionContext(request);
 
-    const usersInTwake: Map<string, User> = new Map(
+    const usersInTdrive: Map<string, User> = new Map(
       await gr.services.users
         .getByEmails(request.body.invitations.map(a => a.email))
         .then(users => users.map(user => [user.email_canonical, user])),
@@ -443,8 +443,8 @@ export class WorkspaceUsersCrudController
 
       const consoleClient = gr.services.console.getClient();
 
-      if (usersInTwake.has(invitation.email)) {
-        user = usersInTwake.get(invitation.email);
+      if (usersInTdrive.has(invitation.email)) {
+        user = usersInTdrive.get(invitation.email);
         usersToProcessImmediately.push(user);
 
         if (user) {
@@ -453,7 +453,7 @@ export class WorkspaceUsersCrudController
           );
         }
       } else {
-        user = await consoleClient.addUserToTwake({
+        user = await consoleClient.addUserToTdrive({
           email: invitation.email,
           password: invitation.password,
         });

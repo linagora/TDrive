@@ -45,6 +45,6 @@ services:
         soft: -1
         hard: -1
     volumes:
-      - ./docker-data/es_twake:/usr/share/elasticsearch/data
+      - ./docker-data/es_tdrive:/usr/share/elasticsearch/data
     ports:
       - 9200:9200

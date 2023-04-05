@@ -1,6 +1,6 @@
 import { Subject } from "rxjs";
 import { v4 as uuidv4 } from "uuid";
-import { Initializable, logger, TwakeServiceProvider } from "../../framework";
+import { Initializable, logger, TdriveServiceProvider } from "../../framework";
 import { Processor } from "./processor";
 import { ExecutionContext } from "../../framework/api/crud-service";
 
@@ -60,7 +60,7 @@ export type MessageQueueSubscriptionOptions = {
 
 export type MessageQueueListener<T> = (message: IncomingMessageQueueMessage<T>) => void;
 
-export interface MessageQueueServiceAPI extends TwakeServiceProvider {
+export interface MessageQueueServiceAPI extends TdriveServiceProvider {
   /**
    * Publish a message to a given topic
    * @param topic The topic to publish the message to

@@ -31,7 +31,7 @@ document.body.addEventListener('dragover', e => e.preventDefault());
 document.body.addEventListener('dragenter', e => e.preventDefault());
 document.body.addEventListener('drop', e => e.preventDefault());
 
-class TwakeApp {
+class TdriveApp {
   window: Window;
   environment: EnvironmentType;
   store_public_access_get_data: any;
@@ -67,6 +67,6 @@ class TwakeApp {
   }
 }
 
-const app = new TwakeApp();
-(window as any).TwakeApp = app;
+const app = new TdriveApp();
+(window as any).TdriveApp = app;
 export default app;

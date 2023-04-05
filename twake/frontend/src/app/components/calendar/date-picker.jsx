@@ -4,7 +4,7 @@ import Tooltip from 'components/tooltip/tooltip.jsx';
 import moment from 'moment';
 import DateTimeUtils from 'app/features/global/utils/datetime.js';
 import UserService from 'app/features/users/services/current-user-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import DayPicker from './day-picker/day-picker.jsx';
 import MenusManager from 'app/components/menus/menus-manager.jsx';
 import Input from 'components/inputs/input.jsx';

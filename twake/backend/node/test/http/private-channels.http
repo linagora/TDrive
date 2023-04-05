@@ -35,9 +35,9 @@ Authorization: Bearer {{authToken}}
 {
   "resource": {
     "name": "My private channel",
-    "icon": "twake logo",
+    "icon": "tdrive logo",
     "description": "A private channel",
-    "channel_group": "twake",
+    "channel_group": "tdrive",
     "visibility": "private",
     "is_default": true,
     "archived": false

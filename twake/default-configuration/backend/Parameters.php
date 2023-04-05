@@ -33,7 +33,7 @@ class Parameters extends \Common\Configuration
                 "driver" => "pdo_cassandra",
                 "host" => "scylladb",
                 "port" => 9042,
-                "dbname" => "twake",
+                "dbname" => "tdrive",
                 "user" => "root",
                 "password" => "root",
                 "encryption_key" => "ab63bb3e90c0271c9a1c06651a7c0967eab8851a7a897766",
@@ -113,11 +113,11 @@ class Parameters extends \Common\Configuration
                     "password" => "",
                     "auth_mode" => "plain"
                 ],
-                "template_dir" => "/src/Twake/Core/Resources/views/",
-                "twake_domain_url" => "https://twakeapp.com/",
-                "from" => "noreply@twakeapp.com",
-                "from_name" => "Twake",
-                "twake_address" => "Twake, 54000 Nancy, France",
+                "template_dir" => "/src/Tdrive/Core/Resources/views/",
+                "tdrive_domain_url" => "https://tdriveapp.com/",
+                "from" => "noreply@tdriveapp.com",
+                "from_name" => "Tdrive",
+                "tdrive_address" => "Tdrive, 54000 Nancy, France",
                 "dkim" => [
                     "private_key" => "",
                     "domain_name" => '',
@@ -136,9 +136,9 @@ class Parameters extends \Common\Configuration
             //Defaults values for all clients but editable in database
             "defaults" => [
               "applications" => [
-                "twake_drive" => [ "default" => true ], //False to not install
-                "twake_calendar" => [ "default" => true ],
-                "twake_tasks" => [ "default" => true ],
+                "tdrive_drive" => [ "default" => true ], //False to not install
+                "tdrive_calendar" => [ "default" => true ],
+                "tdrive_tasks" => [ "default" => true ],
                 "connectors" => [
                   "jitsi" => [ "default" => true ],
                 ]
@@ -146,7 +146,7 @@ class Parameters extends \Common\Configuration
               "connectors" => [
               ],
               "branding" => [
-                "name" => "Twake",
+                "name" => "Tdrive",
                 "enable_newsletter" => false,
                 /*
                 "header" => [

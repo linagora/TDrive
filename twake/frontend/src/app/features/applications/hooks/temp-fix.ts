@@ -4,30 +4,30 @@ export const replaceOnlyOfficeForCanary = (applications: Application[]) => {
   return applications.map(application => {
     if (
       application?.identity?.code === 'only_office' &&
-      !application.display?.twake?.files?.editor?.preview_url?.includes('plugins.twake.app')
+      !application.display?.tdrive?.files?.editor?.preview_url?.includes('plugins.tdrive.app')
     ) {
       return {
         ...application,
         display: {
-          twake: {
+          tdrive: {
             version: 1,
             files: {
               editor: {
-                preview_url: 'https://plugins.twake.app/plugins/onlyoffice/?preview=1',
-                edition_url: 'https://plugins.twake.app/plugins/onlyoffice/',
+                preview_url: 'https://plugins.tdrive.app/plugins/onlyoffice/?preview=1',
+                edition_url: 'https://plugins.tdrive.app/plugins/onlyoffice/',
                 empty_files: [
                   {
-                    url: 'https://plugins.twake.app/plugins/onlyoffice/assets/empty.docx',
+                    url: 'https://plugins.tdrive.app/plugins/onlyoffice/assets/empty.docx',
                     filename: 'Untitled.docx',
                     name: 'ONLYOFFICE Word Document',
                   },
                   {
-                    url: 'https://plugins.twake.app/plugins/onlyoffice/assets/empty.xlsx',
+                    url: 'https://plugins.tdrive.app/plugins/onlyoffice/assets/empty.xlsx',
                     filename: 'Untitled.xlsx',
                     name: 'ONLYOFFICE Excel Document',
                   },
                   {
-                    url: 'https://plugins.twake.app/plugins/onlyoffice/assets/empty.pptx',
+                    url: 'https://plugins.tdrive.app/plugins/onlyoffice/assets/empty.pptx',
                     filename: 'Untitled.pptx',
                     name: 'ONLYOFFICE PowerPoint Document',
                   },

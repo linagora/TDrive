@@ -1,9 +1,9 @@
 import WebServerAPI from "../../core/platform/services/webserver/provider";
-import { Prefix, TwakeService } from "../../core/platform/framework";
+import { Prefix, TdriveService } from "../../core/platform/framework";
 import web from "./web";
 
 @Prefix("/internal/services/tags/v1")
-export default class TagsService extends TwakeService<undefined> {
+export default class TagsService extends TdriveService<undefined> {
   version = "1";
   name = "tags";
 

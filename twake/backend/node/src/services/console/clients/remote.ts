@@ -74,8 +74,8 @@ export class ConsoleRemoteClient implements ConsoleServiceClient {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  addUserToTwake(user: CreateConsoleUser): Promise<User> {
-    logger.info("Remote: addUserToTwake");
+  addUserToTdrive(user: CreateConsoleUser): Promise<User> {
+    logger.info("Remote: addUserToTdrive");
     //should do noting for real console
     return Promise.resolve(undefined);
   }
@@ -92,7 +92,7 @@ export class ConsoleRemoteClient implements ConsoleServiceClient {
     }
 
     const roles = userDTO.roles.filter(
-      role => role.applications === undefined || role.applications.find(a => a.code === "twake"),
+      role => role.applications === undefined || role.applications.find(a => a.code === "tdrive"),
     );
 
     let user = await gr.services.users.getByConsoleId(userDTO.email);
@@ -153,7 +153,7 @@ export class ConsoleRemoteClient implements ConsoleServiceClient {
       company = await gr.services.companies.createCompany(
         getCompanyInstance({
           id: "00000000-0000-4000-0000-000000000000",
-          name: "Twake",
+          name: "Tdrive",
           plan: { name: "Local", limits: undefined, features: undefined },
         }),
       );
@@ -182,7 +182,7 @@ export class ConsoleRemoteClient implements ConsoleServiceClient {
     const user = await gr.services.users.getByConsoleId(consoleUserId);
 
     if (!user) {
-      throw new Error("User does not exists on Twake.");
+      throw new Error("User does not exists on Tdrive.");
     }
 
     await gr.services.users.anonymizeAndDelete(

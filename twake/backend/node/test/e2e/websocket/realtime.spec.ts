@@ -89,7 +89,7 @@ describe("The Realtime API", () => {
     it("should receive a realtime:join:success when token is valid and room has been joined", async done => {
       const token = await platform.auth.getJWTToken();
       const name = "test";
-      const roomToken = "twake";
+      const roomToken = "tdrive";
 
       socket.on("connect", () => {
         socket
@@ -133,7 +133,7 @@ describe("The Realtime API", () => {
 
     it("should send success when room has been joined first", async done => {
       const token = await platform.auth.getJWTToken();
-      const roomToken = "twake";
+      const roomToken = "tdrive";
       const name = "roomtest";
 
       socket.on("connect", () => {

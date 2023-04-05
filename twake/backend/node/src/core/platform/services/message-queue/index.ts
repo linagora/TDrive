@@ -1,4 +1,4 @@
-import { TwakeService, ServiceName, logger as rootLogger } from "../../framework";
+import { TdriveService, ServiceName, logger as rootLogger } from "../../framework";
 import {
   MessageQueueAdapter,
   MessageQueueListener,
@@ -13,10 +13,10 @@ import { SkipCLI } from "../../framework/decorators/skip";
 import config from "../../../../core/config";
 
 const logger = rootLogger.child({
-  component: "twake.core.platform.services.message-queue",
+  component: "tdrive.core.platform.services.message-queue",
 });
 @ServiceName("message-queue")
-export default class MessageQueue extends TwakeService<MessageQueueServiceAPI> {
+export default class MessageQueue extends TdriveService<MessageQueueServiceAPI> {
   version = "1";
   name = "message-queue";
   service: MessageQueueService;

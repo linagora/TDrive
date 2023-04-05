@@ -2,11 +2,11 @@
   "general": {
     "help_url": false,
     "pricing_plan_url": "",
-    "app_download_url": "https://twake.app/download",
+    "app_download_url": "https://tdrive.app/download",
     "mobile": {
-      "mobile_redirect": "mobile.twake.app",
-      "mobile_appstore": "https://apps.apple.com/fr/app/twake/id1588764852?l=en",
-      "mobile_googleplay": "https://play.google.com/store/apps/details?id=com.twake.twake&gl=FR"
+      "mobile_redirect": "mobile.tdrive.app",
+      "mobile_appstore": "https://apps.apple.com/fr/app/tdrive/id1588764852?l=en",
+      "mobile_googleplay": "https://play.google.com/store/apps/details?id=com.tdrive.tdrive&gl=FR"
     },
     "app_grid": [
       {
@@ -15,9 +15,9 @@
         "url": "https://tmail.linagora.com/"
       },
       {
-        "name": "Twake",
-        "logo": "/public/img/grid/twake.png",
-        "url": "https://twake.app/"
+        "name": "Tdrive",
+        "logo": "/public/img/grid/tdrive.png",
+        "url": "https://tdrive.app/"
       }
     ],
     "accounts": {
@@ -28,14 +28,14 @@
       },
       "remote": {
         "authority": "http://auth.example.com/",
-        "client_id": "twakeweb",
+        "client_id": "tdriveweb",
         "client_secret": "",
         "issuer": "",
         "audience": "",
         "redirect_uris": [""],
-        "account_management_url": "http://web.twake-console.local/profile?company-code={company_id}",
-        "collaborators_management_url": "http://web.twake-console.local/compaies/{company_id}/users?company-code={company_id}",
-        "company_management_url": "http://web.twake-console.local/companies?company-code={company_id}"
+        "account_management_url": "http://web.tdrive-console.local/profile?company-code={company_id}",
+        "collaborators_management_url": "http://web.tdrive-console.local/compaies/{company_id}/users?company-code={company_id}",
+        "company_management_url": "http://web.tdrive-console.local/companies?company-code={company_id}"
       }
     }
   },
@@ -93,12 +93,12 @@
     "type": "cassandra",
     "mongodb": {
       "uri": "mongodb://mongo:27017",
-      "database": "twake"
+      "database": "tdrive"
     },
     "cassandra": {
       "contactPoints": ["scylladb:9042"],
       "localDataCenter": "datacenter1",
-      "keyspace": "twake",
+      "keyspace": "tdrive",
       "wait": false,
       "retries": 10,
       "delay": 200
@@ -151,7 +151,7 @@
   "email-pusher": {
     "endpoint": "https://api.smtp2go.com/v3/email/send",
     "api_key": "secret",
-    "sender": "noreply@twake.app"
+    "sender": "noreply@tdrive.app"
   },
   "services": [
     "auth",

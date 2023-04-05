@@ -45,7 +45,7 @@ Authorization: Bearer {{authToken1}}
   "resource": {
     "icon": "hello",
     "description": "A direct channel",
-    "channel_group": "twake",
+    "channel_group": "tdrive",
     "is_default": false,
     "archived": false
   }

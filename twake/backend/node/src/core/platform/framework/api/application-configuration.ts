@@ -1,7 +1,7 @@
-import { TwakeServiceOptions } from "./service-options";
-import { TwakeServiceConfiguration } from "./service-configuration";
+import { TdriveServiceOptions } from "./service-options";
+import { TdriveServiceConfiguration } from "./service-configuration";
 
-export class TwakeAppConfiguration extends TwakeServiceOptions<TwakeServiceConfiguration> {
+export class TdriveAppConfiguration extends TdriveServiceOptions<TdriveServiceConfiguration> {
   services: Array<string>;
   servicesPath: string;
 }

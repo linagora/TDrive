@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { IncomingMessage, Server, ServerResponse } from "http";
 
-import { TwakePlatform } from "../core/platform/platform";
+import { TdrivePlatform } from "../core/platform/platform";
 import { RealtimeServiceAPI } from "../core/platform/services/realtime/api";
 import WebServerAPI from "../core/platform/services/webserver/provider";
 import { SearchServiceAPI } from "../core/platform/services/search/api";
@@ -59,7 +59,7 @@ type PlatformServices = {
   emailPusher: EmailPusherAPI;
 };
 
-type TwakeServices = {
+type TdriveServices = {
   workspaces: WorkspaceServiceImpl;
   companies: CompanyServiceImpl;
   users: UserServiceImpl;
@@ -92,7 +92,7 @@ type TwakeServices = {
 };
 
 class GlobalResolver {
-  public services: TwakeServices;
+  public services: TdriveServices;
   public platformServices: PlatformServices;
   public database: DatabaseServiceAPI;
 
@@ -100,7 +100,7 @@ class GlobalResolver {
 
   private alreadyInitialized = false;
 
-  async doInit(platform: TwakePlatform) {
+  async doInit(platform: TdrivePlatform) {
     if (this.alreadyInitialized) {
       return;
     }
@@ -161,7 +161,7 @@ class GlobalResolver {
       tags: await new TagsService().init(),
     };
 
-    Object.keys(this.services).forEach((key: keyof TwakeServices) => {
+    Object.keys(this.services).forEach((key: keyof TdriveServices) => {
       assert(this.services[key], `Service ${key} was not initialized`);
       if (this.services[key].constructor.name == "Object") {
         const subs = this.services[key] as any;

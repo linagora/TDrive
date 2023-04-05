@@ -80,7 +80,7 @@ export class ConsoleController {
         let company = companies.getEntities()?.[0];
         if (!company) {
           const newCompany = getCompanyInstance({
-            name: "Twake",
+            name: "Tdrive",
             plan: { name: "Local", limits: undefined, features: undefined },
           });
           company = await gr.services.companies.createCompany(newCompany);

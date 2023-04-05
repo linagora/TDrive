@@ -1,7 +1,7 @@
 import yargs from "yargs";
 import ora from "ora";
 import Table from "cli-table";
-import twake from "../../../twake";
+import tdrive from "../../../tdrive";
 import gr from "../../../services/global-resolver";
 /**
  * Merge command parameters. Check the builder definition below for more details.
@@ -23,7 +23,7 @@ const services = [
 
 const command: yargs.CommandModule<ListParams, ListParams> = {
   command: "list",
-  describe: "List Twake workspaces",
+  describe: "List Tdrive workspaces",
   builder: {
     size: {
       default: "50",
@@ -33,8 +33,8 @@ const command: yargs.CommandModule<ListParams, ListParams> = {
   },
   handler: async argv => {
     const table = new Table({ head: ["ID", "Name"], colWidths: [40, 50] });
-    const spinner = ora({ text: "List Twake workspaces" }).start();
-    const platform = await twake.run(services);
+    const spinner = ora({ text: "List Tdrive workspaces" }).start();
+    const platform = await tdrive.run(services);
     await gr.doInit(platform);
     const workspaces = await gr.services.workspaces.list({ limitStr: argv.size });
 

@@ -1,5 +1,5 @@
 import Observable from 'app/deprecated/CollectionsV1/observable.js';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 import Collections from 'app/deprecated/CollectionsV1/Collections/Collections.js';
 import MediumPopupManager from 'app/components/modal/modal-manager';
 import Workspaces from 'app/deprecated/workspaces/workspaces.jsx';

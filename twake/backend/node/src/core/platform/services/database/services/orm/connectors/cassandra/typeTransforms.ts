@@ -19,9 +19,9 @@ export const cassandraType = {
   boolean: "BOOLEAN",
 
   // backward compatibility
-  twake_boolean: "TINYINT",
-  twake_int: "INT", //Depreciated
-  twake_datetime: "TIMESTAMP", //Depreciated
+  tdrive_boolean: "TINYINT",
+  tdrive_int: "INT", //Depreciated
+  tdrive_datetime: "TIMESTAMP", //Depreciated
 };
 
 type TransformOptions = {
@@ -36,14 +36,14 @@ export const transformValueToDbString = (
   type: ColumnType,
   options: TransformOptions = {},
 ): string => {
-  if (type === "twake_datetime") {
+  if (type === "tdrive_datetime") {
     if (isNaN(v) || isNull(v)) {
       return "null";
     }
     return `${v}`;
   }
 
-  if (type === "number" || type === "twake_int") {
+  if (type === "number" || type === "tdrive_int") {
     if (isNull(v)) {
       return "null";
     }
@@ -67,7 +67,7 @@ export const transformValueToDbString = (
     }
     return `${!!v}`;
   }
-  if (type === "twake_boolean") {
+  if (type === "tdrive_boolean") {
     if (!isBoolean(v)) {
       throw new Error(`'${v}' is not a ${type}`);
     }
@@ -111,7 +111,7 @@ export const transformValueFromDbString = (
 ): any => {
   logger.trace(`Transform value %o of type ${type}`, v);
 
-  if (type === "twake_datetime") {
+  if (type === "tdrive_datetime") {
     return new Date(`${v}`).getTime();
   }
 
@@ -146,7 +146,7 @@ export const transformValueFromDbString = (
     return decryptedValue;
   }
 
-  if (type === "twake_boolean" || type === "boolean") {
+  if (type === "tdrive_boolean" || type === "boolean") {
     return Boolean(v).valueOf();
   }
 

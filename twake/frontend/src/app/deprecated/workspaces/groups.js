@@ -9,7 +9,7 @@ import $ from 'jquery';
 import JWTStorage from 'app/features/auth/jwt-storage-service';
 import CompanyAPIClient from '../../features/companies/api/company-api-client';
 import UserService from 'app/features/users/services/current-user-service';
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 class Groups extends Observable {
   constructor() {

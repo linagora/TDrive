@@ -30,7 +30,7 @@ export default class WorkspaceUser {
   @Column("last_access", "number")
   lastAccess: number;
 
-  @Column("is_externe", "twake_boolean")
+  @Column("is_externe", "tdrive_boolean")
   isExternal: boolean; //Depreciated
 }
 

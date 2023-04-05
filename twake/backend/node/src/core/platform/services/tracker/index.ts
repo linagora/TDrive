@@ -1,6 +1,6 @@
 import Segment from "./adapters/segment";
 import { Analytics } from "./adapters/types";
-import { Consumes, TwakeService, logger } from "../../framework";
+import { Consumes, TdriveService, logger } from "../../framework";
 import TrackerAPI from "./provider";
 import { localEventBus } from "../../framework/event-bus";
 import { IdentifyObjectType, TrackedEventType, TrackerConfiguration } from "./types";
@@ -8,7 +8,7 @@ import { ResourceEventsPayload } from "../../../../utils/types";
 import { md5 } from "../../../../core/crypto";
 
 @Consumes([])
-export default class Tracker extends TwakeService<TrackerAPI> implements TrackerAPI {
+export default class Tracker extends TdriveService<TrackerAPI> implements TrackerAPI {
   name = "tracker";
   version = "1";
   analytics: Analytics;
@@ -121,14 +121,14 @@ export default class Tracker extends TwakeService<TrackerAPI> implements Tracker
 
     // Fixme: For now we have zero users allowing to track (value false by default and not asked during sign up)
     // As soon as we clearly define a way for users to choose this option we will enable this code again.
-    // Right now we need stats to move forward with Twake.
+    // Right now we need stats to move forward with Tdrive.
     // Note that the user that create the event will be anonymised here
     // if (!event.user?.allow_tracking) return;
 
     const analytics = await this.getAnalytics();
 
     if (analytics && event) {
-      event.event = `twake:${event.event}`;
+      event.event = `tdrive:${event.event}`;
       analytics.track(
         {
           userId: event.user?.allow_tracking

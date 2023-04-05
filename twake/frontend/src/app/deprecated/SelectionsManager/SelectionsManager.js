@@ -1,6 +1,6 @@
 import Observable from 'app/deprecated/CollectionsV1/observable.js';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 class SelectionsManager extends Observable {
   constructor() {

@@ -39,7 +39,7 @@ export default () => {
     return <ArchiveDisplay download={download} name={name} />;
   }
 
-  // /* Uncomment after https://github.com/linagora/Twake/issues/2453 is done
+  // /* Uncomment after https://github.com/linagora/Tdrive/issues/2453 is done
   if (type) {
     return <OtherDisplay download={download} name={name} id={id} />;
   }

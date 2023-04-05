@@ -1,6 +1,6 @@
 import Api from '../../global/framework/api-service';
 import { ChannelType } from 'app/features/channels/types/channel';
-import { TwakeService } from '../../global/framework/registry-decorator-service';
+import { TdriveService } from '../../global/framework/registry-decorator-service';
 import { delayRequest } from 'app/features/global/utils/managedSearchRequest';
 import { removeBadgesNow } from 'app/features/users/hooks/use-notifications';
 
@@ -14,7 +14,7 @@ export type SearchOptions = {
   limit?: number;
 };
 
-@TwakeService('ChannelAPIClientService')
+@TdriveService('ChannelAPIClientService')
 class ChannelAPIClientService {
   private logger = Logger.getLogger('ChannelAPIClientService');
 

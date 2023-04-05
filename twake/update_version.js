@@ -3,16 +3,16 @@
  */
 
 const versions = {
-  VERSION_NAME: process.env.TWAKE_VERSION_NAME || "Albatros",
-  VERSION: process.env.TWAKE_VERSION || "2023.Q1",
-  VERSION_DETAIL: process.env.TWAKE_VERSION_DETAIL || "2023.Q1.1223",
-  MIN_VERSION_WEB: process.env.TWAKE_MIN_VERSION_WEB || "2022.Q2.975",
-  MIN_VERSION_MOBILE: process.env.TWAKE_MIN_VERSION_MOBILE || "2022.Q2.975",
+  VERSION_NAME: process.env.Tdrive_VERSION_NAME || "Albatros",
+  VERSION: process.env.Tdrive_VERSION || "2023.Q1",
+  VERSION_DETAIL: process.env.Tdrive_VERSION_DETAIL || "2023.Q1.1223",
+  MIN_VERSION_WEB: process.env.Tdrive_MIN_VERSION_WEB || "2022.Q2.975",
+  MIN_VERSION_MOBILE: process.env.Tdrive_MIN_VERSION_MOBILE || "2022.Q2.975",
 };
 
 const files = [
   "frontend/src/app/environment/version.ts",
-  "backend/core/src/Twake/Core/Controller/Version.php",
+  "backend/core/src/Tdrive/Core/Controller/Version.php",
   "backend/node/src/version.ts",
   "../.github/workflows/publish-backend.yml",
   "../.github/workflows/publish-frontend.yml",

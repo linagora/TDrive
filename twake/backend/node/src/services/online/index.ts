@@ -1,7 +1,7 @@
-import { Prefix, TwakeService } from "../../core/platform/framework";
+import { Prefix, TdriveService } from "../../core/platform/framework";
 
 @Prefix("/internal/services/online/v1")
-export default class OnlineService extends TwakeService<undefined> {
+export default class OnlineService extends TdriveService<undefined> {
   version = "1";
   name = "online";
 

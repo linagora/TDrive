@@ -125,7 +125,7 @@ docker-compose.yml
 /docker-data/*
 /docker/data/*
 
-### Twake specific ###
+### Tdrive specific ###
 /build/
 /vendor/
 /app/Ressources/DatabaseEncryption/.HaliteEncryptor.key

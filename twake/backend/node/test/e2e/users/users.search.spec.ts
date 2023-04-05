@@ -52,32 +52,32 @@ describe("The /users API", () => {
       await testDbService.createUser([workspacePk], {
         firstName: "Ha",
         lastName: "Nguyen",
-        email: "hnguyen@twake.app",
+        email: "hnguyen@tdrive.app",
       });
       await testDbService.createUser([workspacePk], {
         firstName: "Harold",
         lastName: "Georges",
-        email: "hgeorges@twake.app",
+        email: "hgeorges@tdrive.app",
       });
       await testDbService.createUser([workspacePk], {
         firstName: "Bob",
         lastName: "Smith",
-        email: "bob@twake.app",
+        email: "bob@tdrive.app",
       });
       await testDbService.createUser([workspacePk], {
         firstName: "Bob",
         lastName: "Rabiot",
-        email: "rabiot.b@twake.app",
+        email: "rabiot.b@tdrive.app",
       });
       await testDbService.createUser([workspacePk, workspacePk2], {
         firstName: "Bob",
         lastName: "Smith-Rabiot",
-        email: "rbs@twake.app",
+        email: "rbs@tdrive.app",
       });
       await testDbService.createUser([workspacePk], {
         firstName: "Alexïs",
         lastName: "Goélâns",
-        email: "alexis.goelans@twake.app",
+        email: "alexis.goelans@tdrive.app",
       });
 
       //Wait for indexation to happen
@@ -88,38 +88,38 @@ describe("The /users API", () => {
 
       resources = await search("bob rabiot");
 
-      expect(resources.map(e => e.email).includes("rabiot.b@twake.app")).toBe(true);
-      expect(resources.map(e => e.email).includes("rbs@twake.app")).toBe(true);
-      expect(resources.map(e => e.email).includes("bob@twake.app")).toBe(true);
+      expect(resources.map(e => e.email).includes("rabiot.b@tdrive.app")).toBe(true);
+      expect(resources.map(e => e.email).includes("rbs@tdrive.app")).toBe(true);
+      expect(resources.map(e => e.email).includes("bob@tdrive.app")).toBe(true);
 
       resources = await search("alexis");
-      expect(resources[0].email).toBe("alexis.goelans@twake.app");
+      expect(resources[0].email).toBe("alexis.goelans@tdrive.app");
 
       resources = await search("ALEXIS");
-      expect(resources[0].email).toBe("alexis.goelans@twake.app");
+      expect(resources[0].email).toBe("alexis.goelans@tdrive.app");
 
       resources = await search("AleXis");
-      expect(resources[0].email).toBe("alexis.goelans@twake.app");
+      expect(resources[0].email).toBe("alexis.goelans@tdrive.app");
 
       resources = await search("alex");
-      expect(resources[0].email).toBe("alexis.goelans@twake.app");
+      expect(resources[0].email).toBe("alexis.goelans@tdrive.app");
 
       resources = await search("àlèXïs");
-      expect(resources[0].email).toBe("alexis.goelans@twake.app");
+      expect(resources[0].email).toBe("alexis.goelans@tdrive.app");
 
       resources = await search("rbs");
-      expect(resources[0].email).toBe("rbs@twake.app");
+      expect(resources[0].email).toBe("rbs@tdrive.app");
 
-      resources = await search("rbs@twake.app");
-      expect(resources[0].email).toBe("rbs@twake.app");
+      resources = await search("rbs@tdrive.app");
+      expect(resources[0].email).toBe("rbs@tdrive.app");
 
       resources = await search("bob", workspacePk2.company_id);
       expect(resources.length).toBe(1);
 
-      resources = await search("rbs@twake.app", workspacePk.company_id);
-      expect(resources[0].email).toBe("rbs@twake.app");
+      resources = await search("rbs@tdrive.app", workspacePk.company_id);
+      expect(resources[0].email).toBe("rbs@tdrive.app");
 
-      resources = await search("rbs@twake.app", uuidv1());
+      resources = await search("rbs@tdrive.app", uuidv1());
       expect(resources.length).toBe(0);
 
       done();

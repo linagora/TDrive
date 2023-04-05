@@ -1,9 +1,9 @@
 /**
  * To run all tests in local development mode:
- * cd twake/; docker-compose -f docker-compose.dev.tests.mongo.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
+ * cd tdrive/; docker-compose -f docker-compose.dev.tests.mongo.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
  *
  * To run only specific tests:
- * cd twake/; docker-compose -f docker-compose.dev.tests.mongo.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e -- test/e2e/application/app-create-update.spec.ts  test/e2e/application/application-events.spec.ts
+ * cd tdrive/; docker-compose -f docker-compose.dev.tests.mongo.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e -- test/e2e/application/app-create-update.spec.ts  test/e2e/application/application-events.spec.ts
  */
 
 const fs = require("fs");

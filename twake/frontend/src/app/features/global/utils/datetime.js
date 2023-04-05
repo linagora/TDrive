@@ -7,7 +7,7 @@ import 'moment/locale/es';
 import Observable from 'app/deprecated/CollectionsV1/observable.js';
 import UserService from 'app/features/users/services/current-user-service';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 class DateTime extends Observable {
   constructor() {

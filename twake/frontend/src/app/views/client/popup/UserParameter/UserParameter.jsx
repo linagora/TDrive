@@ -639,7 +639,7 @@ export default class UserParameter extends Component {
                   text: this.state.i18n.t('scenes.apps.account.assistant.title'),
                   emoji: ':robot:',
                   hide:
-                    document.location.origin === 'https://web.twake.app' &&
+                    document.location.origin === 'https://web.tdrive.app' &&
                     workspaceService.currentGroupId !== '56393af2-e5fe-11e9-b894-0242ac120004',
                   selected: this.state.page === 4 ? 'selected' : '',
                   onClick: () => {

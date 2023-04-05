@@ -6,7 +6,7 @@ import Login from 'app/features/auth/login-service';
 import Collections from 'app/deprecated/CollectionsV1/Collections/Collections.js';
 import AlertManager from 'app/features/global/services/alert-manager-service';
 
-import Globals from 'app/features/global/services/globals-twake-app-service';
+import Globals from 'app/features/global/services/globals-tdrive-app-service';
 
 /**
  * FIXME: This service seems still used by some components but we now have ./NotificationPreferences one which seems to overlap...

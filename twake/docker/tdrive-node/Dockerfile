@@ -24,7 +24,7 @@ RUN npm install
 COPY backend/node/ .
 
 # Add frontend Stage
-FROM node-base as with-frontend
+FROM node-base as installed-libs
 
 COPY backend/node/ .
 #Install dev dependancies for build
@@ -37,7 +37,7 @@ RUN NODE_ENV=development npm install && \
     npm install --legacy-peer-deps
 
 # Development Stage
-FROM with-frontend as development
+FROM installed-libs as development
 
 ENV NODE_ENV=development
 RUN npm install -g pino-pretty && \
@@ -46,7 +46,7 @@ RUN npm install -g pino-pretty && \
 CMD ["npm", "run", "dev:debug"]
 
 # Production Stage
-FROM with-frontend as production
+FROM installed-libs as production
 
 EXPOSE 3000
 CMD ["npm", "run", "serve"]

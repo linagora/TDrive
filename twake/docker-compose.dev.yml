@@ -61,7 +61,6 @@ services:
     ports:
       - 8000:80
     depends_on:
-      - php
       - node
     volumes:
       - ./docker-data/logs/nginx/:/var/log/nginx

@@ -51,7 +51,6 @@ services:
       - 8000:80
       - 443:443
     depends_on:
-      - php
       - node
     volumes:
       - ./docker-data/logs/nginx/:/var/log/nginx

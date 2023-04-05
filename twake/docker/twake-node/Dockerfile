@@ -36,20 +36,6 @@ RUN NODE_ENV=development npm install && \
     #Install prod dependancies after build
     npm install --legacy-peer-deps
 
-# Add frontend into node
-COPY frontend/ ../public_build/
-RUN export NODE_ENV=development && \
-    apt-get install -y build-essential && \
-    cd ../public_build/ && \
-    yarn install --network-timeout 1000000000 && \
-    yarn global add webpack webpack-cli jest && \
-    cp src/app/environment/environment.ts.dist src/app/environment/environment.ts && \
-    export NODE_ENV=production && \
-    yarn build && \
-    rm -R node_modules && \
-    mv build/* ../app/public && \
-    cd .. && rm -R public_build/
-
 # Development Stage
 FROM with-frontend as development
 

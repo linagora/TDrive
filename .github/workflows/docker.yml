@@ -17,4 +17,4 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: cd twake && docker build --target production -t twaketech/tdrive-node -f docker/twake-node/Dockerfile .
+      - run: cd twake && docker build --target production -t docker-registry.linagora.com/tdrive/tdrive-node -f docker/twake-node/Dockerfile .

@@ -27,13 +27,4 @@ jobs:
         run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
       - name: e2e-cassandra-test
         run: cd twake && docker-compose -f docker-compose.tests.yml up -d scylladb elasticsearch rabbitmq && sleep 60 && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=elasticsearch -e DB_DRIVER=cassandra node npm run test:e2e
-  build:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - run: cd twake && mv docker-compose.tests.yml docker-compose.yml
-      - run: cd twake && docker-compose up -d
-      - run: cd twake && docker-compose exec -T php php composer.phar install
-      - run: cd twake && docker-compose exec -T php php bin/console twake:schema:update #Test if scylla is live
-      - run: cd twake && docker-compose exec -T php php bin/console twake:mapping #Test if es is live
-      - run: cd twake && docker-compose exec -T php php bin/console twake:init #Test in we can do things
+

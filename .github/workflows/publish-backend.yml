@@ -10,10 +10,11 @@ on:
       - ".github/workflows/**"
 
 jobs:
-  deploy-node:
+  publish-node:
     runs-on: ubuntu-20.04
     steps:
-      - run: 'echo "DOCKERTAGVERSION=2023.Q1.1223" >> $GITHUB_ENV'
+      - name: "Setup version"
+        run: 'echo "DOCKERTAGVERSION=2023.Q1.1223" >> $GITHUB_ENV'
       - name: Set env to develop
         if: endsWith(github.ref, '/develop')
         run: 'echo "DOCKERTAG=develop" >> $GITHUB_ENV; echo "DOCKERTAGVERSION=2023.Q1.1223" >> $GITHUB_ENV'
@@ -26,15 +27,19 @@ jobs:
       - name: Set env to production
         if: endsWith(github.ref, '/main')
         run: 'echo "DOCKERTAG=latest" >> $GITHUB_ENV'
+      - name: "Push to the registry following labels:"
+        run: |
+          echo "${{ env.DOCKERTAG }},${{ env.DOCKERTAGVERSION }}"
       - uses: actions/checkout@v2
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
-          name: twaketech/tdrive-node
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          name: tdrive/tdrive-node
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           workdir: twake
+          registry: docker-registry.linagora.com
           context: .
           target: production
-          buildoptions: "-t twaketech/tdrive-node -f docker/twake-node/Dockerfile"
+          buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-node -f docker/twake-node/Dockerfile"
           tags: "${{ env.DOCKERTAG }},${{ env.DOCKERTAGVERSION }}"

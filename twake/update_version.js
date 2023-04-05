@@ -14,8 +14,8 @@ const files = [
   "frontend/src/app/environment/version.ts",
   "backend/core/src/Twake/Core/Controller/Version.php",
   "backend/node/src/version.ts",
-  "../.github/workflows/saas-update-backend.yml",
-  "../.github/workflows/saas-update-front.yml",
+  "../.github/workflows/publish-backend.yml",
+  "../.github/workflows/publish-frontend.yml",
 ];
 
 var fs = require("fs");

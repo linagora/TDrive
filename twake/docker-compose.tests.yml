@@ -47,18 +47,7 @@ services:
       - mongo
       - scylladb
       - rabbitmq
-  php:
-    image: twaketech/twake-php
-    volumes:
-      - ./backend/core/:/twake-core:cached
-      - ./docker-data/drive/:/twake-core/drive/
-      - ./docker-data/fpm/:/etc/docker-data/fpm/
-    depends_on:
-      - scylladb
-      - rabbitmq
-      - elasticsearch
-    links:
-      - scylladb
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
     environment:
@@ -72,6 +61,7 @@ services:
         hard: -1
     ports:
       - 9200:9200
+
   nginx:
     image: twaketech/twake-nginx
     ports:

@@ -1,4 +1,4 @@
-name: update-saas-frontend
+name: publish-frontend
 
 # Edit with caution ! Made for build+test on "feature/*" push and pull requests events
 # And for only deploying on pushes on "main" branch
@@ -43,8 +43,8 @@ jobs:
           name: frontend-build
           path: twake/frontend/build/
 
-  deploy-nginx:
-    needs: build-frontend
+  publish-frontend:
+#    needs: build-frontend
     runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/canary'
     steps:
@@ -63,11 +63,12 @@ jobs:
         run: 'echo "DOCKERTAG=latest" >> $GITHUB_ENV'
       - uses: actions/checkout@v2
       - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
+        uses: elgohr/Publish-Docker-Github-Action@v5
         with:
-          name: twaketech/tdrive-nginx
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          name: tdrive/tdrive-frontend
+          registry: docker-registry.linagora.com
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
           workdir: twake
-          buildoptions: "-t twaketech/tdrive-nginx -f docker/twake-nginx/Dockerfile"
+          buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-frontend -f docker/twake-nginx/Dockerfile"
           tags: "${{ env.DOCKERTAG }},${{ env.DOCKERTAGVERSION }}"

@@ -41,5 +41,5 @@ jobs:
           registry: docker-registry.linagora.com
           context: .
           target: production
-          buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-node -f docker/twake-node/Dockerfile"
+          buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-node -f docker/tdrive-node/Dockerfile"
           tags: "${{ env.DOCKERTAG }},${{ env.DOCKERTAGVERSION }}"

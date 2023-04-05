@@ -12,10 +12,10 @@ services:
       - 5672:5672
       - 15672:15672
   node:
-    image: twaketech/twake-node:test
+    image: tdrive/tdrive-node:test
     build:
       context: .
-      dockerfile: ./docker/twake-node/Dockerfile
+      dockerfile: docker/tdrive-node/Dockerfile
       target: test
     environment:
       - NODE_ENV=test

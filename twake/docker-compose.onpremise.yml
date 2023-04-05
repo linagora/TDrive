@@ -25,7 +25,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: docker/twake-node/Dockerfile
+      dockerfile: docker/tdrive-node/Dockerfile
     environment:
       - NODE_ENV=production
       - PUBSUB_URLS=amqp://guest:guest@rabbitmq:5672
@@ -38,29 +38,11 @@ services:
       rabbitmq:
         condition: service_healthy
 
-  php:
-    build:
-      context: .
-      dockerfile: docker/twake-php/Dockerfile
-    environment:
-      - DEV=production
-    volumes:
-      - ./default-configuration/backend/Parameters.php:/configuration/Parameters.php
-      - ./connectors/:/twake-core/src/BuiltInConnectors/Connectors
-      - ./docker-data/drive/:/twake-core/drive/
-      - ./docker-data/fpm/:/etc/docker-data/fpm/
-      - ./docker-data/drive-preview/:/twake-core/web/medias/
-      - ./docker-data/uploads/:/twake-core/web/upload/
-    depends_on:
-      scylladb:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
 
   nginx:
     build:
       context: .
-      dockerfile: docker/twake-nginx/Dockerfile
+      dockerfile: docker/tdrive-frontend/Dockerfile
     environment:
       - DEV=production
       - SSL_CERTS=selfsigned

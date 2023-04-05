@@ -9,10 +9,10 @@ services:
     ports:
       - 27017:27017
     networks:
-      - twake_network
+      - tdrive_network
 
   node:
-    image: twaketech/twake-node
+    image: tdrive/tdrive-node
     container_name: node
     ports:
       - 4000:3000
@@ -26,7 +26,7 @@ services:
       - STATIC_ROOT=/frontend
     build:
       context: .
-      dockerfile: ./docker/twake-node/Dockerfile
+      dockerfile: docker/tdrive-node/Dockerfile
       target: development
     volumes:
       - ./backend/node:/usr/src/app
@@ -37,9 +37,9 @@ services:
     links:
       - mongo
     networks:
-      - twake_network
+      - tdrive_network
 
 networks:
-  twake_network:
+  tdrive_network:
     driver: bridge
          

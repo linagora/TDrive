@@ -11,11 +11,11 @@ services:
     ports:
       - 27017:27017
   node:
-    image: twaketech/twake-node:test
+    image: tdrive/tdrive-node:test
     container_name: node-test
     build:
       context: .
-      dockerfile: ./docker/twake-node/Dockerfile
+      dockerfile: docker/tdrive-node/Dockerfile
       target: test
     environment:
       - NODE_ENV=test

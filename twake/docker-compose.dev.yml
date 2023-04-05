@@ -12,7 +12,7 @@ services:
     image: rabbitmq:3
 
   node:
-    image: twaketech/twake-node
+    image: tdrive/tdrive-node
     ports:
       - 9229:9229
     environment:
@@ -23,7 +23,7 @@ services:
       - PUBSUB_URLS=amqp://guest:guest@rabbitmq:5672
     build:
       context: .
-      dockerfile: ./docker/twake-node/Dockerfile
+      dockerfile: docker/tdrive-node/Dockerfile
       target: development
     volumes:
       - ./backend/node:/usr/src/app
@@ -36,25 +36,7 @@ services:
       - scylladb
     extra_hosts:
       - "host.docker.internal:host-gateway"
-  php:
-    image: twaketech/twake-php
-    environment:
-      - DEV=dev
-    build:
-      context: .
-      dockerfile: docker/twake-php/Dockerfile
-    volumes:
-      - ./backend/core/:/twake-core:cached
-      - ./docker-data/drive/:/twake-core/drive/
-      - ./docker-data/fpm/:/etc/docker-data/fpm/
-      - ./docker-data/drive-preview/:/twake-core/web/medias/
-      - ./docker-data/uploads/:/twake-core/web/upload/
-    depends_on:
-      - scylladb
-      - rabbitmq
-      - elasticsearch
-    links:
-      - scylladb
+
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
     environment:
@@ -70,12 +52,12 @@ services:
       - ./docker-data/es:/usr/share/elasticsearch/data
 
   nginx:
-    image: twaketech/twake-nginx
+    image: tdrive/tdrive-frontend
     environment:
       - DEV=dev
     build:
       context: .
-      dockerfile: docker/twake-nginx/Dockerfile
+      dockerfile: docker/tdrive-frontend/Dockerfile
     ports:
       - 8000:80
     depends_on:

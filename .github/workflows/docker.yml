@@ -7,11 +7,11 @@ on:
       - "twake/docker/**"
 
 jobs:
-  build-nginx:
+  build-frontend:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: cd twake && docker build -t twaketech/tdrive-nginx -f docker/twake-nginx/Dockerfile .
+      - run: cd twake && docker build -t tdrive/tdrive-frontend -f docker/tdrive-frontend/Dockerfile .
 
   build-node:
     runs-on: ubuntu-20.04

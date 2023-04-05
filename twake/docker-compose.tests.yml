@@ -25,10 +25,10 @@ services:
     environment:
       - REDIS_REPLICATION_MODE=master
   node:
-    image: twaketech/twake-node:test
+    image: tdrive/tdrive-node:test
     build:
       context: .
-      dockerfile: ./docker/twake-node/Dockerfile
+      dockerfile: docker/tdrive-node/Dockerfile
       target: test
     volumes:
        - ./coverage/:/usr/src/app/coverage/
@@ -63,7 +63,7 @@ services:
       - 9200:9200
 
   nginx:
-    image: twaketech/twake-nginx
+    image: tdrive/tdrive-frontend
     ports:
       - 8000:80
     links:

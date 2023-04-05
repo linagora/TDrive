@@ -70,5 +70,5 @@ jobs:
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
           workdir: twake
-          buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-frontend -f docker/twake-nginx/Dockerfile"
+          buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-frontend -f docker/tdrive-frontend/Dockerfile"
           tags: "${{ env.DOCKERTAG }},${{ env.DOCKERTAGVERSION }}"

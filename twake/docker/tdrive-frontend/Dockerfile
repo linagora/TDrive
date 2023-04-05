@@ -16,11 +16,11 @@ RUN cp /twake-react/src/app/environment/environment.ts.dist /twake-react/src/app
 
 # Second stage: configuring nginx and copying build artifacts
 FROM nginx:latest
-COPY docker/twake-nginx/nginx.conf /etc/nginx/nginx.conf
-COPY docker/twake-nginx/site.conf /etc/nginx/sites-available/site.template
-COPY docker/twake-nginx/redirect.conf /etc/nginx/sites-available/redirect
-COPY docker/twake-nginx/entrypoint.sh /
-COPY docker/twake-nginx/self-signed.sh /usr/local/bin/
+COPY docker/tdrive-frontend/nginx.conf /etc/nginx/nginx.conf
+COPY docker/tdrive-frontend/site.conf /etc/nginx/sites-available/site.template
+COPY docker/tdrive-frontend/redirect.conf /etc/nginx/sites-available/redirect
+COPY docker/tdrive-frontend/entrypoint.sh /
+COPY docker/tdrive-frontend/self-signed.sh /usr/local/bin/
 COPY --from=build /twake-react /twake-react
 
 RUN chmod +x /entrypoint.sh && rm /etc/nginx/conf.d/default.conf

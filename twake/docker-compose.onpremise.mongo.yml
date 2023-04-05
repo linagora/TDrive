@@ -8,7 +8,7 @@ services:
       - ./docker-data/mongo:/data/db
 
   node:
-    image: twaketech/twake-node:latest
+    image: tdrive/tdrive-node:latest
     ports:
       - 3000:3000
       - 8000:3000

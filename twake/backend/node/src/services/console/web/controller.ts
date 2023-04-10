@@ -238,7 +238,7 @@ export class ConsoleController {
 
   private async userUpdated(code: string) {
     //Not implemented yet
-    throw CrudException.notImplemented("Unimplemented");
+    throw CrudException.notImplemented(`Method not implemented, ${code}.`);
   }
 
   private async companyRemoved(content: ConsoleHookCompanyDeletedContent) {

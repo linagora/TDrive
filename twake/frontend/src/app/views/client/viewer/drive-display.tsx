@@ -9,6 +9,7 @@ import PdfDisplay from './pdf/display';
 import CodeDisplay from './code/display';
 import ArchiveDisplay from './archive/display';
 import OtherDisplay from './other/display';
+import LinkDisplay from './link/display';
 
 export default (): React.ReactElement => {
   const { download, type, name, id } = useDrivePreviewDisplayData();
@@ -39,6 +40,8 @@ export default (): React.ReactElement => {
       return <ArchiveDisplay download={download} name={name} />;
     case 'pdf':
       return <PdfDisplay download={download} name={name} />;
+    case 'link':
+      return <LinkDisplay download={download} name={name} />;
     default:
       return <OtherDisplay download={download} name={name} id={id} />;
   }

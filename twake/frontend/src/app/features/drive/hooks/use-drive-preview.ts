@@ -79,5 +79,5 @@ export const useDrivePreviewDisplayData = () => {
     fileId: status.details?.item.last_version_cache.file_metadata.external_id || '',
   });
 
-  return { download, id, name, type, extension };
+  return { download, id, name, type, extension, size: status.details?.item.size };
 };

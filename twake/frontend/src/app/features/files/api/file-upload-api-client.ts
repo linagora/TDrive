@@ -105,7 +105,8 @@ class FileUploadAPIClient {
   }
 
   public mimeToType(mime: string, extension?: string): FileTypes {
-    const { archives, images, pdf, slides, audio, spreadsheets, videos, documents } = fileTypeMimes;
+    const { archives, images, pdf, slides, audio, spreadsheets, videos, documents, links } =
+      fileTypeMimes;
 
     if (images.includes(mime)) return 'image';
     if (videos.includes(mime)) return 'video';
@@ -115,6 +116,7 @@ class FileUploadAPIClient {
     if (archives.includes(mime)) return 'archive';
     if (spreadsheets.includes(mime)) return 'spreadsheet';
     if (documents.includes(mime)) return 'document';
+    if (links.includes(mime)) return 'link';
 
     if (extension && AceModeList.getMode(extension) !== 'text') {
       return 'code';

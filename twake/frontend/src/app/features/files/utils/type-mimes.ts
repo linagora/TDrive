@@ -151,6 +151,7 @@ export const fileTypeMimes: FileTypeMimes = {
     'text/csv',
     'application/vnd.ms-excel.sheet.macroEnabled.12',
   ],
+  links: ['text/uri-list'],
 };
 
 export type FileTypeMimes = {
@@ -162,4 +163,5 @@ export type FileTypeMimes = {
   archives: string[];
   pdf: string[];
   documents: string[];
+  links: string[];
 };

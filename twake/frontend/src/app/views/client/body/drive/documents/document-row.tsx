@@ -3,6 +3,7 @@ import { Button } from 'app/atoms/button/button';
 import {
   FileTypeArchiveIcon,
   FileTypeDocumentIcon,
+  FileTypeLinkIcon,
   FileTypeMediaIcon,
   FileTypePdfIcon,
   FileTypeSlidesIcon,
@@ -89,6 +90,8 @@ export const DocumentRow = ({
                 <FileTypeSpreadsheetIcon className={'h-5 w-5 shrink-0 text-gray-400'} />
               ) : fileType === 'slides' ? (
                 <FileTypeSlidesIcon className={'h-5 w-5 shrink-0 text-gray-400'} />
+              ) : fileType === 'link' ? (
+                <FileTypeLinkIcon className={'h-5 w-5 shrink-0 text-gray-400'} />
               ) : (
                 <FileTypeUnknownIcon className={'h-5 w-5 shrink-0 text-gray-400'} />
               )}

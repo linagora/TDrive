@@ -12,7 +12,7 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, options, next) 
   const accessControl = async (
     request: FastifyRequest<{ Body: ConsoleHookBody; Querystring: ConsoleHookQueryString }>,
   ) => {
-    throw fastify.httpErrors.notImplemented("Hook service doesn't exist anymore");
+    throw fastify.httpErrors.notImplemented(`Hook service doesn't exist anymore, ${request}.`);
   };
 
   fastify.route({

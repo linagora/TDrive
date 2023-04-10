@@ -9,6 +9,7 @@ import { ReactComponent as FileTypeSpreadsheetSvg } from './assets/file-type-spr
 import { ReactComponent as FileTypeUnknownSvg } from './assets/file-type-unknown.svg';
 import { ReactComponent as FileTypeMediaSvg } from './assets/file-type-media.svg';
 import { ReactComponent as FileTypeSlidesSvg } from './assets/file-type-slides.svg';
+import { ReactComponent as FileTypeLinkSvg } from './assets/file-type-link.svg';
 import { ReactComponent as RemoveSvg } from './assets/remove.svg';
 import { ReactComponent as SentSvg } from './assets/sent.svg';
 
@@ -33,6 +34,8 @@ export const FileTypeMediaIcon = (props: ComponentProps<'svg'>) => <FileTypeMedi
 export const FileTypeSlidesIcon = (props: ComponentProps<'svg'>) => (
   <FileTypeSlidesSvg {...props} />
 );
+
+export const FileTypeLinkIcon = (props: ComponentProps<'svg'>) => <FileTypeLinkSvg {...props} />;
 
 export const RemoveIcon = (props: ComponentProps<'svg'>) => <RemoveSvg {...props} />;
 

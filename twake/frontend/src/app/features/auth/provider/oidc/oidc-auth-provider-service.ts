@@ -14,6 +14,7 @@ import LocalStorage from 'app/features/global/framework/local-storage-service';
 
 const OIDC_CALLBACK_URL = '/oidccallback';
 const OIDC_SIGNOUT_URL = '/signout';
+const OIDC_SILENT_URL = '/oidcsilent';
 
 @TdriveService('OIDCAuthProvider')
 export default class OIDCAuthProviderService
@@ -50,13 +51,15 @@ export default class OIDCAuthProviderService
         client_id: this.configuration?.client_id,
         redirect_uri: getAsFrontUrl(OIDC_CALLBACK_URL),
         response_type: 'code',
+        response_mode: 'query',
         scope: 'openid profile email address phone offline_access',
         post_logout_redirect_uri: getAsFrontUrl(OIDC_SIGNOUT_URL),
-        //silent_redirect_uri: getAsFrontUrl(OIDC_SILENT_URL),
+        silent_redirect_uri: getAsFrontUrl(OIDC_SILENT_URL),
         automaticSilentRenew: true,
         loadUserInfo: true,
-        accessTokenExpiringNotificationTime: 60,
+        accessTokenExpiringNotificationTime: 10,
         filterProtocolClaims: true,
+        monitorSession: false,
       });
 
       // For logout if signout or logout endpoint called
@@ -66,129 +69,58 @@ export default class OIDCAuthProviderService
         this.signOut();
       }
 
-      this.userManager.events.addUserLoaded(user => {
-        // fires each time the user is loaded or updated
-        this.logger.debug('OIDC user loaded listener', user);
-        this.user = user;
-
-        this.getJWTFromOidcToken(user, (err, jwt) => {
-          if (err) {
-            this.logger.error(
-              'OIDC user loaded listener, error while getting the JWT from OIDC token',
-              err,
-            );
-            this.signinRedirect();
-            // FIXME: Should we return?
-            //return;
-          }
-
-          if (!this.initialized) {
-            // FIXME: Do we need to send back the user?
-            this.onInitialized();
-            this.initialized = true;
-          } else {
-            jwt && params.onNewToken(jwt);
-          }
-        });
+      this.userManager.events.addUserLoaded((user: any, ...args) => {
+        this.logger.debug('New User Loaded：', user, args);
+        this.logger.debug('Acess_token: ', user.access_token);
       });
 
-      this.userManager.events.addAccessTokenExpired(() => {
-        this.logger.debug('OIDC access token expired listener');
-        this.silentLogin();
-        // FIXME: use params.onSessionExpired() if we can not renew
+      this.userManager.events.addAccessTokenExpiring((...args) => {
+        this.logger.debug('AccessToken Expiring：', args);
       });
 
-      this.userManager.events.addAccessTokenExpiring(() => {
-        this.logger.debug('OIDC access token is expiring');
-        this.silentLogin();
+      this.userManager.events.addAccessTokenExpired((...args) => {
+        this.logger.debug('AccessToken Expired：', args);
       });
 
-      this.userManager.events.addSilentRenewError(error => {
-        // in case the renew failed, ask for login
-        // since we have set automaticSilentRenew to true, this will be called when silentSignin raise error when token is expiring
-        this.logger.error('OIDC silent renew error', error);
-        this.signOut();
+      this.userManager.events.addSilentRenewError((...args) => {
+        console.error('Silent Renew Error：', args);
       });
-
-      //This even listener is temporary disabled because of this issue: https://gitlab.ow2.org/lemonldap-ng/lemonldap-ng/-/issues/2358
-      this.userManager.events.addUserSignedOut(() => {
-        this.logger.info('OIDC Signed out listener');
-        //this.signOut();
-      });
-
-      //This manage the initial sign-in when loading the app
-      if (this.enforceFrontendUrl()) {
-        this.silentLogin();
-      }
     }
 
     return this;
   }
 
-  //Redirect to valid frontend url to make sure oidc will work as expected
-  private enforceFrontendUrl() {
-    const frontUrl = (getDomain(environment.front_root_url || '') || '').toLocaleLowerCase();
-
-    if (frontUrl && document.location.host.toLocaleLowerCase() !== frontUrl) {
-      document.location.replace(
-        document.location.protocol +
-          '//' +
-          getDomain(environment.front_root_url) +
-          '/' +
-          document.location.pathname +
-          document.location.search +
-          document.location.hash,
-      );
-      return false;
-    }
-    return true;
-  }
-
-  private async silentLogin(): Promise<void> {
-    if (!this.userManager) {
-      this.logger.debug('silentLogin, no auth provider');
-      return;
-    }
-
-    //Try to use the in-url sign-in response from oidc if exists
-    try {
-      this.logger.debug('silentLogin, trying to get user from redirect callback');
-      // This has to be called when we are in a redirect callback, not on other URLs
-      // if so, we catch the error which will be 'No state in response' and we try to silently signin
-      await this.userManager.signinRedirectCallback();
-      // calling this will fire the userloaded event listener above
-      await this.userManager.getUser();
-    } catch (e) {
-      this.logger.debug('silentLogin, not a signin response, trying to signin now', e);
-      //There is no sign-in response, so we can try to silent login and use refresh token
-      try {
-        //First we try to see if we know this user
-        let user = await this.userManager.getUser();
-        if (user) {
-          this.logger.debug('silentLogin, user is already defined, launching silent signin', user);
-          // If user is defined, we try a silent signin
-          // This will raise a userLoaded event, and so call some code in the listener above...
-          user = await this.userManager.signinSilent();
-          this.logger.debug('silentLogin, user from silent signin', user);
-          // Note: the userloaded listener above should be called from the signinSilent call
-          // if not get the JWT from the user and store the result in the JWT service with the help of callbacks
-        } else {
-          //If no user defined,  we try a redirect signin
-          this.logger.debug('silentLogin, user not defined, launching a signin redirect');
-          this.signinRedirect();
-        }
-      } catch (e) {
-        this.logger.debug('silentLogin error, launching a signin redirect', e);
-        // FIXME: We should also be able to show a message to the user with the onSessionExpired listener
-        // In any case if it doesn't work we do a redirect signin
-        this.signinRedirect();
-      }
-    }
-  }
-
   async signIn(): Promise<void> {
     this.logger.info('Signin');
-    await this.silentLogin();
+
+    try {
+      await this.userManager!.signinRedirectCallback();
+    } catch (e) {
+      console.log("Not connected, connect through SSO");
+    }
+
+    const user = await this.userManager?.getUser();
+
+    if (user) {
+      this.getJWTFromOidcToken(user, (err, jwt) => {
+        if (err) {
+          this.logger.error(
+            'OIDC user loaded listener, error while getting the JWT from OIDC token',
+            err,
+          );
+          this.signinRedirect();
+        }
+
+        if (!this.initialized) {
+          this.onInitialized();
+          this.initialized = true;
+        } else {
+          jwt && this.params!.onNewToken(jwt);
+        }
+      });
+    } else {
+      this.userManager?.signinRedirect();
+    }
   }
 
   async signUp(): Promise<void> {
@@ -266,8 +198,4 @@ export default class OIDCAuthProviderService
 
     this.params?.onInitialized();
   }
-}
-
-function getDomain(str: string): string {
-  return ((str || '').split('//').pop() || '').split('/').shift() || '';
 }

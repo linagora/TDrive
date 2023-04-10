@@ -25,6 +25,8 @@ import { UserExternalLinksServiceImpl } from "./user/services/external_links";
 import { UserNotificationBadgeService } from "./notifications/services/bages";
 import { NotificationPreferencesService } from "./notifications/services/preferences";
 import { UserServiceImpl } from "./user/services/users/service";
+import { CompanyApplicationServiceImpl } from "./applications/services/company-applications";
+import { ApplicationServiceImpl } from "./applications/services/applications";
 import { FileServiceImpl } from "./files/services";
 import { ChannelServiceImpl } from "./channels/services/channel/service";
 import { MemberServiceImpl } from "./channels/services/member/service";
@@ -36,6 +38,7 @@ import { NotificationEngine } from "./notifications/services/engine";
 import { MobilePushService } from "./notifications/services/mobile-push";
 import { ChannelMemberPreferencesServiceImpl } from "./notifications/services/channel-preferences";
 import { ChannelThreadUsersServiceImpl } from "./notifications/services/channel-thread-users";
+import { ApplicationHooksService } from "./applications/services/hooks";
 import OnlineServiceImpl from "./online/service";
 import { ChannelsMessageQueueListener } from "./channels/services/pubsub";
 import { UserNotificationDigestService } from "./notifications/services/digest";
@@ -74,6 +77,11 @@ type TwakeServices = {
     preferences: NotificationPreferencesService;
     mobilePush: MobilePushService;
     digest: UserNotificationDigestService;
+  };
+  applications: {
+    marketplaceApps: ApplicationServiceImpl;
+    companyApps: CompanyApplicationServiceImpl;
+    hooks: ApplicationHooksService;
   };
   files: FileServiceImpl;
   channels: {
@@ -144,6 +152,11 @@ class GlobalResolver {
         preferences: await new NotificationPreferencesService().init(),
         mobilePush: await new MobilePushService().init(),
         digest: await new UserNotificationDigestService().init(),
+      },
+      applications: {
+        marketplaceApps: await new ApplicationServiceImpl().init(),
+        companyApps: await new CompanyApplicationServiceImpl().init(),
+        hooks: await new ApplicationHooksService().init(),
       },
       files: await new FileServiceImpl().init(),
       channels: {

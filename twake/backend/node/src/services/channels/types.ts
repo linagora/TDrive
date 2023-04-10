@@ -52,7 +52,3 @@ export type ChannelActivityNotification = {
   sender_name: string;
   body: string;
 };
-
-export interface CompanyExecutionContext extends ExecutionContext {
-  company: { id: string };
-}

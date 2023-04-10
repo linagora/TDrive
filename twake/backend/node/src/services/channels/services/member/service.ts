@@ -26,7 +26,6 @@ import {
   ChannelMemberType,
   ChannelVisibility,
   WorkspaceExecutionContext,
-  CompanyExecutionContext,
 } from "../../types";
 import { Channel, ResourceEventsPayload, User } from "../../../../utils/types";
 import { cloneDeep, isNil, omitBy } from "lodash";
@@ -53,7 +52,7 @@ import { WorkspacePrimaryKey } from "../../../workspaces/entities/workspace";
 import gr from "../../../global-resolver";
 import uuidTime from "uuid-time";
 import { ChannelObject } from "../channel/types";
-
+import { CompanyExecutionContext } from "../../../applications/web/types";
 const USER_CHANNEL_KEYS = [
   "id",
   "company_id",

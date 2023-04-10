@@ -26,7 +26,7 @@ export default class CompanyApplication {
 
   @Type(() => String)
   @Column("created_by", "string")
-  created_by: string; //Will be the default delegated user when doing actions on Twake
+  created_by: string; //Will be the default delegated user when doing actions on Tdrive
 }
 
 export type CompanyApplicationPrimaryKey = Pick<

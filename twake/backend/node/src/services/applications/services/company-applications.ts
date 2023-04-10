@@ -9,7 +9,7 @@ import {
   logger,
   RealtimeDeleted,
   RealtimeSaved,
-  TwakeServiceProvider,
+  TdriveServiceProvider,
 } from "../../../core/platform/framework";
 import {
   DeleteResult,
@@ -23,7 +23,7 @@ import { CompanyExecutionContext } from "../web/types";
 import { getCompanyApplicationRoom } from "../realtime";
 import gr from "../../global-resolver";
 
-export class CompanyApplicationServiceImpl implements TwakeServiceProvider, Initializable {
+export class CompanyApplicationServiceImpl implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<CompanyApplication>;
 

@@ -5,7 +5,7 @@ import Application, {
   TYPE,
 } from "../entities/application";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
-import { Initializable, logger, TwakeServiceProvider } from "../../../core/platform/framework";
+import { Initializable, logger, TdriveServiceProvider } from "../../../core/platform/framework";
 import {
   DeleteResult,
   ExecutionContext,
@@ -19,7 +19,7 @@ import assert from "assert";
 
 import gr from "../../global-resolver";
 
-export class ApplicationServiceImpl implements TwakeServiceProvider, Initializable {
+export class ApplicationServiceImpl implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<Application>;
   searchRepository: SearchRepository<Application>;

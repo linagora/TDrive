@@ -3,7 +3,7 @@ import Repository from "../../../core/platform/services/database/services/orm/re
 import {
   Initializable,
   logger as log,
-  TwakeServiceProvider,
+  TdriveServiceProvider,
 } from "../../../core/platform/framework";
 import { CrudException, ExecutionContext } from "../../../core/platform/framework/api/crud-service";
 import SearchRepository from "../../../core/platform/services/search/repository";
@@ -12,7 +12,7 @@ import * as crypto from "crypto";
 import { isObject } from "lodash";
 import gr from "../../global-resolver";
 
-export class ApplicationHooksService implements TwakeServiceProvider, Initializable {
+export class ApplicationHooksService implements TdriveServiceProvider, Initializable {
   version: "1";
   repository: Repository<Application>;
   searchRepository: SearchRepository<Application>;
@@ -60,7 +60,7 @@ export class ApplicationHooksService implements TwakeServiceProvider, Initializa
       .post(app.api.hooks_url, payload, {
         headers: {
           "Content-Type": "application/json",
-          "X-Twake-Signature": signature,
+          "X-Tdrive-Signature": signature,
         },
       })
 

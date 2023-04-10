@@ -108,7 +108,7 @@ export type ApplicationIdentity = {
   description: string;
   website: string;
   categories: string[];
-  compatibility: "twake"[];
+  compatibility: "tdrive"[];
   repository?: string;
 };
 
@@ -145,7 +145,7 @@ export type ApplicationAccess = {
 };
 
 export type ApplicationDisplay = {
-  twake: {
+  tdrive: {
     files?: {
       editor?: {
         preview_url: string; //Open a preview inline (iframe)

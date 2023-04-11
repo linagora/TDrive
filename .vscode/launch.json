@@ -7,7 +7,7 @@
       "request": "launch",
       "type": "chrome",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/twake/frontend/src"
+      "webRoot": "${workspaceFolder}/tdrive/frontend/src"
     },
     {
       "name": "Launch & Debug on Canay",
@@ -15,7 +15,7 @@
       "request": "launch",
       "type": "chrome",
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/twake/frontend/src",
+      "webRoot": "${workspaceFolder}/tdrive/frontend/src",
       "runtimeExecutable": "canary"
     },
     {
@@ -24,12 +24,12 @@
       "request": "launch",
       "reAttach": true,
       "url": "http://localhost:3000",
-      "webRoot": "${workspaceFolder}/twake/frontend/src",
+      "webRoot": "${workspaceFolder}/tdrive/frontend/src",
     },
     {
       "name": "Debug Node Backend",
       "request": "launch",
-      "cwd": "${workspaceFolder}/twake/backend/node/",
+      "cwd": "${workspaceFolder}/tdrive/backend/node/",
       "runtimeArgs": [
         "run",
         "dev:debug"
@@ -49,23 +49,23 @@
       "protocol": "inspector",
       "request": "attach",
       "type": "node",
-      "localRoot": "${workspaceFolder}/twake/backend/node/dist",
+      "localRoot": "${workspaceFolder}/tdrive/backend/node/dist",
       "remoteRoot": "/usr/src/app/dist",
       "outFiles": [
-        "${workspaceFolder}/twake/backend/node/dist/**/**.js"
+        "${workspaceFolder}/tdrive/backend/node/dist/**/**.js"
       ],
       "skipFiles": [
         "<node_internals>/**/*.js"
       ],
       "sourceMapPathOverrides": {
-        "file:///usr/src/app/node_modules/*": "${workspaceRoot}/twake/backend/node/node_modules/*",
-        "file:///usr/src/app/node_modules/": "${workspaceRoot}/twake/backend/node/node_modules/",
-        "file:///usr/src/app/*": "${workspaceRoot}/twake/backend/node/dist/*",
-        "file:///usr/src/app/": "${workspaceRoot}/twake/backend/node/dist/",
-        "/usr/src/app/node_modules/*": "${workspaceRoot}/twake/backend/node/node_modules/*",
-        "/usr/src/app/node_modules/": "${workspaceRoot}/twake/backend/node/node_modules/",
-        "/usr/src/app/*": "${workspaceRoot}/twake/backend/node/dist/*",
-        "/usr/src/app/": "${workspaceRoot}/twake/backend/node/dist/"
+        "file:///usr/src/app/node_modules/*": "${workspaceRoot}/tdrive/backend/node/node_modules/*",
+        "file:///usr/src/app/node_modules/": "${workspaceRoot}/tdrive/backend/node/node_modules/",
+        "file:///usr/src/app/*": "${workspaceRoot}/tdrive/backend/node/dist/*",
+        "file:///usr/src/app/": "${workspaceRoot}/tdrive/backend/node/dist/",
+        "/usr/src/app/node_modules/*": "${workspaceRoot}/tdrive/backend/node/node_modules/*",
+        "/usr/src/app/node_modules/": "${workspaceRoot}/tdrive/backend/node/node_modules/",
+        "/usr/src/app/*": "${workspaceRoot}/tdrive/backend/node/dist/*",
+        "/usr/src/app/": "${workspaceRoot}/tdrive/backend/node/dist/"
       },
       "sourceMaps": true
     }

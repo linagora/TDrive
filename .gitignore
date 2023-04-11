@@ -121,11 +121,11 @@ docker-compose.yml
 ### Dev ###
 /docker-data/*
 /docker/data/*
-/twake/docker-data/*
-/twake/docker-data
-/twake/backend/websockets_server/false
+/tdrive/docker-data/*
+/tdrive/docker-data
+/tdrive/backend/websockets_server/false
 
-### Twake specific ###
+### Tdrive specific ###
 /build/
 /vendor/
 /app/Ressources/DatabaseEncryption/.HaliteEncryptor.key

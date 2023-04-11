@@ -5,8 +5,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "twake/docker/**"
-      - "twake/backend/**"
+      - "tdrive/docker/**"
+      - "tdrive/backend/**"
       - ".github/workflows/**"
 
 jobs:
@@ -37,7 +37,7 @@ jobs:
           name: tdrive/tdrive-node
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          workdir: twake
+          workdir: tdrive
           registry: docker-registry.linagora.com
           context: .
           target: production

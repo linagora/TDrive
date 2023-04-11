@@ -4,7 +4,7 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "twake/backend/node/**"
+      - "tdrive/backend/node/**"
 
 jobs:
   lint:
@@ -12,19 +12,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prettier code style check
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run lint:prettier
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run lint:prettier
       - name: Lint
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run lint
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run lint
   test:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
       - name: build-test
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run build
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run build
       - name: unit-test
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:unit
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:unit
       - name: e2e-mongo-test
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
       - name: e2e-cassandra-test
-        run: cd twake && docker-compose -f docker-compose.tests.yml up -d scylladb elasticsearch rabbitmq && sleep 60 && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=elasticsearch -e DB_DRIVER=cassandra node npm run test:e2e
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml up -d scylladb elasticsearch rabbitmq && sleep 60 && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=elasticsearch -e DB_DRIVER=cassandra node npm run test:e2e
 

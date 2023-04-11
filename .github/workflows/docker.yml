@@ -4,17 +4,17 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "twake/docker/**"
+      - "tdrive/docker/**"
 
 jobs:
   build-frontend:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: cd twake && docker build -t tdrive/tdrive-frontend -f docker/tdrive-frontend/Dockerfile .
+      - run: cd tdrive && docker build -t tdrive/tdrive-frontend -f docker/tdrive-frontend/Dockerfile .
 
   build-node:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: cd twake && docker build --target production -t docker-registry.linagora.com/tdrive/tdrive-node -f docker/tdrive-node/Dockerfile .
+      - run: cd tdrive && docker build --target production -t docker-registry.linagora.com/tdrive/tdrive-node -f docker/tdrive-node/Dockerfile .

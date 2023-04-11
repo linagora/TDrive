@@ -6,13 +6,13 @@ on:
   push:
     branches: [main]
     paths:
-      - "twake/frontend/**"
-      - "twake/docker/**"
+      - "tdrive/frontend/**"
+      - "tdrive/docker/**"
       - ".github/workflows/**"
   pull_request:
     branches: [main]
     paths:
-      - "twake/frontend/**"
+      - "tdrive/frontend/**"
 
 jobs:
   build-frontend:
@@ -31,17 +31,17 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install -g yarn
-      - run: cd twake/frontend/ && yarn install
-      - run: cp twake/frontend/src/app/environment/environment.ts.dist twake/frontend/src/app/environment/environment.ts
+      - run: cd tdrive/frontend/ && yarn install
+      - run: cp tdrive/frontend/src/app/environment/environment.ts.dist tdrive/frontend/src/app/environment/environment.ts
       - if: ${{env.FRONTEND_ENV}}
-        run: echo ${{ secrets.FRONTEND_ENV }} > twake/frontend/src/app/environment/environment.ts
-      - run: cd twake/frontend/ && yarn test
-      - run: cd twake/frontend/ && yarn build
+        run: echo ${{ secrets.FRONTEND_ENV }} > tdrive/frontend/src/app/environment/environment.ts
+      - run: cd tdrive/frontend/ && yarn test
+      - run: cd tdrive/frontend/ && yarn build
       - name: Upload frontend build artifact
         uses: actions/upload-artifact@v1
         with:
           name: frontend-build
-          path: twake/frontend/build/
+          path: tdrive/frontend/build/
 
   publish-frontend:
 #    needs: build-frontend
@@ -69,6 +69,6 @@ jobs:
           registry: docker-registry.linagora.com
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-          workdir: twake
+          workdir: tdrive
           buildoptions: "-t docker-registry.linagora.com/tdrive/tdrive-frontend -f docker/tdrive-frontend/Dockerfile"
           tags: "${{ env.DOCKERTAG }},${{ env.DOCKERTAGVERSION }}"

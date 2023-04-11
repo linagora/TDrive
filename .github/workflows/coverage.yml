@@ -5,7 +5,7 @@ on:
     types: [assigned, opened, synchronize, reopened]
     branches: [main]
     paths:
-      - "twake/backend/node/**"
+      - "tdrive/backend/node/**"
 
 jobs:
   test:
@@ -15,15 +15,15 @@ jobs:
         with:
           ref: "refs/pull/${{ github.event.number }}/merge"
       - name: unit-test
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:unit
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:unit
       - name: e2e-mongo-test
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
       - name: generate coverage summary json
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:json
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:json
       - name: generate coverage summary text
-        run: cd twake && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:text
+        run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:text
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:
-          coverage-summary-path: twake/coverage/merged/coverage-summary.json
-          coverage-path: twake/coverage/coverage-report.txt
+          coverage-summary-path: tdrive/coverage/merged/coverage-summary.json
+          coverage-path: tdrive/coverage/coverage-report.txt

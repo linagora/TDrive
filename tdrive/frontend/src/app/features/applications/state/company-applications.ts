@@ -1,12 +1,8 @@
 import { atomFamily, selectorFamily } from 'recoil';
 
 import { Application } from 'app/features/applications/types/application';
-import Logger from 'app/features/global/framework/logger-service';
-import CompanyApplicationsAPIClient from 'app/features/applications/api/company-applications-api-client';
 import Collections from 'app/deprecated/CollectionsV1/Collections/Collections';
 import _ from 'lodash';
-
-const logger = Logger.getLogger('CurrentCompanyApplicationsState');
 
 //Retro compatibility
 const companyApplicationMap: Map<string, Application> = new Map();
@@ -36,5 +32,5 @@ export const CompanyApplicationsStateFamily = atomFamily<Application[], string>(
 
 export const fetchCompanyApplications = selectorFamily<Application[], string>({
   key: 'fetchCompanyApplications',
-  get: companyId => () => [],
+  get: () => () => [],
 });

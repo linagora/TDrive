@@ -6,7 +6,7 @@ import { useDriveItem } from 'app/features/drive/hooks/use-drive-item';
 import { DriveItemSelectedList } from 'app/features/drive/state/store';
 import { DriveItem } from 'app/features/drive/types';
 import { useEffect, useState } from 'react';
-import { atom, useRecoilState, useSetRecoilState } from 'recoil';
+import { atom, useRecoilState } from 'recoil';
 
 export type ConfirmDeleteModalType = {
   open: boolean;

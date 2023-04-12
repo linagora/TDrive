@@ -8,7 +8,7 @@ import { CreateModalAtom } from '.';
 
 export const CreateFolder = () => {
   const [name, setName] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, _] = useState<boolean>(false);
   const [state, setState] = useRecoilState(CreateModalAtom);
   const { create } = useDriveActions();
 
@@ -20,7 +20,7 @@ export const CreateFolder = () => {
         disabled={loading}
         placeholder="Folder name"
         className="w-full mt-4"
-        onChange={e => setName(e.target.value)}
+        onChange={(e:any) => setName(e.target.value)}
       />
 
       <Button

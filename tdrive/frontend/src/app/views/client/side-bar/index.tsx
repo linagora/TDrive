@@ -4,10 +4,8 @@ import {
   CloudIcon,
   ExternalLinkIcon,
   HeartIcon,
-  PlusIcon,
   ShareIcon,
   TrashIcon,
-  UploadIcon,
 } from '@heroicons/react/outline';
 import { useRecoilState } from 'recoil';
 import { Title } from '../../../atoms/text';

@@ -1,5 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-use-before-define
-import { Layout } from 'antd';
 import { FC, useEffect, useState } from 'react';
 
 import AccountStatusComponent from 'app/components/on-boarding/account-status-component';

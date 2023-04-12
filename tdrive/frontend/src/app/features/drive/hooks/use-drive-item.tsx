@@ -1,7 +1,7 @@
 import { ToasterService } from 'app/features/global/services/toaster-service';
 import { LoadingStateInitTrue } from 'app/features/global/state/atoms/Loading';
 import useRouterCompany from 'app/features/router/hooks/use-router-company';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { DriveItemAtom, DriveItemChildrenAtom } from '../state/store';
 import { DriveItem } from '../types';

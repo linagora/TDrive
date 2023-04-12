@@ -1,4 +1,4 @@
-import { ChevronDownIcon, PlusIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon } from '@heroicons/react/outline';
 import { Button } from 'app/atoms/button/button';
 import { Base, BaseSmall, Subtitle, Title } from 'app/atoms/text';
 import Menu from 'app/components/menus/menu';

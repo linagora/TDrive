@@ -1,5 +1,5 @@
 import { Button } from '@atoms/button/button';
-import { PlusIcon, TruckIcon, UploadIcon, XIcon } from '@heroicons/react/outline';
+import { PlusIcon, TruckIcon, UploadIcon } from '@heroicons/react/outline';
 import { useCallback, useRef } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { AnimatedHeight } from '../../../atoms/animated-height';
@@ -14,7 +14,7 @@ import { CreateModal, CreateModalAtom } from '../body/drive/modals/create';
 
 export default () => {
   const companyId = useRouterCompany();
-  const [parentId, _setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
+  const [parentId, _] = useRecoilState(DriveCurrentFolderAtom('root'));
   const { access, item, inTrash } = useDriveItem(parentId);
   const { children: trashChildren } = useDriveItem('trash');
   const uploadZoneRef = useRef<UploadZone | null>(null);

@@ -1,10 +1,8 @@
 import { Button } from 'app/atoms/button/button';
 import React, { useState } from 'react';
 import { CopyIcon } from '@atoms/icons-agnostic';
-import { Base } from 'app/atoms/text';
 import { useInvitation } from 'app/features/invitation/hooks/use-invitation';
 import Languages from 'app/features/global/services/languages-service';
-import MagicLinks from 'app/views/client/popup/AddUser/MagicLinks';
 import { Input } from 'app/atoms/input/input-text';
 import { InputDecorationIcon } from 'app/atoms/input/input-decoration-icon';
 import { LinkIcon } from '@heroicons/react/outline';

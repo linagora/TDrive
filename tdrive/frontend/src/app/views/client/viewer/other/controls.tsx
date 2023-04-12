@@ -10,7 +10,7 @@ import Languages from 'app/features/global/services/languages-service';
 import MenuManager from 'components/menus/menus-manager';
 import { useEditors } from './editors-service';
 
-export default (props: {}) => {
+export default () => {
   const { status } = useDrivePreview();
   const extension = status?.item?.name?.split('.').pop();
   const { candidates, openFile } = useEditors(extension || '');

@@ -28,13 +28,14 @@ FROM node-base as installed-libs
 
 COPY backend/node/ .
 #Install dev dependancies for build
-RUN NODE_ENV=development npm install && \
-    #Build in production mode
-    export NODE_ENV=production && \
-    npm run build && \
-    rm -rf node_modules && \
-    #Install prod dependancies after build
-    npm install --legacy-peer-deps
+RUN export NODE_ENV=development
+RUN npm install
+#Build in production mode
+RUN export NODE_ENV=production
+RUN npm run build
+RUN rm -rf node_modules
+#Install prod dependancies after build
+RUN npm install --legacy-peer-deps
 
 # Development Stage
 FROM installed-libs as development

@@ -16,11 +16,10 @@ import FeatureTogglesService, {
 import { useCurrentCompany } from 'app/features/companies/hooks/use-companies';
 
 import './Pages.scss';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import { invitationState } from 'app/features/invitation/state/invitation';
 import { useInvitationUsers } from 'app/features/invitation/hooks/use-invitation-users';
 import AccessRightsService from 'app/features/workspace-members/services/workspace-members-access-rights-service';
-import { useCurrentWorkspace } from 'app/features/workspaces/hooks/use-workspaces';
 import useRouterWorkspace from 'app/features/router/hooks/use-router-workspace';
 
 type PropsType = {

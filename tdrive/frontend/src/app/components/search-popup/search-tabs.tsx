@@ -1,7 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { SearchInputState } from 'app/features/search/state/search-input';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useRecoilValue } from 'recoil';
 import SearchResulsDriveItems from './tabs/drive';
 
 export const SearchResultsIndex = () => {
@@ -16,14 +14,5 @@ export const SearchResultsIndex = () => {
         <SearchResulsDriveItems />
       </PerfectScrollbar>
     </>
-  );
-};
-
-const SearchCounterBadge = (props: { count: number }) => {
-  const count = props.count < 100 ? props.count : '99+';
-  return (
-    <div className="bg-zinc-200 ml-2 px-1.5 text-sm rounded-full text-zinc-500 dark:bg-zing-800 dark:text-zinc-600">
-      {count}
-    </div>
   );
 };

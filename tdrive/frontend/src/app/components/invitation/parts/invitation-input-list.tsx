@@ -10,7 +10,6 @@ import {
 import React, { useState } from 'react';
 import { useRecoilState } from 'recoil';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
 import { useInvitationUsers } from 'app/features/invitation/hooks/use-invitation-users';
 import ReachedLimit from './reached-limit';
 import Languages from 'app/features/global/services/languages-service';
@@ -22,9 +21,7 @@ export default (): React.ReactElement => {
   const [currentInput, setCurrentInput] = useState<string>('');
   const [notValidEmail, setNotValidEmail] = useState<boolean>(false);
   const [invitationTargetType] = useRecoilState(invitationTypeState);
-  const { user } = useCurrentUser();
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-  const currentUserEmailDomain = user?.email.split('@').pop();
   const { can_add_invitations, members_limit_reached, allowed_members, allowed_guests } =
     useInvitationUsers();
 

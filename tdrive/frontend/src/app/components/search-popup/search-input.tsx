@@ -1,11 +1,8 @@
 import { InputDecorationIcon } from '@atoms/input/input-decoration-icon';
 import { SearchIcon } from '@heroicons/react/solid';
-import { Select } from 'app/atoms/input/input-select';
 import { Input } from 'app/atoms/input/input-text';
 import { Loader } from 'app/atoms/loader';
 import Languages from 'app/features/global/services/languages-service';
-import useRouterChannel from 'app/features/router/hooks/use-router-channel';
-import useRouterWorkspace from 'app/features/router/hooks/use-router-workspace';
 import { useSearchChannelsLoading } from 'app/features/search/hooks/use-search-channels';
 import {
   useSearchMessagesFilesLoading,
@@ -20,8 +17,6 @@ import { useRecoilState } from 'recoil';
 
 export const SearchInput = () => {
   const [input, setInput] = useRecoilState(SearchInputState);
-  const workspaceId = useRouterWorkspace();
-  const channelId = useRouterChannel();
 
   const inputElement = useRef<HTMLInputElement>(null);
   useEffect(() => {

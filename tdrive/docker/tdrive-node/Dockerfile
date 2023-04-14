@@ -49,5 +49,5 @@ CMD ["npm", "run", "dev:debug"]
 # Production Stage
 FROM installed-libs as production
 
-EXPOSE 3000
+EXPOSE 4000
 CMD ["npm", "run", "serve"]

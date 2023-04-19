@@ -22,6 +22,8 @@ jobs:
         run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:json
       - name: generate coverage summary text
         run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:text
+      - name: check generation
+        run: ls tdrive/backend/node/coverage/e2e;ls tdrive/backend/node/coverage/merged;cat tdrive/backend/node/coverage/merged/coverage-report.txt;
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:

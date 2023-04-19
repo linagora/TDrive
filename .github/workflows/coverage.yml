@@ -18,12 +18,14 @@ jobs:
         run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:unit
       - name: e2e-mongo-test
         run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn -e SEARCH_DRIVER=mongodb -e DB_DRIVER=mongodb -e PUBSUB_TYPE=local node npm run test:e2e
+      - name: check generation 1
+        run: ls tdrive/coverage/e2e;
       - name: generate coverage summary json
         run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:json
       - name: generate coverage summary text
         run: cd tdrive && docker-compose -f docker-compose.tests.yml run -e NODE_OPTIONS=--unhandled-rejections=warn node npm run test:merge:text
       - name: check generation
-        run: ls tdrive/backend/node/coverage/e2e;ls tdrive/backend/node/coverage/merged;cat tdrive/backend/node/coverage/merged/coverage-report.txt;
+        run: ls tdrive/coverage/e2e;ls tdrive/coverage/merged;cat tdrive/coverage/merged/coverage-report.txt;
       - name: Jest Coverage Comment
         uses: MishaKav/jest-coverage-comment@main
         with:

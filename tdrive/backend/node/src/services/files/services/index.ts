@@ -67,7 +67,7 @@ export class FileServiceImpl {
       entity.application_id = applicationId;
       entity.upload_data = null;
 
-      this.repository.save(entity, context);
+      await this.repository.save(entity, context);
     }
 
     if (file) {
@@ -89,7 +89,7 @@ export class FileServiceImpl {
             size: options.totalSize,
             chunks: options.totalChunks || 1,
           };
-          this.repository.save(entity, context);
+          await this.repository.save(entity, context);
         }
       }
 
@@ -109,7 +109,9 @@ export class FileServiceImpl {
       }
     }
 
-    return entity;
+    return await this.getFile(entity, context, {
+      waitForThumbnail: options.waitForThumbnail,
+    });
   }
 
   async exists(id: string, companyId: string, context?: CompanyExecutionContext): Promise<boolean> {

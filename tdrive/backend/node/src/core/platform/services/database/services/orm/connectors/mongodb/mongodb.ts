@@ -44,14 +44,13 @@ export class MongoConnector extends AbstractConnector<MongoConnectionOptions, mo
 
   async getDatabase(): Promise<mongo.Db> {
     await this.connect();
-
     return this.client.db(this.options.database);
   }
 
   async drop(): Promise<this> {
     const db = await this.getDatabase();
 
-    db.dropDatabase();
+    await db.dropDatabase();
 
     return this;
   }

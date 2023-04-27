@@ -264,7 +264,6 @@ describe("The /workspace users API", () => {
       const anotherUserId = testDbService.workspaces[0].users[0].id;
 
       let workspaceUsersCount = await testDbService.getWorkspaceUsersCountFromDb(workspaceId);
-      let companyUsersCount = await testDbService.getCompanyUsersCountFromDb(companyId);
 
       console.log(testDbService.workspaces[2].users);
       console.log(workspaceUsersCount);
@@ -290,10 +289,7 @@ describe("The /workspace users API", () => {
       checkUserObject(resource);
 
       workspaceUsersCount = await testDbService.getWorkspaceUsersCountFromDb(workspaceId);
-      companyUsersCount = await testDbService.getCompanyUsersCountFromDb(companyId);
       expect(workspaceUsersCount).toBe(5);
-      // expect(companyUsersCount).toBe(6);
-
       done();
     });
   });

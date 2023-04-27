@@ -50,6 +50,9 @@ export async function formatUser(
     const companies = await Promise.all(
       userCompanies.map(async uc => {
         const company = await gr.services.companies.getCompany({ id: uc.group_id });
+        if (!company) {
+          throw new Error(`Company with id ${uc.group_id} doesn't exists!`);
+        }
         return {
           role: uc.role as CompanyUserRole,
           status: "active" as CompanyUserStatus, // FIXME: with real status

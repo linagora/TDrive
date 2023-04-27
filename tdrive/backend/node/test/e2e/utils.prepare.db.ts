@@ -156,11 +156,13 @@ export class TestDbService {
     }
 
     this.users.push(createdUser);
-    await gr.services.companies.setUserRole(
-      this.company ? this.company.id : workspacesPk[0].company_id,
-      createdUser.id,
-      options.companyRole ? options.companyRole : "member",
-    );
+    if (workspacesPk && workspacesPk.length) {
+      await gr.services.companies.setUserRole(
+          this.company ? this.company.id : workspacesPk[0].company_id,
+          createdUser.id,
+          options.companyRole ? options.companyRole : "member",
+      );
+    }
 
     if (workspacesPk && workspacesPk.length) {
       for (const workspacePk of workspacesPk) {

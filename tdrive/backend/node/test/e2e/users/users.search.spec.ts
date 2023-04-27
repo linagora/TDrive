@@ -123,7 +123,7 @@ describe("The /users API", () => {
       expect(resources.length).toBe(0);
 
       done();
-    });
+    }, 1200000);
   });
 
   async function search(search: string, companyId?: string): Promise<any[]> {

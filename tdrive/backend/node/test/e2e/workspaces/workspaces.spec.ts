@@ -35,7 +35,7 @@ describe("The /workspaces API", () => {
 
     await platform.database.getConnector().init();
     testDbService = new TestDbService(platform);
-    await testDbService.createCompany(companyId);
+    await testDbService.createCompany(companyId, "Company name");
     const ws0pk = { id: uuidv1(), company_id: companyId };
     const ws1pk = { id: uuidv1(), company_id: companyId };
     const ws2pk = { id: uuidv1(), company_id: companyId };

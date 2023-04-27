@@ -73,7 +73,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
       return await this.getConnector().write(path, stream);
     } catch (err) {
       logger.error(err);
-      return null;
+      throw err;
     }
   }
 
@@ -107,8 +107,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
           }
         } catch (err) {
           logger.error(err);
-          callback();
-          return;
+          callback(err, null);
         }
         callback(null, stream);
         return;
@@ -117,7 +116,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
       return new Multistream(factory);
     } catch (err) {
       logger.error(err);
-      return null;
+      throw err;
     }
   }
 

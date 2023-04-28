@@ -10,7 +10,6 @@ import _ from 'lodash';
 import RouterService from '@features/router/services/router-service';
 import WorkspacesService from '@deprecated/workspaces/workspaces.jsx';
 import AccessRightsService from '@features/workspace-members/services/workspace-members-access-rights-service';
-import Groups from '@deprecated/workspaces/groups.js';
 import LoginService from '@features/auth/login-service';
 import UserAPIClient from '@features/users/api/user-api-client';
 import { useRealtimeRoom } from '@features/global/hooks/use-realtime';
@@ -72,7 +71,6 @@ export const useCurrentCompany = () => {
   //Always set the current company in localstorage to open it automatically later
   if (routerCompanyId && company) {
     //Depreciated retrocompatibility
-    Groups.addToUser(company);
     AccessRightsService.updateCompanyLevel(
       company.id,
       company.role === 'admin' || company.role === 'owner'

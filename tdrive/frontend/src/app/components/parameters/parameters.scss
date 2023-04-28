@@ -47,7 +47,6 @@
 
   & > .value {
     font-size: 14px;
-    max-height: 0;
     transition: max-height 0.2s, opacity 0.2s;
     overflow: hidden;
     opacity: 0;

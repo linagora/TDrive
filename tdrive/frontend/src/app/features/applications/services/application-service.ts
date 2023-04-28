@@ -3,7 +3,6 @@ import Logger from 'app/features/global/framework/logger-service';
 import AccessRightsService from 'app/features/workspace-members/services/workspace-members-access-rights-service';
 import CurrentUser from 'app/deprecated/user/CurrentUser';
 import JWT from 'app/features/auth/jwt-storage-service';
-import WorkspacesListener from '../../workspaces/services/workspaces-listener-service';
 import LocalStorage from '../../global/framework/local-storage-service';
 import WebSocket from '../../global/types/websocket-types';
 
@@ -29,14 +28,11 @@ class Application {
     const ws = WebSocket.get();
     ws.connect();
 
-    WorkspacesListener.startListen();
     AccessRightsService.resetLevels();
-
     CurrentUser.start();
   }
 
   stop(): void {
-    WorkspacesListener.cancelListen();
     LocalStorage.clear();
     JWT.clear();
   }

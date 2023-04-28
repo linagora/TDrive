@@ -6,7 +6,6 @@ import { useRecoilState } from 'recoil';
 import { CurrentUserState } from '../state/atoms/current-user';
 import { useRealtimeRoom } from '@features/global/hooks/use-realtime';
 import Languages from '@features/global/services/languages-service';
-import ConfiguratorsManager from '@deprecated/Configurators/ConfiguratorsManager.js';
 import { RealtimeApplicationEvent } from '@features/global/types/realtime-types';
 import { useSetUserList } from './use-user-list';
 
@@ -43,25 +42,6 @@ export const useCurrentUser = () => {
   return { user, refresh, updateStatus };
 };
 
-const applicationEventHandler = (event: RealtimeApplicationEvent) => {
-  switch (event.action) {
-    case 'configure':
-      if (event.form) {
-        ConfiguratorsManager.openConfigurator(
-          event.application,
-          event.form,
-          event.hidden_data,
-          event.configurator_id,
-        );
-      } else {
-        ConfiguratorsManager.closeConfigurator(event.application);
-      }
-      break;
-    default:
-      console.error(`Unknown application action: ${event.action}`);
-  }
-};
-
 export const useCurrentUserRealtime = () => {
   const { user, refresh } = useCurrentUser();
   const room = UserAPIClient.websocket(user?.id || '');
@@ -75,9 +55,6 @@ export const useCurrentUserRealtime = () => {
         timeout.current = setTimeout(() => {
           refresh();
         }, 1000) as any;
-        break;
-      case 'application':
-        applicationEventHandler(resource);
         break;
       default:
         console.error('Unknown resource type');

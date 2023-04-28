@@ -2,7 +2,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 
-import UploadManager from './upload-manager';
 import Languages from '@features/global/services/languages-service';
 import { Upload } from 'react-feather';
 import classNames from 'classnames';
@@ -18,8 +17,6 @@ type StateType = { [key: string]: any };
 
 type FileInputType = any;
 
-type FileObjectType = { [key: string]: any };
-
 let sharedFileInput: any = null;
 let sharedFolderInput: any = null;
 
@@ -30,14 +27,7 @@ export default class UploadZone extends React.Component<PropsType, StateType> {
 
   constructor(props: PropsType) {
     super(props);
-    this.state = {
-      upload_manager: UploadManager,
-    };
-    UploadManager.addListener(this);
-  }
-
-  componentWillUnmount() {
-    UploadManager.removeListener(this);
+    this.state = {};
   }
 
   componentDidMount() {

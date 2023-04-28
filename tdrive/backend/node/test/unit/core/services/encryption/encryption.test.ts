@@ -1,5 +1,5 @@
 import { describe, expect, it } from "@jest/globals";
-import { decrypt } from "../../../../../src/core/crypto/index";
+import { decrypt, encrypt } from "../../../../../src/core/crypto/index";
 import v2 from "../../../../../src/core/crypto/v2";
 import v1 from "../../../../../src/core/crypto/v1";
 import legacy from "../../../../../src/core/crypto/legacy";
@@ -26,6 +26,24 @@ describe("Encryption", () => {
 
       expect(decrypt(v1Encrypted.data, encryptionKey).data).toMatchObject(myData);
       expect(decrypt(v2Encrypted.data, encryptionKey).data).toMatchObject(myData);
+    });
+  });
+});
+
+describe("Disabled encryption", () => {
+  const encryptionKey = "";
+
+  describe("The encrypt/decrypt functions", () => {
+    it("should not encrypt the data", async () => {
+      const myData = "hello world";
+
+      const encrypted = encrypt(myData, encryptionKey);
+      const decrypted = decrypt(encrypted.data, encryptionKey);
+      const decrypted2 = decrypt(myData, encryptionKey);
+
+      expect(encrypted.data).toBe(myData);
+      expect(decrypted.data).toBe(myData);
+      expect(decrypted2.data).toBe(myData);
     });
   });
 });

@@ -1,26 +1,23 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/jsx-key */
-import React, { Component } from 'react';
+import { Component } from 'react';
 
-import Languages from '@features/global/services/languages-service';
-import Collections from '@deprecated/CollectionsV1/Collections/Collections.js';
-import LoginService from '@features/auth/login-service';
-import popupManager from '@deprecated/popupManager/popupManager.js';
-import userService from '@features/users/services/current-user-service';
-import currentUserService from '@deprecated/user/CurrentUser';
-import uploadService from '@deprecated/uploadManager/upload-manager.js';
-import ButtonWithTimeout from 'components/buttons/button-with-timeout.jsx';
-import Attribute from 'components/parameters/attribute.jsx';
-import Assistant from './Pages/Assistant';
-import MenuList from 'components/menus/menu-component.jsx';
-import './UserParameter.scss';
-import Input from 'components/inputs/input.jsx';
-import { Button } from '../../../../atoms/button/button';
-import { ExternalLinkIcon } from '@heroicons/react/outline';
-import InitService from '@features/global/services/init-service';
-import * as Text from '../../../../atoms/text';
-import workspaceService from '@deprecated/workspaces/workspaces.jsx';
 import { getFilesTree } from '@components/uploads/file-tree-utils';
+import Collections from '@deprecated/CollectionsV1/Collections/Collections.js';
+import popupManager from '@deprecated/popupManager/popupManager.js';
+import currentUserService from '@deprecated/user/CurrentUser';
+import LoginService from '@features/auth/login-service';
+import InitService from '@features/global/services/init-service';
+import Languages from '@features/global/services/languages-service';
+import userService from '@features/users/services/current-user-service';
+import { ExternalLinkIcon } from '@heroicons/react/outline';
+import ButtonWithTimeout from 'components/buttons/button-with-timeout.jsx';
+import Input from 'components/inputs/input.jsx';
+import MenuList from 'components/menus/menu-component.jsx';
+import Attribute from 'components/parameters/attribute.tsx';
+import { Button } from '../../../../atoms/button/button';
+import * as Text from '../../../../atoms/text';
+import './UserParameter.scss';
 
 export default class UserParameter extends Component {
   constructor(props) {
@@ -605,9 +602,6 @@ export default class UserParameter extends Component {
         </div>
       );
     }
-    if (this.state.page === 4) {
-      return <Assistant />;
-    }
   }
 
   setPage(page) {
@@ -628,18 +622,6 @@ export default class UserParameter extends Component {
                   selected: this.state.page === 1 ? 'selected' : '',
                   onClick: () => {
                     this.setPage(1);
-                  },
-                },
-                {
-                  type: 'menu',
-                  text: this.state.i18n.t('scenes.apps.account.assistant.title'),
-                  emoji: ':robot:',
-                  hide:
-                    document.location.origin === 'https://web.tdrive.app' &&
-                    workspaceService.currentGroupId !== '56393af2-e5fe-11e9-b894-0242ac120004',
-                  selected: this.state.page === 4 ? 'selected' : '',
-                  onClick: () => {
-                    this.setPage(4);
                   },
                 },
               ]}

@@ -4,7 +4,6 @@ import $ from 'jquery';
 import Login from '@features/auth/login-service';
 import Collections from '@deprecated/CollectionsV1/Collections/Collections';
 import Api from '@features/global/framework/api-service';
-import ws from '@deprecated/websocket/websocket';
 import Observable from '@deprecated/CollectionsV1/observable';
 import Number from '@features/global/utils/Numbers';
 import AlertManager from '@features/global/services/alert-manager-service';
@@ -87,11 +86,7 @@ class CurrentUser extends Observable {
     const data = {
       status: user.tutorial_status,
     };
-    Api.post('/ajax/users/account/set_tutorial_status', data, () => {
-      ws.publish('users/' + Login.currentUserId, {
-        user: { tutorial_status: user.tutorial_status },
-      });
-    });
+    Api.post('/ajax/users/account/set_tutorial_status', data, () => {});
   }
 
   updateUserName(username: string) {
@@ -106,7 +101,6 @@ class CurrentUser extends Observable {
     Api.post('/ajax/users/account/username', { username }, (res: any) => {
       that.loading = false;
       if (res.errors.length === 0) {
-        ws.publish('users/' + Login.currentUserId, { user: update });
         that.errorUsernameExist = false;
       } else {
         that.errorUsernameExist = true;
@@ -166,7 +160,6 @@ class CurrentUser extends Observable {
                 update.thumbnail = resp.data.thumbnail || '';
               }
               Collections.get('users').updateObject(update);
-              ws.publish('users/' + Login.currentUserId, { user: update });
               that.notify();
             }
           }

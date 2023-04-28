@@ -44,13 +44,6 @@ export const useWorkspacesCommons = (companyId = '') => {
     );
   }
 
-  //Retro compatibility
-  workspaces?.forEach(w => {
-    Collections.get('workspaces').updateObject(_.cloneDeep(w));
-    AccessRightsService.updateLevel(w.id, w.role as RightsOrNone);
-  });
-  //End
-
   return { workspaces, loading, refresh };
 };
 

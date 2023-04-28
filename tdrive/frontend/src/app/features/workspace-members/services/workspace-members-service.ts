@@ -2,18 +2,14 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Languages from '@features/global/services/languages-service';
 import Observable from '@deprecated/CollectionsV1/observable.js';
-import User from '@features/users/services/current-user-service';
-import Api from '@features/global/framework/api-service';
-import ws from '@deprecated/websocket/websocket.js';
-import Collections from '@deprecated/CollectionsV1/Collections/Collections.js';
 import workspaceService from '@deprecated/workspaces/workspaces.jsx';
-import Numbers from '@features/global/utils/Numbers';
-import WorkspaceUserRights from '@features/workspaces/services/workspace-user-rights-service';
-import CurrentUser from '@deprecated/user/CurrentUser';
+import Api from '@features/global/framework/api-service';
 import AlertManager from '@features/global/services/alert-manager-service';
 import Globals from '@features/global/services/globals-tdrive-app-service';
+import Languages from '@features/global/services/languages-service';
+import User from '@features/users/services/current-user-service';
+import WorkspaceUserRights from '@features/workspaces/services/workspace-user-rights-service';
 
 const prefixRoute = '/internal/services/workspaces/v1';
 
@@ -54,35 +50,13 @@ class WorkspacesUsers extends Observable {
     (Globals.window as any).workspaceUserService = this;
   }
   getAdminLevel(idWorkspace = workspaceService.currentWorkspaceId) {
-    const levels = Collections.get('workspaces').find(idWorkspace).levels;
-    if (levels) {
-      for (let i = 0; i < levels.length; i++) {
-        if (levels[i].admin) {
-          return levels[i];
-        }
-      }
-    }
     return false;
   }
   getDefaultLevel(idWorkspace = workspaceService.currentWorkspaceId) {
-    const levels = Collections.get('workspaces').find(idWorkspace).levels;
-    if (levels) {
-      for (let i = 0; i < levels.length; i++) {
-        if (levels[i].default) {
-          return levels[i];
-        }
-      }
-    }
     return false;
   }
   isGroupManager() {}
   getLevel(idLevel: string) {
-    const levels = Collections.get('workspaces').find(workspaceService.currentWorkspaceId).levels;
-    for (let i = 0; i < levels.length; i++) {
-      if (idLevel === levels[i].id) {
-        return levels[i];
-      }
-    }
     return false;
   }
 
@@ -90,113 +64,6 @@ class WorkspacesUsers extends Observable {
     return (this.users_by_workspace || {})[workspace_id] || {};
   }
 
-  unload(workspace_id: string) {
-    ws.unsubscribe('workspace_users/' + workspace_id, null, null);
-  }
-
-  load(workspace_id: string, reset_offset: string, options: any) {
-    if (!options) {
-      options = {};
-    }
-
-    const that = this;
-    const workspace = Collections.get('workspaces').find(workspace_id);
-    if (!workspace) {
-      return;
-    }
-    const group_id = workspace?.group?.id || workspace.company_id;
-
-    if (!this.users_by_group[group_id]) {
-      this.users_by_group[group_id] = {};
-    }
-    if (!this.users_by_workspace[workspace_id]) {
-      this.users_by_workspace[workspace_id] = {};
-    }
-
-    if (!this.offset_by_workspace_id[workspace_id] || reset_offset) {
-      this.offset_by_workspace_id[workspace_id] = [0, false];
-    }
-    if (!this.offset_by_group_id[group_id] || reset_offset) {
-      this.offset_by_group_id[group_id] = [0, false];
-    }
-
-    const loadMembers = (data: any) => {
-      if (!data) {
-        return;
-      }
-      if (typeof data.members === 'object' && data.members.members) {
-        data = data.members;
-      }
-      if (data.members) {
-        (data.members || []).forEach((item: any) => {
-          if (
-            !that.offset_by_workspace_id[workspace_id][1] ||
-            Numbers.compareTimeuuid(item.user.id, that.offset_by_workspace_id[workspace_id][1]) > 0
-          ) {
-            that.offset_by_workspace_id[workspace_id][1] = item.user.id;
-          }
-          that.offset_by_workspace_id[workspace_id][0]++;
-
-          Collections.get('users').completeObject(item.user, item.user.front_id);
-
-          that.users_by_group[group_id][item.user.id] = item;
-          that.users_by_workspace[workspace_id][item.user.id] = item;
-        });
-        that.notify();
-      }
-
-      if (data.mails) {
-        that.membersPending = data.mails || [];
-        that.notify();
-      }
-
-      if (data.stats.total_members > 1 && WorkspaceUserRights.hasWorkspacePrivilege()) {
-        CurrentUser.updateTutorialStatus('did_invite_collaborators');
-      }
-    };
-
-    const data = {
-      workspaceId: workspace_id,
-      max: this.offset_by_workspace_id[workspace_id][0] === 0 ? 100 : 40,
-    };
-
-    if (options.members) {
-      loadMembers(options.members || []);
-    } else {
-      Api.post('/ajax/workspace/members/list', data, (res: any) => {
-        if (res.data) {
-          loadMembers({ members: res.data });
-        }
-      });
-      Api.post('/ajax/workspace/members/pending', data, (res: any) => {
-        if (res.data) {
-          loadMembers({ mails: res.data });
-        }
-      });
-      loadMembers(options.members || []);
-    }
-
-    const loadGroupUsers = (data: any) => {
-      data.users.forEach((item: any) => {
-        if (
-          !that.offset_by_group_id[group_id][1] ||
-          Numbers.compareTimeuuid(item.user.id, that.offset_by_group_id[group_id][1]) > 0
-        ) {
-          that.offset_by_group_id[group_id][1] = item.user.id;
-        }
-        that.offset_by_group_id[group_id][0]++;
-
-        Collections.get('users').completeObject(item.user, item.user.front_id);
-
-        that.users_by_group[group_id][item.user.id] = item;
-      });
-      that.notify();
-    };
-
-    if (options.group_users) {
-      loadMembers(options.group_users);
-    }
-  }
   canShowUserInWorkspaceList(member: any) {
     // if user is interne or wexterne => no restriction
     if (!WorkspaceUserRights.isInvite()) {
@@ -205,28 +72,6 @@ class WorkspacesUsers extends Observable {
       if (!WorkspaceUserRights.isInvite(member)) {
         // if other user is interne or wexterne
         return true;
-      }
-
-      // check in all channel if 2 chavite are in the same channel
-      const channelsInWorkspace = Collections.get('channels').findBy({
-        direct: false,
-        application: false,
-        original_workspace: workspaceService.currentWorkspaceId,
-      });
-      for (let i = 0; i < channelsInWorkspace.length; i++) {
-        // check in all channel if 2 chavite are in the same channel
-        if (channelsInWorkspace[i].ext_members) {
-          let bothAreInChannel = 0; // if 1 : one of 2 users searched is in channel as chavite, 2 : both are in channel as chavite
-          const extMembers = channelsInWorkspace[i].ext_members;
-          for (let j = 0; j < extMembers.length; j++) {
-            if (extMembers[j] === member || extMembers[j] === CurrentUser.get().id) {
-              bothAreInChannel++;
-              if (bothAreInChannel >= 2) {
-                return true;
-              }
-            }
-          }
-        }
       }
     }
     return false;

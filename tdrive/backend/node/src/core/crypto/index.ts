@@ -19,22 +19,26 @@ export type CryptoResult = {
 };
 
 export function decrypt(data: string, encryptionKey: string): CryptoResult {
-  let result = v2.decrypt(data, encryptionKey);
-  if (result.done) {
+  if (encryptionKey) {
+    let result = v2.decrypt(data, encryptionKey);
+    if (result.done) {
+      return result;
+    }
+
+    result = v1.decrypt(data, encryptionKey);
+    if (result.done) {
+      return result;
+    }
+
+    result = legacy.decrypt(data, encryptionKey);
+    if (result.done) {
+      return result;
+    }
+
     return result;
   }
 
-  result = v1.decrypt(data, encryptionKey);
-  if (result.done) {
-    return result;
-  }
-
-  result = legacy.decrypt(data, encryptionKey);
-  if (result.done) {
-    return result;
-  }
-
-  return result;
+  return { data, done: true };
 }
 
 export function md5(value: string): string {
@@ -46,5 +50,6 @@ export function encrypt(
   encryptionKey: any,
   options: { disableSalts?: boolean } = {},
 ): CryptoResult {
+  if (!encryptionKey) return { data: `${value}`, done: true };
   return v2.encrypt(value, encryptionKey, options);
 }

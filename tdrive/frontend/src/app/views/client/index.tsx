@@ -2,7 +2,7 @@
 import classNames from 'classnames';
 import React, { Suspense, useState } from 'react';
 
-import ChatUploadsViewer from '@components/file-uploads/uploads-viewer';
+import UploadsViewer from '@components/file-uploads/uploads-viewer';
 import { useFeatureToggles } from '@components/locked-features-components/feature-toggles-hooks';
 import MenusBodyLayer from '@components/menus/menus-body-layer.jsx';
 import ModalComponent from '@components/modal/modal-component';
@@ -16,7 +16,6 @@ import ConnectionIndicator from 'components/connection-indicator/connection-indi
 import NewVersionComponent from 'components/new-version/new-version-component';
 import PopupComponent from 'components/popup-component/popup-component.jsx';
 import SearchPopup from 'components/search-popup/search-popup';
-import DriveUploadViewer from 'components/uploads/upload-viewer.jsx';
 import MainView from './body';
 
 import DownloadAppBanner from '@components/download-app-banner/download-app-banner';
@@ -94,12 +93,11 @@ export default React.memo((): JSX.Element => {
       {PopupService.isOpen() && <PopupComponent key="PopupComponent" />}
       {page}
       <MenusBodyLayer />
-      <DriveUploadViewer />
       <Viewer />
       <ModalComponent />
       <SearchPopup />
       <ConnectionIndicator />
-      <ChatUploadsViewer />
+      <UploadsViewer />
     </>
   );
 });

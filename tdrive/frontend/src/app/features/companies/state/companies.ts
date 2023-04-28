@@ -21,7 +21,6 @@ export const CompaniesState = atomFamily<CompanyType | null, string>({
       onSet(company => {
         if (company?.id) {
           companies[company.id] = company;
-          Collections.get('groups').updateObject(_.cloneDeep(company));
         }
       });
     },

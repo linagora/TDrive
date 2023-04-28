@@ -1,9 +1,8 @@
 import FileUploadService from '@features/files/services/file-upload-service';
+import RouterServices from '@features/router/services/router-service';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { PendingFilesListState } from '../state/atoms/pending-files-list';
 import { CurrentTaskSelector } from '../state/selectors/current-task';
-import RouterServices from '@features/router/services/router-service';
-import { AttachedFileType } from '@features/files/types/file';
 
 export const useUpload = () => {
   const { companyId } = RouterServices.getStateFromRoute();

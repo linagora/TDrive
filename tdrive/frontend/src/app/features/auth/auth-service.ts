@@ -21,15 +21,7 @@ import LocalStorage from '@features/global/framework/local-storage-service';
 import Globals from '@features/global/services/globals-tdrive-app-service';
 
 type AccountType = 'remote' | 'internal';
-export type LoginState =
-  | ''
-  | 'app'
-  | 'error'
-  | 'signin'
-  | 'verify_mail'
-  | 'forgot_password'
-  | 'logged_out'
-  | 'logout';
+export type LoginState = '' | 'app' | 'error' | 'signin' | 'logged_out' | 'logout';
 type InitState = '' | 'initializing' | 'initialized';
 
 @TdriveService('AuthService')

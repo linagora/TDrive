@@ -2,15 +2,14 @@
 /* eslint-disable @typescript-eslint/ban-types */
 import { v1 as uuid } from 'uuid';
 
-import { FileType, PendingFileType } from '@features/files/types/file';
 import JWTStorage from '@features/auth/jwt-storage-service';
-import RouterServices from '@features/router/services/router-service';
+import { FileType, PendingFileType } from '@features/files/types/file';
 import Resumable from '@features/files/utils/resumable';
+import Logger from '@features/global/framework/logger-service';
+import RouterServices from '@features/router/services/router-service';
+import _ from 'lodash';
 import FileUploadAPIClient from '../api/file-upload-api-client';
 import { isPendingFileStatusPending } from '../utils/pending-files';
-import Logger from '@features/global/framework/logger-service';
-import _ from 'lodash';
-import { AttachedFileType } from '@features/files/types/file';
 
 export enum Events {
   ON_CHANGE = 'notify',

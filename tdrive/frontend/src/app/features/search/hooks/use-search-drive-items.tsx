@@ -1,13 +1,13 @@
-import { delayRequest } from '@features/global/utils/managedSearchRequest';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { SearchInputState } from '../state/search-input';
 import { DriveApiClient } from '@features/drive/api-client/api-client';
-import { LoadingState } from '@features/global/state/atoms/Loading';
-import { SearchDriveItemsResultsState } from '../state/search-drive-items-result';
-import { RecentDriveItemsState } from '../state/recent-drive-items';
-import _ from 'lodash';
 import { useGlobalEffect } from '@features/global/hooks/use-global-effect';
+import { LoadingState } from '@features/global/state/atoms/Loading';
+import { delayRequest } from '@features/global/utils/managedSearchRequest';
 import useRouterCompany from '@features/router/hooks/use-router-company';
+import _ from 'lodash';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { RecentDriveItemsState } from '../state/recent-drive-items';
+import { SearchDriveItemsResultsState } from '../state/search-drive-items-result';
+import { SearchInputState } from '../state/search-input';
 import { useSearchModal } from './use-search';
 
 export const useSearchDriveItemsLoading = () => {

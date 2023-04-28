@@ -134,15 +134,6 @@ export default class LoginView extends Component {
                   {this.state.i18n.t('scenes.login.home.create_account')}
                 </Typography.Link>
               )}
-              {/*
-              <Typography.Link
-                onClick={() => this.state.login.changeState('forgot_password')}
-                id="forgot_password_btn"
-                className="blue_link"
-              >
-                {this.state.i18n.t('scenes.login.home.lost_password')}
-              </Typography.Link>
-              */}
             </div>
           )}
         </div>

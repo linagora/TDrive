@@ -19,7 +19,6 @@ export const onChangeCompanyApplications = (companyId: string, _applications: Ap
   (applications || []).forEach(a => {
     if (!_.isEqual(a, companyApplicationMap.get(a.id))) {
       companyApplicationMap.set(a.id, a);
-      Collections.get('applications').updateObject(a);
     }
   });
 };

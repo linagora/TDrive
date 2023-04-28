@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-types */
 import Observable from '@deprecated/CollectionsV1/observable';
-import DateTime from '@features/global/utils/datetime';
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import Backend from 'i18next-http-backend';
@@ -66,7 +65,6 @@ class LanguagesService extends Observable {
     }
 
     await i18n.changeLanguage(language);
-    DateTime.setCurrentLanguage(language);
 
     this.notify();
   }

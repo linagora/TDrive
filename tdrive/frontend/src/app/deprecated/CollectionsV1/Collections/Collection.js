@@ -1,7 +1,6 @@
 import Api from '@features/global/framework/api-service';
 import Observable from '@deprecated/CollectionsV1/observable.js';
 import Number from '@features/global/utils/Numbers';
-import MultipleSecuredConnections from './MultipleSecuredConnections.js';
 import LocalStorage from '@features/global/framework/local-storage-service';
 /** Collection
  * Act like a doctrine repository and try to be allways in sync with server in realtime
@@ -65,24 +64,6 @@ export default class Collection extends Observable {
     this.sources_to_be_removed_timeout = {};
     this.sources_on_event = {};
     this._last_modified = {};
-
-    this.connections = new MultipleSecuredConnections((event, data) => {
-      Object.keys(this.sources_on_event).forEach(source_key => {
-        if (this.sources_on_event[source_key].routes.indexOf(data._route) >= 0) {
-          this.sources_on_event[source_key].callback(event, data);
-        }
-      });
-
-      if (event === 'event') {
-        if (data.multiple && data.multiple.forEach) {
-          data.multiple.forEach(item => {
-            this.ws_message(item);
-          });
-        } else {
-          this.ws_message(data);
-        }
-      }
-    });
   }
 
   updatedOptions() {
@@ -345,7 +326,6 @@ export default class Collection extends Observable {
       var ws_identifier = collection_id || this.collection_id;
       // eslint-disable-next-line no-redeclare
       var options = options || this.options || {};
-      this.connections.addConnection(ws_identifier, options, http_options, key);
       return true;
     }
 
@@ -363,7 +343,6 @@ export default class Collection extends Observable {
 
     if (this.total_subscribe_by_route[collection_id] <= 0) {
       var ws_identifier = collection_id || this.collection_id;
-      this.connections.removeConnection(ws_identifier);
     }
 
     return;
@@ -865,14 +844,7 @@ export default class Collection extends Observable {
   }
 
   //To use only on very specific cases !!!
-  shareRemove(deleted_front_id) {
-    this.connections.publish({
-      client_id: this.client_id,
-      action: 'remove',
-      object_type: this.object_type,
-      front_id: deleted_front_id,
-    });
-  }
+  shareRemove(deleted_front_id) {}
 
   //To use only on very specific cases !!!
   share(object) {
@@ -883,13 +855,6 @@ export default class Collection extends Observable {
       if (key.startsWith('_user_') || key.startsWith('_once_')) {
         delete object[key];
       }
-    });
-
-    this.connections.publish({
-      client_id: this.client_id,
-      action: 'save',
-      object_type: this.object_type,
-      object: object,
     });
   }
 
@@ -927,7 +892,6 @@ export default class Collection extends Observable {
       data: data,
       client_id: this.client_id,
     };
-    this.connections.publish(_d);
   }
 
   addWebsocketListener(callback) {

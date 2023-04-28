@@ -22,9 +22,6 @@ export const WorkspaceListStateFamily = atomFamily<WorkspaceType[], string>({
     ({ onSet }) => {
       onSet(workspaces => {
         workspacesCompanyMap[companyId] = workspaces;
-        workspaces.map(w => {
-          Collections.get('workspaces').updateObject(_.cloneDeep(w));
-        });
       });
     },
   ],

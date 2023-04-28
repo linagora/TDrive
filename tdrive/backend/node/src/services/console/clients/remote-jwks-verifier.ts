@@ -18,6 +18,7 @@ function verifyAudience(expected: string, aud: string | Array<string>) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function verifyIssuer(expected: string, issuer: string) {
   if (issuer !== expected) {
     throw new Error(`issuer ${issuer} does not match expected issuer: ${expected}`);
@@ -91,7 +92,7 @@ export class OidcJwtVerifier {
   async verifyIdToken(idTokenString: string, expectedClientId: string) {
     const jwt = await this.verifyAsPromise(idTokenString);
     verifyAudience(expectedClientId, jwt.claims.aud);
-    logger.info(`issuer is ${this.issuer} -- ${jwt.claims.iss} -- ${JSON.stringify(jwt)}`)
+    logger.info(`issuer is ${this.issuer} -- ${jwt.claims.iss} -- ${JSON.stringify(jwt)}`);
     // verifyIssuer(this.issuer, jwt.claims.iss);
 
     return jwt;

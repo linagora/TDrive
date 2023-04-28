@@ -216,21 +216,22 @@ export class ConsoleRemoteClient implements ConsoleServiceClient {
       locale?: string;
       picture?: string;
     };
+    logger.info(`User from getUserByAccessToken is ${JSON.stringify(user)} for token ${idToken}`);
     return {
       _id: user.email || user.sub,
       roles: [] as any,
-      email: user.email,
-      name: user.given_name,
-      surname: user.family_name,
+      email: user.email || user.sub,
+      name: user?.given_name,
+      surname: user?.family_name,
       isVerified: true,
       preference: {
-        locale: user.locale,
+        locale: user?.locale,
         timeZone: 0,
         allowTrackingPersonalInfo: true,
       },
       avatar: {
         type: "url",
-        value: user.picture,
+        value: user?.picture,
       },
     };
   }

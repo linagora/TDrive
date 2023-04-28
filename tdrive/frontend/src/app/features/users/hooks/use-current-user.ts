@@ -11,6 +11,7 @@ import { RealtimeApplicationEvent } from '@features/global/types/realtime-types'
 import { useSetUserList } from './use-user-list';
 
 export const useCurrentUser = () => {
+  console.log("getting current user");
   const [user, setUser] = useRecoilState(CurrentUserState);
   const { set: setUserList } = useSetUserList('useCurrentUser');
 
@@ -19,6 +20,7 @@ export const useCurrentUser = () => {
   useEffect(() => {
     if (!user) {
       LoginService.init();
+      LoginService.login({});
     }
     if (user) setUserList([user]);
   }, [user]);

@@ -117,7 +117,7 @@ class ConsoleService {
     );
     Api.post(
       '/internal/services/console/v1/login',
-      { oidc_id_token: currentToken.access_token },
+      { oidc_id_token: currentToken.id_token },
       (response: {
         access_token: JWTDataType;
         message: string;

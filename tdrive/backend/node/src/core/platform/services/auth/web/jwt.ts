@@ -14,6 +14,7 @@ const jwtPlugin: FastifyPluginCallback = (fastify, _opts, next) => {
     if (jwt.type === "refresh") {
       // TODO  in the future we must invalidate the refresh token (because it should be single use)
     }
+
     request.currentUser = {
       ...{ email: jwt.email },
       ...{ id: jwt.sub },
@@ -29,7 +30,7 @@ const jwtPlugin: FastifyPluginCallback = (fastify, _opts, next) => {
     try {
       await authenticate(request);
     } catch (err) {
-      throw fastify.httpErrors.unauthorized("Bad credentials");
+      throw fastify.httpErrors.unauthorized(`Bad credentials ${JSON.stringify(err)}`);
     }
   });
 

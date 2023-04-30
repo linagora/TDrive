@@ -74,6 +74,24 @@ describe("The Files feature", () => {
 
     }, 120000);
 
+    it("Download file should return 200 if file exists", async () => {
+      //given file
+      const filesUpload = await uploadFile(files[0]);
+      expect(filesUpload.resource.id).toBeTruthy();
+      //clean files directory
+      expect(platform.storage.getConnector()).toBeInstanceOf(LocalConnectorService)
+
+      //when try to download the file
+      const fileDownloadResponse = await platform.app.inject({
+        method: "GET",
+        url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.resource.id}/download`,
+      });
+      //then file should be not found with 404 error and "File not found message"
+      expect(fileDownloadResponse).toBeTruthy();
+      expect(fileDownloadResponse.statusCode).toBe(200);
+
+    }, 120000);
+
 
     it.skip("should save file and generate previews", async done => {
       for (const i in files) {

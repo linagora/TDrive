@@ -84,7 +84,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
 
       const chunks = options?.totalChunks || 1;
       let count = 1;
-      let stream;
+      let stream: any;
       async function factory(callback: (err?: Error, stream?: Stream) => unknown) {
         if (count > chunks) {
           callback();

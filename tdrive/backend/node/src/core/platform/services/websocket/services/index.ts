@@ -11,7 +11,7 @@ import {
   WebsocketUserEvent,
 } from "../types";
 import { EventEmitter } from "events";
-import { User } from "../../../../../utils/types";
+import { User } from "src/utils/types";
 import { JwtType } from "../../types";
 
 export class WebSocketService extends EventEmitter implements WebSocketAPI {

@@ -58,7 +58,7 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
     const company = await gr.services.companies.getCompany({ id: argv.id });
 
     if (!company) {
-      return "No such company";
+      return;
     }
 
     console.log(`Start export for company ${company.id}`);

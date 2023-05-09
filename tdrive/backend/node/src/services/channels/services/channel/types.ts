@@ -18,14 +18,6 @@ export type ChannelStats = {
 type ChannelType = "workspace" | "direct";
 
 export class ChannelMemberObject extends ChannelMember {
-  id: string;
-  user_id: string;
-  // type: "member" | "guest" | "bot";
-  last_access: number; //Timestamp in seconds
-  last_increment: number;
-  favorite: boolean; //Did the user add this channel to its favorites
-  // notification_level: "all" | "none" | "group_mentions" | "user_mentions";
-
   static mapTo(
     channelMember: ChannelMember,
     channelMemberLikeObject: Partial<ChannelMemberObject> = {},

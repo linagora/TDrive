@@ -1,7 +1,7 @@
 import { logger, TdriveService } from "../../framework";
 import { Server, IncomingMessage, ServerResponse } from "http";
 import { FastifyInstance, fastify } from "fastify";
-import sensible from "fastify-sensible";
+import sensible from "@fastify/sensible";
 import multipart from "fastify-multipart";
 import formbody from "@fastify/formbody";
 import fastifyStatic from "@fastify/static";
@@ -122,7 +122,7 @@ export default class WebServerService extends TdriveService<WebServerAPI> implem
             req.raw.url.startsWith("/plugins") ||
             req.raw.url.startsWith("/admin"))
         ) {
-          return res.status(404).send({
+          res.status(404).send({
             error: "Not found",
           });
         }

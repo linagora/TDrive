@@ -103,7 +103,7 @@ const command: yargs.CommandModule<{}, CLIArgs> = {
       first(),
     );
 
-    return obsv$
+    obsv$
       .toPromise()
       .then(() => platform.stop())
       .finally(() => console.log("✅ Company users are now created"));

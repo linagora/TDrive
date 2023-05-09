@@ -1,5 +1,5 @@
 import { FastifyPluginCallback, FastifyRequest } from "fastify";
-import fastifyJwt from "fastify-jwt";
+import fastifyJwt from "@fastify/jwt";
 import fp from "fastify-plugin";
 import config from "../../../../config";
 import { JwtType } from "../../types";

@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from "fastify";
 import { Multipart } from "fastify-multipart";
-import { ResourceDeleteResponse } from "../../../../utils/types";
+import { ResourceDeleteResponse } from "src/utils/types";
 import { CompanyExecutionContext } from "../types";
 import { UploadOptions } from "../../types";
 import { PublicFile } from "../../entities/file";
@@ -11,7 +11,19 @@ export class FileController {
     request: FastifyRequest<{
       Params: { company_id: string; id: string };
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      Querystring: any;
+      Querystring: {
+        resumableTotalChunks?: string;
+        total_chunks?: string;
+        resumableTotalSize?: string;
+        total_size?: string;
+        resumableChunkNumber?: string;
+        chunk_number?: string;
+        resumableFilename?: string;
+        filename?: string;
+        resumableType?: string;
+        type?: string;
+        thumbnail_sync?: boolean;
+      };
     }>,
   ): Promise<{ resource: PublicFile }> {
     const context = getCompanyExecutionContext(request);

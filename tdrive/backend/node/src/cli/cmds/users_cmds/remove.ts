@@ -56,11 +56,13 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
 
     if (!user) {
       console.error("Error: You need to provide User ID");
-      return spinner.stop();
+      spinner.stop();
     }
 
     if (user) {
       // Table before
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       tableBefore.push([user.id, user.username_canonical, user.deleted]);
 
       await gr.services.users.anonymizeAndDelete(
@@ -73,6 +75,8 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
       const finalUser = await gr.services.users.get({ id: argv.id });
 
       // Table after
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       tableAfter.push([finalUser.id, finalUser.username_canonical, finalUser.deleted]);
 
       spinner.stop();

@@ -136,7 +136,7 @@ const command: yargs.CommandModule<unknown, unknown> = {
       repository,
     });
 
-    return spinner.stop();
+    spinner.stop();
   },
 };
 

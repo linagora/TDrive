@@ -6,10 +6,10 @@ import Languages from '@features/global/services/languages-service';
 import { addApiUrlIfNeeded } from '@features/global/utils/URLUtils';
 import RouterService from '@features/router/services/router-service';
 import Drive from '@views/client/body/drive';
-import Avatar from '../../../../atoms/avatar';
-import { setPublicLinkToken } from '../../../../features/drive/api-client/api-client';
 import { useParams } from 'react-router-dom';
 import shortUUID from 'short-uuid';
+import Avatar from '../../../../atoms/avatar';
+import { setPublicLinkToken } from '../../../../features/drive/api-client/api-client';
 import useRouterCompany from '../../../../features/router/hooks/use-router-company';
 
 export default () => {
@@ -42,7 +42,7 @@ export default () => {
   }
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col h-full w-full dark:bg-zinc-900">
       <div className="flex flex-row items-center justify-center bg-blue-500 px-4 py-2">
         <div className="grow flex flex-row items-center">
           {group.logo && (

@@ -46,7 +46,7 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
 
   return (
     <div
-      className="flex items-center p-2 hover:bg-zinc-50 rounded-md cursor-pointer"
+      className="flex items-center p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-md cursor-pointer"
       onClick={() => openViewer(file)}
     >
       <FileResultMedia file={file} className="w-16 h-16 mr-3" />
@@ -74,7 +74,7 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
       >
         <Button
           theme="outline"
-          className="w-9 px-1.5 ml-2 rounded-full border-none"
+          className="w-9 !p-0 flex items-center justify-center ml-2 rounded-full border-none"
           onClick={() => onDriveItemDownloadClick(file)}
         >
           <DownloadIcon className="text-blue-500 w-6 h-6" />
@@ -89,7 +89,7 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
       >
         <Button
           theme="outline"
-          className="w-9 px-1.5 ml-2 rounded-full border-none"
+          className="w-9 !p-0 flex items-center justify-center ml-2 rounded-full border-none"
           onClick={() => {
             openDriveItem(file, currentWorkspaceId, tdriveDriveApplicationId);
             setParentId(file.parent_id);

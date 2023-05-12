@@ -161,7 +161,6 @@
     "get-website-favicon": "^0.0.7",
     "html-metadata-parser": "^2.0.4",
     "html-to-text": "^8.2.1",
-    "http-proxy": "^1.18.1",
     "idtoken-verifier": "^2.2.3",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^3.0.1",

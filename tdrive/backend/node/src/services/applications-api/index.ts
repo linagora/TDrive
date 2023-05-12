@@ -4,6 +4,7 @@ import WebServerAPI from "../../core/platform/services/webserver/provider";
 import Application from "../applications/entities/application";
 import web from "./web/index";
 import axios, { AxiosResponse } from "axios";
+import _ from "lodash";
 
 @Prefix("/api")
 export default class ApplicationsApiService extends TdriveService<undefined> {
@@ -30,17 +31,18 @@ export default class ApplicationsApiService extends TdriveService<undefined> {
               const response = await axios.request({
                 url: domain + req.url,
                 method: req.method as any,
-                headers: req.headers as {
+                headers: _.omit(req.headers, "host", "content-length") as {
                   [key: string]: string;
                 },
                 data: req.body as any,
+                responseType: "stream",
               });
-              rep.raw.statusCode = response.status;
-              rep.raw.end(response.data);
+              rep.statusCode = response.status;
+              rep.send(response.data);
             } catch (err) {
               console.error(err);
               rep.raw.statusCode = 500;
-              rep.raw.end("Error");
+              rep.raw.end(JSON.stringify({ error: err.message }));
             }
           });
           console.log("Listening at ", "/" + prefix + "/*");

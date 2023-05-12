@@ -1,20 +1,9 @@
 import config from "config";
-import httpProxy from "http-proxy";
 import { Prefix, TdriveService } from "../../core/platform/framework";
 import WebServerAPI from "../../core/platform/services/webserver/provider";
 import Application from "../applications/entities/application";
 import web from "./web/index";
-
-const proxy = httpProxy.createProxyServer({});
-// https://github.com/http-party/node-http-proxy/issues/1471
-proxy.on("proxyReq", (proxyReq, req: any) => {
-  if (req.body && ["POST", "PATCH", "PUT"].includes(req.method)) {
-    const bodyData = JSON.stringify(req.body);
-    proxyReq.setHeader("content-type", "application/json");
-    proxyReq.setHeader("content-length", Buffer.byteLength(bodyData));
-    proxyReq.write(bodyData);
-  }
-});
+import axios, { AxiosResponse } from "axios";
 
 @Prefix("/api")
 export default class ApplicationsApiService extends TdriveService<undefined> {
@@ -35,10 +24,24 @@ export default class ApplicationsApiService extends TdriveService<undefined> {
       const prefix = app.external_prefix.replace(/(\/$|^\/)/gm, "");
       if (domain && prefix) {
         try {
-          fastify.all("/" + prefix + "/*", (req, rep) => {
-            proxy.web(req.raw, rep.raw, {
-              target: domain,
-            });
+          fastify.all("/" + prefix + "/*", async (req, rep) => {
+            console.log("Proxying", req.method, req.url, "to", domain);
+            try {
+              const response = await axios.request({
+                url: domain + req.url,
+                method: req.method as any,
+                headers: req.headers as {
+                  [key: string]: string;
+                },
+                data: req.body as any,
+              });
+              rep.raw.statusCode = response.status;
+              rep.raw.end(response.data);
+            } catch (err) {
+              console.error(err);
+              rep.raw.statusCode = 500;
+              rep.raw.end("Error");
+            }
           });
           console.log("Listening at ", "/" + prefix + "/*");
         } catch (e) {

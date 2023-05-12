@@ -1,10 +1,10 @@
+import axios from "axios";
 import config from "config";
+import _ from "lodash";
 import { Prefix, TdriveService } from "../../core/platform/framework";
 import WebServerAPI from "../../core/platform/services/webserver/provider";
 import Application from "../applications/entities/application";
 import web from "./web/index";
-import axios, { AxiosResponse } from "axios";
-import _ from "lodash";
 
 @Prefix("/api")
 export default class ApplicationsApiService extends TdriveService<undefined> {

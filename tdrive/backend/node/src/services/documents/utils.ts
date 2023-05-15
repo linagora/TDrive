@@ -68,6 +68,8 @@ export const getDefaultDriveItem = (
       ],
       public: {
         level: "none",
+        password: "",
+        expiration: 0,
         token: generateAccessToken(),
       },
     },
@@ -357,7 +359,7 @@ export const getAccessLevel = async (
       ? "manage"
       : "write";
 
-  const publicToken = context.public_token;
+  let publicToken = context.public_token;
 
   try {
     item =
@@ -379,7 +381,15 @@ export const getAccessLevel = async (
     //Public access
     if (publicToken) {
       if (!item.access_info.public.token) return "none";
-      const { token: itemToken, level: itemLevel } = item.access_info.public;
+      const { token: itemToken, level: itemLevel, password, expiration } = item.access_info.public;
+      if (expiration && expiration < Date.now()) return "none";
+      if (password) {
+        const data = publicToken.split("+");
+        if (data.length !== 2) return "none";
+        const [extractedPublicToken, publicTokenPassword] = data;
+        if (publicTokenPassword !== password) return "none";
+        publicToken = extractedPublicToken;
+      }
       if (itemToken === publicToken) return itemLevel;
     }
 

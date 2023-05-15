@@ -30,6 +30,8 @@ description: Documents database models
 type AccessInformation = {
   public: {
     token: string;
+    password: string;
+    expiration: number;
     level: publicAccessLevel;
   };
   entities: AuthEntity[];

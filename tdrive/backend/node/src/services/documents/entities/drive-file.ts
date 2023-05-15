@@ -78,6 +78,8 @@ export class DriveFile {
 export type AccessInformation = {
   public?: {
     token: string;
+    password: string;
+    expiration: number;
     level: publicAccessLevel;
   };
   entities: AuthEntity[];

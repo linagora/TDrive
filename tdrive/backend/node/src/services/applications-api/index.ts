@@ -40,18 +40,18 @@ export default class ApplicationsApiService extends TdriveService<undefined> {
                 validateStatus: null,
               });
 
+              // Headers
+              for (const key in response.headers) {
+                rep.header(key, response.headers[key]);
+              }
+              rep.statusCode = response.status;
+
               // Redirects
               if (response.status === 301 || response.status === 302) {
                 rep.redirect(response.headers.location);
                 return;
               }
 
-              // Headers
-              for (const key in response.headers) {
-                rep.header(key, response.headers[key]);
-              }
-
-              rep.statusCode = response.status;
               rep.send(response.data);
             } catch (err) {
               console.error(`${err}`);

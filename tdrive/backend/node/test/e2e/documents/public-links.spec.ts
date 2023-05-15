@@ -1,6 +1,8 @@
-import { afterAll, afterEach, beforeEach, describe, expect, it } from "@jest/globals";
+import { afterAll, beforeAll, describe, expect, it } from "@jest/globals";
 import { deserialize } from "class-transformer";
-import { AccessInformation } from "../../../src/services/documents/entities/drive-file";
+import { AccessInformation, DriveFile } from "../../../src/services/documents/entities/drive-file";
+import { FileVersion } from "../../../src/services/documents/entities/file-version";
+import { DriveFileAccessLevel, DriveItemDetails } from "../../../src/services/documents/types";
 import { init, TestPlatform } from "../setup";
 import { TestDbService } from "../utils.prepare.db";
 import { e2e_createDocument, e2e_updateDocument } from "./utils";
@@ -20,7 +22,15 @@ describe("the public links feature", () => {
     access_info: AccessInformation;
   }
 
-  beforeEach(async () => {
+  class FullDriveInfoMockClass {
+    path: DriveFile[];
+    item?: DriveFile;
+    versions?: FileVersion[];
+    children: DriveFile[];
+    access: DriveFileAccessLevel | "none";
+  }
+
+  beforeAll(async () => {
     platform = await init({
       services: [
         "webserver",
@@ -45,11 +55,8 @@ describe("the public links feature", () => {
     });
   });
 
-  afterEach(async () => {
-    await platform.tearDown();
-  });
-
   afterAll(async () => {
+    await platform.tearDown();
     await platform.app.close();
   });
 
@@ -114,9 +121,9 @@ describe("the public links feature", () => {
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
       headers: {},
     });
-    const resPublic = deserialize<DriveFileMockClass>(DriveFileMockClass, resPublicRaw.body);
+    const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
-    expect(resPublic.id).toBe(publicFile.id);
+    expect(resPublic.item?.id).toBe(publicFile.id);
 
     done?.();
   });
@@ -139,9 +146,9 @@ describe("the public links feature", () => {
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
       headers: {},
     });
-    let resPublic = deserialize<DriveFileMockClass>(DriveFileMockClass, resPublicRaw.body);
+    const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
-    expect(resPublic.id).toBe(publicFile.id);
+    expect(resPublic.item?.id).toBe(publicFile.id);
 
     await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
@@ -197,9 +204,9 @@ describe("the public links feature", () => {
       }%2B${"abcdef"}`,
       headers: {},
     });
-    let resPublic = deserialize<DriveFileMockClass>(DriveFileMockClass, resPublicRaw.body);
+    let resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
-    expect(resPublic.id).toBe(publicFile.id);
+    expect(resPublic.item?.id).toBe(publicFile.id);
 
     resPublicRaw = await platform.app.inject({
       method: "GET",

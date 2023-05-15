@@ -97,8 +97,7 @@ export const getPublicLink = (item?: DriveItem): string => {
     publicLink +=
       `/shared/${translator.fromUUID(item?.company_id || '')}` +
       `/drive/${translator.fromUUID(item?.id || '')}` +
-      `/t/${item?.access_info?.public?.token}` +
-      (item?.access_info?.public?.password ? '&pwd' : '');
+      `/t/${item?.access_info?.public?.token}`;
   } catch (e) {
     return publicLink;
   }

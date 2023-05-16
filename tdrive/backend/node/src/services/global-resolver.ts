@@ -22,26 +22,14 @@ import assert from "assert";
 import { CompanyServiceImpl } from "./user/services/companies";
 import { WorkspaceServiceImpl } from "./workspaces/services/workspace";
 import { UserExternalLinksServiceImpl } from "./user/services/external_links";
-import { UserNotificationBadgeService } from "./notifications/services/bages";
-import { NotificationPreferencesService } from "./notifications/services/preferences";
 import { UserServiceImpl } from "./user/services/users/service";
 import { CompanyApplicationServiceImpl } from "./applications/services/company-applications";
 import { ApplicationServiceImpl } from "./applications/services/applications";
 import { FileServiceImpl } from "./files/services";
-import { ChannelServiceImpl } from "./channels/services/channel/service";
-import { MemberServiceImpl } from "./channels/services/member/service";
-import ChannelPendingEmailServiceImpl from "./channels/services/channel/pending-emails/service";
-import { TabServiceImpl } from "./channels/services/tab";
 import { ConsoleServiceImpl } from "./console/service";
 import { StatisticsServiceImpl } from "./statistics/service";
-import { NotificationEngine } from "./notifications/services/engine";
-import { MobilePushService } from "./notifications/services/mobile-push";
-import { ChannelMemberPreferencesServiceImpl } from "./notifications/services/channel-preferences";
-import { ChannelThreadUsersServiceImpl } from "./notifications/services/channel-thread-users";
 import { ApplicationHooksService } from "./applications/services/hooks";
 import OnlineServiceImpl from "./online/service";
-import { ChannelsMessageQueueListener } from "./channels/services/pubsub";
-import { UserNotificationDigestService } from "./notifications/services/digest";
 import { DocumentsService } from "./documents/services";
 import { DocumentsEngine } from "./documents/services/engine";
 import { TagsService } from "./tags/services/tags";
@@ -69,28 +57,12 @@ type TdriveServices = {
   console: ConsoleServiceImpl;
   statistics: StatisticsServiceImpl;
   externalUser: UserExternalLinksServiceImpl;
-  notifications: {
-    badges: UserNotificationBadgeService;
-    channelPreferences: ChannelMemberPreferencesServiceImpl;
-    channelThreads: ChannelThreadUsersServiceImpl;
-    engine: NotificationEngine;
-    preferences: NotificationPreferencesService;
-    mobilePush: MobilePushService;
-    digest: UserNotificationDigestService;
-  };
   applications: {
     marketplaceApps: ApplicationServiceImpl;
     companyApps: CompanyApplicationServiceImpl;
     hooks: ApplicationHooksService;
   };
   files: FileServiceImpl;
-  channels: {
-    channels: ChannelServiceImpl;
-    members: MemberServiceImpl;
-    pubsub: ChannelsMessageQueueListener;
-  };
-  channelPendingEmail: ChannelPendingEmailServiceImpl;
-  tab: TabServiceImpl;
   online: OnlineServiceImpl;
   documents: {
     documents: DocumentsService;
@@ -144,28 +116,12 @@ class GlobalResolver {
       console: await new ConsoleServiceImpl().init(),
       statistics: await new StatisticsServiceImpl().init(),
       externalUser: await new UserExternalLinksServiceImpl().init(),
-      notifications: {
-        badges: await new UserNotificationBadgeService().init(platform),
-        channelPreferences: await new ChannelMemberPreferencesServiceImpl().init(),
-        channelThreads: await new ChannelThreadUsersServiceImpl().init(),
-        engine: await new NotificationEngine().init(),
-        preferences: await new NotificationPreferencesService().init(),
-        mobilePush: await new MobilePushService().init(),
-        digest: await new UserNotificationDigestService().init(),
-      },
       applications: {
         marketplaceApps: await new ApplicationServiceImpl().init(),
         companyApps: await new CompanyApplicationServiceImpl().init(),
         hooks: await new ApplicationHooksService().init(),
       },
       files: await new FileServiceImpl().init(),
-      channels: {
-        channels: await new ChannelServiceImpl().init(),
-        members: await new MemberServiceImpl().init(),
-        pubsub: await new ChannelsMessageQueueListener().init(),
-      },
-      channelPendingEmail: await new ChannelPendingEmailServiceImpl().init(),
-      tab: await new TabServiceImpl().init(),
       online: await new OnlineServiceImpl().init(),
       documents: {
         documents: await new DocumentsService().init(),

@@ -24,9 +24,6 @@
       "root": "STATIC_ROOT"
     }
   },
-  "phpnode": {
-    "secret": "PHP_NODE_API_SECRET"
-  },
   "websocket": {
     "auth": {
       "jwt": {

@@ -6,7 +6,6 @@ import { DatabaseServiceAPI } from "../../../core/platform/services/database/api
 import { Pagination } from "../../../core/platform/framework/api/crud-service";
 
 import User, { TYPE as UserTYPE } from "../../../services/user/entities/user";
-import { Channel } from "../../../services/channels/entities";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import { SearchServiceAPI } from "../../../core/platform/services/search/api";
 import CompanyUser, { TYPE as CompanyUserTYPE } from "../../../services/user/entities/company_user";
@@ -29,7 +28,6 @@ class SearchIndexAll {
   public async run(options: Options = {}): Promise<void> {
     const repositories: Map<string, Repository<any>> = new Map();
     repositories.set("users", await this.database.getRepository(UserTYPE, User));
-    repositories.set("channels", await this.database.getRepository("channels", Channel));
 
     const repository = repositories.get(options.repository);
     if (!repository) {

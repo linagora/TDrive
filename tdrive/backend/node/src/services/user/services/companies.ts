@@ -34,10 +34,6 @@ import { logger, RealtimeSaved } from "../../../core/platform/framework";
 import { getCompanyRoom, getUserRoom } from "../realtime";
 import gr from "../../global-resolver";
 import { localEventBus } from "../../../core/platform/framework/event-bus";
-import {
-  KnowledgeGraphEvents,
-  KnowledgeGraphGenericEventPayload,
-} from "../../../core/platform/services/knowledge-graph/types";
 
 export class CompanyServiceImpl {
   version: "1";
@@ -99,15 +95,6 @@ export class CompanyServiceImpl {
 
       await this.externalCompanyRepository.save(extCompany, context);
     }
-
-    localEventBus.publish<KnowledgeGraphGenericEventPayload<Company>>(
-      KnowledgeGraphEvents.COMPANY_UPSERT,
-      {
-        id: company.id,
-        resource: company,
-        links: [],
-      },
-    );
 
     return new SaveResult<Company>("company", company, OperationType.UPDATE);
   }

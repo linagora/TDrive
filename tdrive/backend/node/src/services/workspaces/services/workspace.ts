@@ -60,10 +60,6 @@ import { expandUUID4, reduceUUID4 } from "../../../utils/uuid-reducer";
 import gr from "../../global-resolver";
 import { logger } from "@sentry/utils";
 import { localEventBus } from "../../../core/platform/framework/event-bus";
-import {
-  KnowledgeGraphEvents,
-  KnowledgeGraphGenericEventPayload,
-} from "../../../core/platform/services/knowledge-graph/types";
 import WorkspaceInviteDomain, {
   TYPE as WorkspaceInviteDomainType,
   getInstance as getWorkspaceInviteDomainInstance,
@@ -238,15 +234,6 @@ export class WorkspaceServiceImpl implements TdriveServiceProvider, Initializabl
         },
       });
     }
-
-    localEventBus.publish<KnowledgeGraphGenericEventPayload<Workspace>>(
-      KnowledgeGraphEvents.WORKSPACE_UPSERT,
-      {
-        id: workspace.id,
-        resource: workspace,
-        links: [{ relation: "parent", type: "company", id: workspace.company_id }],
-      },
-    );
 
     return new SaveResult<Workspace>(
       TYPE,

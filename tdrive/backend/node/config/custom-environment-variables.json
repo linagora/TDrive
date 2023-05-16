@@ -41,15 +41,6 @@
       "secret": "AUTH_JWT_SECRET"
     }
   },
-  "notifications": {
-    "push": {
-      "type": "PUSH_DRIVER",
-      "fcm": {
-        "endpoint": "PUSH_FCM_ENDPOINT",
-        "key": "PUSH_FCM_KEY"
-      }
-    }
-  },
   "database": {
     "secret": "DB_SECRET",
     "type": "DB_DRIVER",

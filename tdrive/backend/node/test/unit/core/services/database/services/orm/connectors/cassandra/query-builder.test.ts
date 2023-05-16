@@ -5,79 +5,64 @@ import {
   buildComparison,
   buildIn,
 } from "../../../../../../../../../src/core/platform/services/database/services/orm/connectors/cassandra/query-builder";
-import { ChannelMemberNotificationPreference } from "../../../../../../../../../src/services/notifications/entities/channel-member-notification-preferences";
+import { DriveFile } from "../../../../../../../../../src/services/documents/entities/drive-file";
 
 describe("The QueryBuilder module", () => {
   describe("The buildSelectQuery function", () => {
     it("should build a valid query from primary key parameters", () => {
       const filters = {
         company_id: "comp1",
-        channel_id: "chan1",
+        parent_id: "parent1",
       };
-      const result = buildSelectQuery<ChannelMemberNotificationPreference>(
-        ChannelMemberNotificationPreference,
-        filters,
-        {},
-        { keyspace: "tdrive" },
-      );
+      const result = buildSelectQuery<DriveFile>(DriveFile, filters, {}, { keyspace: "tdrive" });
 
       expect(result).toEqual(
-        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1;",
+        "SELECT * FROM tdrive.drive_files WHERE company_id = comp1 AND parent_id = 'parent1';",
       );
     });
 
     it("should build a valid query from primary key parameters and comparison", () => {
       const filters = {
         company_id: "comp1",
-        channel_id: "chan1",
+        parent_id: "parent1",
       };
-      const result = buildSelectQuery<ChannelMemberNotificationPreference>(
-        ChannelMemberNotificationPreference,
+      const result = buildSelectQuery<DriveFile>(
+        DriveFile,
         filters,
         {
-          $lt: [["last_read", 1000]],
+          $lt: [["size", 1000]],
         },
         { keyspace: "tdrive" },
       );
 
       expect(result).toEqual(
-        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1 AND last_read < 1000;",
+        "SELECT * FROM tdrive.drive_files WHERE company_id = comp1 AND parent_id = 'parent1' AND size < 1000;",
       );
     });
 
     it("should build IN query from array parameters", () => {
       const filters = {
         company_id: "comp1",
-        channel_id: "chan1",
-        user_id: ["u1", "u2", "u3"],
+        parent_id: "parent1",
+        creator: ["u1", "u2", "u3"],
       };
-      const result = buildSelectQuery<ChannelMemberNotificationPreference>(
-        ChannelMemberNotificationPreference,
-        filters,
-        {},
-        { keyspace: "tdrive" },
-      );
+      const result = buildSelectQuery<DriveFile>(DriveFile, filters, {}, { keyspace: "tdrive" });
 
       expect(result).toEqual(
-        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1 AND user_id IN (u1,u2,u3);",
+        "SELECT * FROM tdrive.drive_files WHERE company_id = comp1 AND parent_id = 'parent1' AND creator IN (u1,u2,u3);",
       );
     });
 
     it("should not build IN query from array parameters when array is empty", () => {
       const filters = {
         company_id: "comp1",
-        channel_id: "chan1",
+        parent_id: "parent1",
         user_id: [],
       };
-      const result = buildSelectQuery<ChannelMemberNotificationPreference>(
-        ChannelMemberNotificationPreference,
-        filters,
-        {},
-        { keyspace: "tdrive" },
-      );
+      const result = buildSelectQuery<DriveFile>(DriveFile, filters, {}, { keyspace: "tdrive" });
 
       expect(result).toEqual(
-        "SELECT * FROM tdrive.channel_members_notification_preferences WHERE company_id = comp1 AND channel_id = chan1;",
+        "SELECT * FROM tdrive.drive_files WHERE company_id = comp1 AND parent_id = 'parent1';",
       );
     });
   });

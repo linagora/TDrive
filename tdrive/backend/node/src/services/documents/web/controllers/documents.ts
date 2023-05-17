@@ -140,7 +140,6 @@ export class DocumentsController {
   getAccess = async (
     request: FastifyRequest<{
       Params: ItemRequestParams & { user_id: string };
-      Querystring: {};
     }>,
   ): Promise<{ access: DriveFileAccessLevel | "none" }> => {
     const context = getDriveExecutionContext(request);

@@ -175,6 +175,19 @@ export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<
  * @returns {Promise<boolean>}
  */
 export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<boolean> => {
+  if (context.user.application_id) {
+    //Applications do everything (if they are added to the company)
+    if (
+      !(await globalResolver.services.applications.companyApps.get({
+        company_id: context.company.id,
+        application_id: context.user.application_id,
+      }))
+    ) {
+      return false;
+    }
+    return true;
+  }
+
   const userRole = await globalResolver.services.companies.getUserRole(
     context.company.id,
     context.user?.id,
@@ -369,6 +382,19 @@ export const getAccessLevel = async (
 
     if (!item) {
       throw Error("Drive item doesn't exist");
+    }
+
+    if (context.user.application_id) {
+      //Applications do everything (if they are added to the company)
+      if (
+        !(await globalResolver.services.applications.companyApps.get({
+          company_id: context.company.id,
+          application_id: context.user.application_id,
+        }))
+      ) {
+        return "none";
+      }
+      return "manage";
     }
 
     /*

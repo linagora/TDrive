@@ -23,6 +23,10 @@ export class CompanyApplicationServiceImpl implements TdriveServiceProvider, Ini
       context,
     );
 
+    if (!application?.id) {
+      return null;
+    }
+
     return {
       ...{
         id: pk.application_id,

@@ -162,13 +162,15 @@ export const hasAccessLevel = (
  * @returns {Promise<boolean>}
  */
 export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<boolean> => {
-  if (false && context.user.application_id) {
+  if (context.user.application_id) {
     //Applications do everything (if they are added to the company)
     if (
-      !!(await globalResolver.services.applications.companyApps.get({
-        company_id: context.company.id,
-        application_id: context.user.application_id,
-      }))
+      !!(
+        await globalResolver.services.applications.companyApps.get({
+          company_id: context.company.id,
+          application_id: context.user.application_id,
+        })
+      )?.application?.id
     ) {
       return false;
     }
@@ -189,13 +191,15 @@ export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<
  * @returns {Promise<boolean>}
  */
 export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<boolean> => {
-  if (false && context.user.application_id) {
+  if (context.user.application_id) {
     //Applications do everything (if they are added to the company)
     if (
-      !!(await globalResolver.services.applications.companyApps.get({
-        company_id: context.company.id,
-        application_id: context.user.application_id,
-      }))
+      !!(
+        await globalResolver.services.applications.companyApps.get({
+          company_id: context.company.id,
+          application_id: context.user.application_id,
+        })
+      )?.application?.id
     ) {
       return true;
     }
@@ -397,13 +401,15 @@ export const getAccessLevel = async (
       throw Error("Drive item doesn't exist");
     }
 
-    if (false && context.user.application_id) {
+    if (context.user.application_id) {
       //Applications do everything (if they are added to the company)
       if (
-        !!(await globalResolver.services.applications.companyApps.get({
-          company_id: context.company.id,
-          application_id: context.user.application_id,
-        }))
+        !!(
+          await globalResolver.services.applications.companyApps.get({
+            company_id: context.company.id,
+            application_id: context.user.application_id,
+          })
+        )?.application?.id
       ) {
         return "manage";
       }

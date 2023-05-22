@@ -163,6 +163,7 @@ export const hasAccessLevel = (
  */
 export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<boolean> => {
   if (context.user.application_id) {
+    console.log("A-12");
     //Applications do everything (if they are added to the company)
     if (
       !!(
@@ -172,8 +173,10 @@ export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<
         })
       )?.application?.id
     ) {
+      console.log("A-13");
       return false;
     }
+    console.log("A-14");
   }
 
   const userRole = await globalResolver.services.companies.getUserRole(

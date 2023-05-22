@@ -25,7 +25,6 @@ export class CompanyApplicationServiceImpl implements TdriveServiceProvider, Ini
       );
 
       if (!application?.id) {
-        console.log("B-12");
         return null;
       }
 

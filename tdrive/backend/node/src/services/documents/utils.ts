@@ -162,21 +162,18 @@ export const hasAccessLevel = (
  * @returns {Promise<boolean>}
  */
 export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<boolean> => {
-  if (context.user.application_id) {
-    console.log("A-12");
+  if (context.user?.application_id) {
     //Applications do everything (if they are added to the company)
     if (
       !!(
         await globalResolver.services.applications.companyApps.get({
           company_id: context.company.id,
-          application_id: context.user.application_id,
+          application_id: context.user?.application_id,
         })
       )?.application?.id
     ) {
-      console.log("A-13");
       return false;
     }
-    console.log("A-14");
   }
 
   const userRole = await globalResolver.services.companies.getUserRole(
@@ -194,13 +191,13 @@ export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<
  * @returns {Promise<boolean>}
  */
 export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<boolean> => {
-  if (context.user.application_id) {
+  if (context.user?.application_id) {
     //Applications do everything (if they are added to the company)
     if (
       !!(
         await globalResolver.services.applications.companyApps.get({
           company_id: context.company.id,
-          application_id: context.user.application_id,
+          application_id: context.user?.application_id,
         })
       )?.application?.id
     ) {
@@ -404,13 +401,13 @@ export const getAccessLevel = async (
       throw Error("Drive item doesn't exist");
     }
 
-    if (context.user.application_id) {
+    if (context.user?.application_id) {
       //Applications do everything (if they are added to the company)
       if (
         !!(
           await globalResolver.services.applications.companyApps.get({
             company_id: context.company.id,
-            application_id: context.user.application_id,
+            application_id: context.user?.application_id,
           })
         )?.application?.id
       ) {
@@ -718,7 +715,7 @@ export const getFileMetadata = async (
       company_id: context.company.id,
     },
     context,
-    { ...(context.user.server_request ? {} : { waitForThumbnail: true }) },
+    { ...(context.user?.server_request ? {} : { waitForThumbnail: true }) },
   );
 
   if (!file) {

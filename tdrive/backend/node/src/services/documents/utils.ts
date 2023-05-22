@@ -160,6 +160,18 @@ export const hasAccessLevel = (
  * @returns {Promise<boolean>}
  */
 export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<boolean> => {
+  if (context.user.application_id) {
+    //Applications do everything (if they are added to the company)
+    if (
+      !!(await globalResolver.services.applications.companyApps.get({
+        company_id: context.company.id,
+        application_id: context.user.application_id,
+      }))
+    ) {
+      return false;
+    }
+  }
+
   const userRole = await globalResolver.services.companies.getUserRole(
     context.company.id,
     context.user?.id,
@@ -178,14 +190,13 @@ export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<
   if (context.user.application_id) {
     //Applications do everything (if they are added to the company)
     if (
-      !(await globalResolver.services.applications.companyApps.get({
+      !!(await globalResolver.services.applications.companyApps.get({
         company_id: context.company.id,
         application_id: context.user.application_id,
       }))
     ) {
-      return false;
+      return true;
     }
-    return true;
   }
 
   const userRole = await globalResolver.services.companies.getUserRole(
@@ -387,14 +398,13 @@ export const getAccessLevel = async (
     if (context.user.application_id) {
       //Applications do everything (if they are added to the company)
       if (
-        !(await globalResolver.services.applications.companyApps.get({
+        !!(await globalResolver.services.applications.companyApps.get({
           company_id: context.company.id,
           application_id: context.user.application_id,
         }))
       ) {
-        return "none";
+        return "manage";
       }
-      return "manage";
     }
 
     /*

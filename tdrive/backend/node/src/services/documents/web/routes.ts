@@ -23,13 +23,6 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, _options, next)
   });
 
   fastify.route({
-    method: "GET",
-    url: `${serviceUrl}/:id/user/:user_id/access`,
-    preValidation: [fastify.authenticateOptional],
-    handler: documentsController.getAccess.bind(documentsController),
-  });
-
-  fastify.route({
     method: "POST",
     url: serviceUrl,
     preValidation: [fastify.authenticateOptional],
@@ -49,6 +42,13 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, _options, next)
     url: `${serviceUrl}/:id`,
     preValidation: [fastify.authenticateOptional],
     handler: documentsController.delete.bind(documentsController),
+  });
+
+  fastify.route({
+    method: "GET",
+    url: `${serviceUrl}/:id/user/:user_id/access`,
+    preValidation: [fastify.authenticateOptional],
+    handler: documentsController.getAccess.bind(documentsController),
   });
 
   fastify.route({

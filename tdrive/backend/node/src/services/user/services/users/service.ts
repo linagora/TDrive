@@ -32,10 +32,6 @@ import { RealtimeSaved } from "../../../../core/platform/framework";
 import { getPublicUserRoom, getUserRoom } from "../../realtime";
 import NodeCache from "node-cache";
 import gr from "../../../global-resolver";
-import {
-  KnowledgeGraphEvents,
-  KnowledgeGraphGenericEventPayload,
-} from "../../../../core/platform/services/knowledge-graph/types";
 import { formatUser } from "../../../../utils/users";
 
 export class UserServiceImpl {
@@ -121,26 +117,10 @@ export class UserServiceImpl {
       },
     ];
   })
-  async save<SaveOptions>(user: User, context?: ExecutionContext): Promise<SaveResult<User>> {
+  async save(user: User, context?: ExecutionContext): Promise<SaveResult<User>> {
     this.assignDefaults(user);
     await this.repository.save(user, context);
     await this.updateExtRepository(user);
-
-    localEventBus.publish<KnowledgeGraphGenericEventPayload<User>>(
-      KnowledgeGraphEvents.USER_UPSERT,
-      {
-        id: user.id,
-        resource: user,
-        links: [
-          {
-            // FIXME: We should provide the company id here
-            id: "",
-            relation: "parent",
-            type: "company",
-          },
-        ],
-      },
-    );
 
     await this.publishPublicUserRealtime(user.id);
 

@@ -409,6 +409,7 @@ export class DocumentsService {
 
       return item;
     } catch (error) {
+      console.error(error);
       this.logger.error("Failed to update drive item", error);
       throw new CrudException("Failed to update item", 500);
     }

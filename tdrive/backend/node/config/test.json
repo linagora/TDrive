@@ -19,8 +19,5 @@
     "amqp": {
       "urls": ["amqp://guest:guest@rabbitmq:5672"]
     }
-  },
-  "phpnode": {
-    "php_endpoint": false
   }
 }

@@ -43,47 +43,7 @@ export default class Tracker extends TdriveService<TrackerAPI> implements Tracke
       );
     });
 
-    const channelCreatedEvent = "channel:created";
-    localEventBus.subscribe<ResourceEventsPayload>(channelCreatedEvent, data => {
-      logger.debug(`Tracker - New ${channelCreatedEvent} event`);
-      this.track(
-        {
-          user: data.user,
-          event: channelCreatedEvent,
-          properties: this.getVisibilityObject(data.channel.visibility),
-        },
-        (err: Error) =>
-          err
-            ? logger.error({ err }, "Tracker - Error while tracking", channelCreatedEvent)
-            : false,
-      );
-    });
-
-    const channelMemberCreatedEvent = "channel:member:created";
-    localEventBus.subscribe<ResourceEventsPayload>(channelMemberCreatedEvent, data => {
-      logger.debug(`Tracker - New ${channelMemberCreatedEvent} event`);
-      this.track(
-        {
-          user: data.user,
-          event: data.user.id !== data.member.user_id ? "channel:invite" : "channel:join",
-          properties: this.getVisibilityObject(data.channel.visibility),
-        },
-        (err: Error) =>
-          err
-            ? logger.error({ err }, "Tracker - Error while tracking", channelMemberCreatedEvent)
-            : false,
-      );
-    });
-
     return this;
-  }
-
-  private getVisibilityObject(visibility: string) {
-    return {
-      is_direct: visibility === "direct" ? true : false,
-      is_private: visibility === "private" ? true : false,
-      is_public: visibility === "public" ? true : false,
-    };
   }
 
   public async identify(

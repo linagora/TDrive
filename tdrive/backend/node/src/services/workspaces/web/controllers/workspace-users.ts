@@ -35,7 +35,6 @@ import WorkspacePendingUser from "../../entities/workspace_pending_users";
 import { ConsoleCompany, CreateConsoleUser } from "../../../console/types";
 import { hasCompanyAdminLevel } from "../../../../utils/company";
 import gr from "../../../global-resolver";
-import { getChannelPendingEmailsInstance } from "../../../channels/entities";
 
 export class WorkspaceUsersCrudController
   implements
@@ -413,16 +412,6 @@ export class WorkspaceUsersCrudController
         invitation.role,
         invitation.company_role,
       );
-      (request.body.channels || []).forEach(async channelId => {
-        const channelPendingEmail = getChannelPendingEmailsInstance({
-          channel_id: channelId,
-          company_id: request.params.company_id,
-          email: invitation.email,
-          workspace_id: context.workspace_id,
-        });
-
-        await gr.services.channelPendingEmail.create(channelPendingEmail, context);
-      });
       responses.push({ email: invitation.email, status: "ok" });
     };
 
@@ -516,18 +505,6 @@ export class WorkspaceUsersCrudController
     await Promise.all(
       usersToProcessImmediately.map(user => {
         gr.services.console.processPendingUser(user);
-        gr.services.channelPendingEmail.proccessPendingEmails(
-          {
-            company_id: context.company_id,
-            user_id: user.id,
-            workspace_id: context.workspace_id,
-          },
-          {
-            workspace_id: context.workspace_id,
-            company_id: context.company_id,
-          },
-          context,
-        );
       }),
     );
 

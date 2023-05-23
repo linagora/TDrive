@@ -44,13 +44,18 @@ export class FileController {
   ): Promise<void> {
     const context = getCompanyExecutionContext(request);
     const params = request.params;
-    const data = await gr.services.files.download(params.id, context);
-    const filename = data.name.replace(/[^a-zA-Z0-9 -_.]/g, "");
+    try {
+      const data = await gr.services.files.download(params.id, context);
+      const filename = data.name.replace(/[^a-zA-Z0-9 -_.]/g, "");
 
-    response.header("Content-disposition", `attachment; filename="${filename}"`);
-    if (data.size) response.header("Content-Length", data.size);
-    response.type(data.mime);
-    response.send(data.file);
+      response.header("Content-disposition", `attachment; filename="${filename}"`);
+      if (data.size) response.header("Content-Length", data.size);
+      response.type(data.mime);
+      response.send(data.file);
+    } catch (e) {
+      console.log("!!!" + e);
+      throw e;
+    }
   }
 
   async thumbnail(

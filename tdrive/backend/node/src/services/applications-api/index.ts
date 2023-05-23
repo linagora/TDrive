@@ -1,5 +1,6 @@
+import axios from "axios";
 import config from "config";
-import FastProxy from "fast-proxy";
+import _ from "lodash";
 import { Prefix, TdriveService } from "../../core/platform/framework";
 import WebServerAPI from "../../core/platform/services/webserver/provider";
 import Application from "../applications/entities/application";
@@ -20,17 +21,49 @@ export default class ApplicationsApiService extends TdriveService<undefined> {
     //Redirect requests from /plugins/* to the plugin server (if installed)
     const apps = config.get<Application[]>("applications.plugins") || [];
     for (const app of apps) {
-      const domain = app.internal_domain;
-      const prefix = app.external_prefix;
+      const domain = app.internal_domain.replace(/(\/$|^\/)/gm, "");
+      const prefix = app.external_prefix.replace(/(\/$|^\/)/gm, "");
       if (domain && prefix) {
-        const { proxy, close } = FastProxy({
-          base: domain,
-        });
-        console.log("Listening at ", "/" + prefix.replace(/(\/$|^\/)/gm, "") + "/*");
-        fastify.addHook("onClose", close);
-        fastify.all("/" + prefix.replace(/(\/$|^\/)/gm, "") + "/*", (req, rep) => {
-          proxy(req.raw, rep.raw, req.url, {});
-        });
+        try {
+          fastify.all("/" + prefix + "/*", async (req, rep) => {
+            console.log("Proxying", req.method, req.url, "to", domain);
+            try {
+              const response = await axios.request({
+                url: domain + req.url,
+                method: req.method as any,
+                headers: _.omit(req.headers, "host", "content-length") as {
+                  [key: string]: string;
+                },
+                data: req.body as any,
+                responseType: "stream",
+                maxRedirects: 0,
+                validateStatus: null,
+              });
+
+              // Headers
+              for (const key in response.headers) {
+                rep.header(key, response.headers[key]);
+              }
+              rep.statusCode = response.status;
+
+              // Redirects
+              if (response.status === 301 || response.status === 302) {
+                rep.redirect(response.headers.location);
+                return;
+              }
+
+              rep.send(response.data);
+            } catch (err) {
+              console.error(`${err}`);
+              rep.raw.statusCode = 500;
+              rep.raw.end(JSON.stringify({ error: err.message }));
+            }
+          });
+          console.log("Listening at ", "/" + prefix + "/*");
+        } catch (e) {
+          console.log(e);
+          console.log("Can't listen to ", "/" + prefix + "/*");
+        }
       }
     }
 

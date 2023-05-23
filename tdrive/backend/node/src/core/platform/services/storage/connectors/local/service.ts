@@ -3,6 +3,7 @@ import { createWriteStream, createReadStream, existsSync, mkdirSync, statSync, r
 import p from "path";
 import { rm } from "fs/promises"; // Do not change the import, this is not the same function import { rm } from "fs"
 import { StorageConnectorAPI, WriteMetadata } from "../../provider";
+import fs from "fs";
 
 export type LocalConfiguration = {
   path: string;
@@ -42,7 +43,11 @@ export default class LocalConnectorService implements StorageConnectorAPI {
   }
 
   async read(path: string): Promise<Readable> {
-    return createReadStream(this.getFullPath(path));
+    const fullPath = this.getFullPath(path);
+    if (!fs.existsSync(fullPath)) {
+      throw new Error("File doesn't exists");
+    }
+    return createReadStream(fullPath);
   }
 
   async remove(path: string): Promise<boolean> {

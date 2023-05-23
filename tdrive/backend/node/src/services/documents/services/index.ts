@@ -21,6 +21,7 @@ import {
   TrashType,
   CompanyExecutionContext,
   DriveTdriveTab,
+  DriveFileAccessLevel,
 } from "../types";
 import {
   addDriveItemToArchive,
@@ -181,6 +182,28 @@ export class DocumentsService {
       children: children,
       access: await getAccessLevel(id, entity, this.repository, context),
     };
+  };
+
+  getAccess = async (
+    id: string,
+    userId: string,
+    context: DriveExecutionContext,
+  ): Promise<DriveFileAccessLevel | "none" | null> => {
+    if (!context) {
+      this.logger.error("invalid context");
+      return null;
+    }
+
+    id = id || this.ROOT;
+
+    //Get requested entity
+    const myAccessLevel = await getAccessLevel(id, null, this.repository, context);
+
+    if (myAccessLevel !== "none") {
+      return await getAccessLevel(id, null, this.repository, { ...context, user: { id: userId } });
+    }
+
+    return null;
   };
 
   /**
@@ -386,6 +409,7 @@ export class DocumentsService {
 
       return item;
     } catch (error) {
+      console.error(error);
       this.logger.error("Failed to update drive item", error);
       throw new CrudException("Failed to update item", 500);
     }

@@ -11,6 +11,8 @@ import { MessageQueueServiceAPI } from "../../../src/core/platform/services/mess
 // @ts-ignore
 import config from "config";
 import globalResolver from "../../../src/services/global-resolver";
+import {FileServiceImpl} from "../../../src/services/files/services";
+import StorageAPI from "../../../src/core/platform/services/storage/provider";
 
 type TokenPayload = {
   sub: string;
@@ -32,8 +34,10 @@ export interface TestPlatform {
   workspace: Workspace;
   app: FastifyInstance;
   database: DatabaseServiceAPI;
+  storage: StorageAPI;
   messageQueue: MessageQueueServiceAPI;
   authService: AuthServiceAPI;
+  filesService: FileServiceImpl;
   auth: {
     getJWTToken(payload?: TokenPayload): Promise<string>;
   };
@@ -68,17 +72,21 @@ export async function init(
     await platform.start();
 
     const database = platform.getProvider<DatabaseServiceAPI>("database");
+    await database.getConnector().drop();
     const messageQueue = platform.getProvider<MessageQueueServiceAPI>("message-queue");
     const auth = platform.getProvider<AuthServiceAPI>("auth");
+    const storage: StorageAPI = platform.getProvider<StorageAPI>("storage");
 
     testPlatform = {
       platform,
       app,
       messageQueue,
       database,
+      storage,
       workspace: { company_id: "", workspace_id: "" },
       currentUser: { id: "" },
       authService: auth,
+      filesService: globalResolver.services.files,
       auth: {
         getJWTToken,
       },
@@ -104,7 +112,7 @@ export async function init(
       payload.sub = testPlatform.currentUser.id;
     }
 
-    if (testPlatform.currentUser.isWorkspaceModerator) {
+    if (testPlatform  .currentUser.isWorkspaceModerator) {
       payload.org = {};
       payload.org[testPlatform.workspace.company_id] = {
         role: "",

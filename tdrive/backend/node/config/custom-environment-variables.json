@@ -24,9 +24,6 @@
       "root": "STATIC_ROOT"
     }
   },
-  "phpnode": {
-    "secret": "PHP_NODE_API_SECRET"
-  },
   "websocket": {
     "auth": {
       "jwt": {
@@ -42,15 +39,6 @@
   "auth": {
     "jwt": {
       "secret": "AUTH_JWT_SECRET"
-    }
-  },
-  "notifications": {
-    "push": {
-      "type": "PUSH_DRIVER",
-      "fcm": {
-        "endpoint": "PUSH_FCM_ENDPOINT",
-        "key": "PUSH_FCM_KEY"
-      }
     }
   },
   "database": {

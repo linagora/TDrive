@@ -127,12 +127,6 @@
       "path": "/storage/"
     }
   },
-  "knowledge-graph": {
-    "endpoint": "http://host-gateway:8888",
-    "callback_token": "secret",
-    "use": false,
-    "forwarded_companies": []
-  },
   "email-pusher": {
     "endpoint": "https://api.smtp2go.com/v3/email/send",
     "api_key": "secret",
@@ -153,12 +147,9 @@
     "search",
     "message-queue",
     "realtime",
-    "phpnode",
     "tracker",
     "general",
     "user",
-    "channels",
-    "notifications",
     "files",
     "workspaces",
     "console",
@@ -166,8 +157,6 @@
     "statistics",
     "cron",
     "online",
-    "knowledge-graph",
-    "knowledge-graph-web",
     "email-pusher",
     "documents",
     "applications",

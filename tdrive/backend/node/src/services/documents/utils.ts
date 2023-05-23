@@ -68,6 +68,8 @@ export const getDefaultDriveItem = (
       ],
       public: {
         level: "none",
+        password: "",
+        expiration: 0,
         token: generateAccessToken(),
       },
     },
@@ -160,6 +162,20 @@ export const hasAccessLevel = (
  * @returns {Promise<boolean>}
  */
 export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<boolean> => {
+  if (context.user?.application_id) {
+    //Applications do everything (if they are added to the company)
+    if (
+      !!(
+        await globalResolver.services.applications.companyApps.get({
+          company_id: context.company.id,
+          application_id: context.user?.application_id,
+        })
+      )?.application?.id
+    ) {
+      return false;
+    }
+  }
+
   const userRole = await globalResolver.services.companies.getUserRole(
     context.company.id,
     context.user?.id,
@@ -175,6 +191,20 @@ export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<
  * @returns {Promise<boolean>}
  */
 export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<boolean> => {
+  if (context.user?.application_id) {
+    //Applications do everything (if they are added to the company)
+    if (
+      !!(
+        await globalResolver.services.applications.companyApps.get({
+          company_id: context.company.id,
+          application_id: context.user?.application_id,
+        })
+      )?.application?.id
+    ) {
+      return true;
+    }
+  }
+
   const userRole = await globalResolver.services.companies.getUserRole(
     context.company.id,
     context.user?.id,
@@ -357,7 +387,7 @@ export const getAccessLevel = async (
       ? "manage"
       : "write";
 
-  const publicToken = context.public_token;
+  let publicToken = context.public_token;
 
   try {
     item =
@@ -371,6 +401,20 @@ export const getAccessLevel = async (
       throw Error("Drive item doesn't exist");
     }
 
+    if (context.user?.application_id) {
+      //Applications do everything (if they are added to the company)
+      if (
+        !!(
+          await globalResolver.services.applications.companyApps.get({
+            company_id: context.company.id,
+            application_id: context.user?.application_id,
+          })
+        )?.application?.id
+      ) {
+        return "manage";
+      }
+    }
+
     /*
      * Specific user or channel rule is applied first. Then less restrictive level will be chosen
      * between the parent folder and company accesses.
@@ -379,7 +423,15 @@ export const getAccessLevel = async (
     //Public access
     if (publicToken) {
       if (!item.access_info.public.token) return "none";
-      const { token: itemToken, level: itemLevel } = item.access_info.public;
+      const { token: itemToken, level: itemLevel, password, expiration } = item.access_info.public;
+      if (expiration && expiration < Date.now()) return "none";
+      if (password) {
+        const data = publicToken.split("+");
+        if (data.length !== 2) return "none";
+        const [extractedPublicToken, publicTokenPassword] = data;
+        if (publicTokenPassword !== password) return "none";
+        publicToken = extractedPublicToken;
+      }
       if (itemToken === publicToken) return itemLevel;
     }
 
@@ -663,7 +715,7 @@ export const getFileMetadata = async (
       company_id: context.company.id,
     },
     context,
-    { ...(context.user.server_request ? {} : { waitForThumbnail: true }) },
+    { ...(context.user?.server_request ? {} : { waitForThumbnail: true }) },
   );
 
   if (!file) {

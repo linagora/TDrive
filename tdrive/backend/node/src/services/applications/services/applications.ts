@@ -11,7 +11,7 @@ export class ApplicationServiceImpl implements TdriveServiceProvider, Initializa
   }
 
   async get(id: string, _: ExecutionContext): Promise<Application> {
-    return (await this.list(_)).find((app: Application) => app.id === id);
+    return (await this.list(_)).find((app: Application) => app?.id === id);
   }
 
   async list(_: ExecutionContext): Promise<Application[]> {

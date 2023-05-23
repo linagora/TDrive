@@ -73,7 +73,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
       return await this.getConnector().write(path, stream);
     } catch (err) {
       logger.error(err);
-      return null;
+      throw err;
     }
   }
 
@@ -84,7 +84,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
 
       const chunks = options?.totalChunks || 1;
       let count = 1;
-      let stream;
+      let stream: any;
       async function factory(callback: (err?: Error, stream?: Stream) => unknown) {
         if (count > chunks) {
           callback();
@@ -107,8 +107,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
           }
         } catch (err) {
           logger.error(err);
-          callback();
-          return;
+          callback(err, null);
         }
         callback(null, stream);
         return;
@@ -117,7 +116,7 @@ export default class StorageService extends TdriveService<StorageAPI> implements
       return new Multistream(factory);
     } catch (err) {
       logger.error(err);
-      return null;
+      throw err;
     }
   }
 

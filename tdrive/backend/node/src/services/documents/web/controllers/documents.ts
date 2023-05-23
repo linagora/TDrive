@@ -10,6 +10,7 @@ import { FileVersion } from "../../entities/file-version";
 import {
   CompanyExecutionContext,
   DriveExecutionContext,
+  DriveFileAccessLevel,
   DriveItemDetails,
   DriveTdriveTab,
   ItemRequestParams,
@@ -130,6 +131,33 @@ export class DocumentsController {
             request.currentUser?.id,
           )
         : [],
+    };
+  };
+
+  /**
+   * Return access level of a given user on a given item
+   */
+  getAccess = async (
+    request: FastifyRequest<{
+      Params: ItemRequestParams & { user_id: string };
+    }>,
+  ): Promise<{ access: DriveFileAccessLevel | "none" }> => {
+    const context = getDriveExecutionContext(request);
+    const { id } = request.params;
+    const { user_id } = request.params;
+
+    const access = await globalResolver.services.documents.documents.getAccess(
+      id,
+      user_id,
+      context,
+    );
+
+    if (!access) {
+      throw new CrudException("Item not found", 404);
+    }
+
+    return {
+      access,
     };
   };
 
@@ -374,9 +402,9 @@ export class DocumentsController {
  * @returns {CompanyExecutionContext}
  */
 const getDriveExecutionContext = (
-  req: FastifyRequest<{ Params: { company_id: string }; Querystring: { public_token?: string } }>,
+  req: FastifyRequest<{ Params: { company_id: string }; Querystring?: { public_token?: string } }>,
 ): DriveExecutionContext => ({
-  public_token: req.query.public_token,
+  public_token: req.query?.public_token,
   user: req.currentUser,
   company: { id: req.params.company_id },
   url: req.url,

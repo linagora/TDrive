@@ -48,6 +48,13 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, options, next) 
     handler: (request, reply) => controller.proxy.bind(controller)(request, reply, fastify),
   });
 
+  // Sync SSO users
+  fastify.route({
+    method: "POST",
+    url: "/sync",
+    handler: controller.syncUsers.bind(controller),
+  });
+
   next();
 };
 

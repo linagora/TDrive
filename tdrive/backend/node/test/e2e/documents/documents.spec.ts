@@ -164,7 +164,7 @@ describe("the Drive feature", () => {
       listTrashResponse.body,
     );
 
-    expect(listTrashResult.item.name).toEqual("trash");
+    expect(listTrashResult.item.name).toEqual("Trash");
     expect(listTrashResult.children.some(({ id }) => id === createItemResult.id)).toBeTruthy();
 
     done?.();

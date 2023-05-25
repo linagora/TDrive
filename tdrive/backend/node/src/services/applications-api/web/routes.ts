@@ -52,6 +52,8 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, options, next) 
   fastify.route({
     method: "POST",
     url: "/sync",
+    preValidation: [fastify.authenticate],
+    preHandler: [checkApplication],
     handler: controller.syncUsers.bind(controller),
   });
 

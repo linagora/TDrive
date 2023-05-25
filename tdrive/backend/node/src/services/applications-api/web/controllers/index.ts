@@ -9,7 +9,6 @@ import {
 } from "../../../../core/platform/services/realtime/types";
 import { ResourceGetResponse } from "../../../../utils/types";
 import { getInstance } from "../../../user/entities/user";
-import { getInstance as getCompanyInstance } from "../../../../services/user/entities/company";
 import {
   ApplicationObject,
   getApplicationObject,
@@ -168,10 +167,25 @@ export class ApplicationsApiController {
 
   async syncUsers(
     request: FastifyRequest<{
-      Body: { email: string; first_name: string; last_name: string };
+      Body: {
+        email: string;
+        first_name: string;
+        last_name: string;
+        application_id: string;
+        company_id: string;
+      };
     }>,
   ): Promise<any> {
     const email = request.body.email.trim().toLocaleLowerCase();
+    const checkApplication = gr.services.applications.companyApps.get({
+      application_id: request.body.application_id,
+      company_id: request.body.company_id,
+    });
+
+    if (!checkApplication) {
+      throw new Error("Application is not allowed to sync users for this company.");
+    }
+
     if (await gr.services.users.getByEmail(email)) {
       throw new Error("This email is already used");
     }
@@ -188,20 +202,8 @@ export class ApplicationsApiController {
         mail_verified: true,
       });
       const user = await gr.services.users.create(newUser);
-      let company = await gr.services.companies.getCompany({
-        id: "00000000-0000-4000-0000-000000000000",
-      });
-      if (!company) {
-        company = await gr.services.companies.createCompany(
-          getCompanyInstance({
-            id: "00000000-0000-4000-0000-000000000000",
-            name: "Tdrive",
-            plan: { name: "Local", limits: undefined, features: undefined },
-          }),
-        );
-      }
 
-      await gr.services.companies.setUserRole(company.id, user.entity.id, "admin");
+      await gr.services.companies.setUserRole(request.body.company_id, user.entity.id, "admin");
 
       await gr.services.users.save(user.entity, {
         user: { id: user.entity.id, server_request: true },

@@ -27,17 +27,21 @@ import {
   addDriveItemToArchive,
   calculateItemSize,
   canMoveItem,
-  checkAccess,
-  getAccessLevel,
   getDefaultDriveItem,
   getDefaultDriveItemVersion,
   getFileMetadata,
   getItemName,
   getPath,
-  hasAccessLevel,
-  makeStandaloneAccessLevel,
+  getVirtualFoldersNames,
+  isVirtualFolder,
   updateItemSize,
 } from "../utils";
+import {
+  checkAccess,
+  getAccessLevel,
+  hasAccessLevel,
+  makeStandaloneAccessLevel,
+} from "./access-check";
 import { websocketEventBus } from "../../../core/platform/services/realtime/bus";
 
 import archiver from "archiver";
@@ -96,19 +100,18 @@ export class DocumentsService {
     id = id || this.ROOT;
 
     //Get requested entity
-    const entity =
-      id === this.ROOT || id === this.TRASH
-        ? null
-        : await this.repository.findOne(
-            {
-              company_id: context.company.id,
-              id,
-            },
-            {},
-            context,
-          );
+    const entity = isVirtualFolder(id)
+      ? null
+      : await this.repository.findOne(
+          {
+            company_id: context.company.id,
+            id,
+          },
+          {},
+          context,
+        );
 
-    if (!entity && !(id === this.ROOT || id === this.TRASH)) {
+    if (!entity && !isVirtualFolder(id)) {
       this.logger.error("Drive item not found");
       throw new CrudException("Item not found", 404);
     }
@@ -171,9 +174,9 @@ export class DocumentsService {
         ({
           id,
           parent_id: null,
-          name: id === this.ROOT ? "root" : id === this.TRASH ? "trash" : "unknown",
+          name: getVirtualFoldersNames(id),
           size: await calculateItemSize(
-            id === this.ROOT ? this.ROOT : "trash",
+            { id, is_directory: true, size: 0 },
             this.repository,
             context,
           ),

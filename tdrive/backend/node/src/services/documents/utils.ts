@@ -1,31 +1,38 @@
-import mimes from "../../utils/mime";
-import { merge } from "lodash";
-import { DriveFile } from "./entities/drive-file";
-import {
-  CompanyExecutionContext,
-  DriveExecutionContext,
-  DriveFileAccessLevel,
-  RootType,
-  TrashType,
-} from "./types";
-import crypto from "crypto";
-import { FileVersion, DriveFileMetadata } from "./entities/file-version";
-import globalResolver from "../global-resolver";
-import Repository from "../../core/platform/services/database/services/orm/repository/repository";
 import archiver from "archiver";
+import { merge } from "lodash";
+import PdfParse from "pdf-parse";
 import { Readable } from "stream";
-import { stopWords } from "./const";
 import unoconv from "unoconv-promise";
+import Repository from "../../core/platform/services/database/services/orm/repository/repository";
 import {
-  writeToTemporaryFile,
   cleanFiles,
   getTmpFile,
-  readFromTemporaryFile,
   readableToBuffer,
+  readFromTemporaryFile,
+  writeToTemporaryFile,
 } from "../../utils/files";
-import PdfParse from "pdf-parse";
-import _ from "lodash";
-import { logger } from "../../core/platform/framework";
+import mimes from "../../utils/mime";
+import globalResolver from "../global-resolver";
+import { stopWords } from "./const";
+import { DriveFile } from "./entities/drive-file";
+import { DriveFileMetadata, FileVersion } from "./entities/file-version";
+import { checkAccess, generateAccessToken } from "./services/access-check";
+import { CompanyExecutionContext, DriveExecutionContext, RootType, TrashType } from "./types";
+
+const ROOT: RootType = "root";
+const TRASH: TrashType = "trash";
+
+export const isVirtualFolder = (id: string) => {
+  return id === ROOT || id === TRASH || id.startsWith("user_");
+};
+
+export const getVirtualFoldersNames = (id: string) => {
+  if (id.startsWith("user_")) {
+    return "My Drive";
+  }
+
+  return id === ROOT ? "Home" : id === TRASH ? "Trash" : "Unknown";
+};
 
 /**
  * Returns the default DriveFile object using existing data
@@ -121,99 +128,6 @@ export const getDefaultDriveItemVersion = (
 };
 
 /**
- * Generates a random sha1 access token
- *
- * @returns {String} - the random access token ( sha1 hex digest ).
- */
-export const generateAccessToken = (): string => {
-  const randomBytes = crypto.randomBytes(64);
-
-  return crypto.createHash("sha1").update(randomBytes).digest("hex");
-};
-
-/**
- * Checks if the level meets the required level.
- *
- * @param {publicAccessLevel | DriveFileAccessLevel} requiredLevel
- * @param {publicAccessLevel} level
- * @returns {boolean}
- */
-export const hasAccessLevel = (
-  requiredLevel: DriveFileAccessLevel | "none",
-  level: DriveFileAccessLevel | "none",
-): boolean => {
-  if (requiredLevel === level) return true;
-
-  if (requiredLevel === "write") {
-    return level === "manage";
-  }
-
-  if (requiredLevel === "read") {
-    return level === "manage" || level === "write";
-  }
-
-  return requiredLevel === "none";
-};
-
-/**
- * checks the current user is a guest
- *
- * @param {CompanyExecutionContext} context
- * @returns {Promise<boolean>}
- */
-export const isCompanyGuest = async (context: CompanyExecutionContext): Promise<boolean> => {
-  if (context.user?.application_id) {
-    //Applications do everything (if they are added to the company)
-    if (
-      !!(
-        await globalResolver.services.applications.companyApps.get({
-          company_id: context.company.id,
-          application_id: context.user?.application_id,
-        })
-      )?.application?.id
-    ) {
-      return false;
-    }
-  }
-
-  const userRole = await globalResolver.services.companies.getUserRole(
-    context.company.id,
-    context.user?.id,
-  );
-
-  return userRole === "guest" || !userRole;
-};
-
-/**
- * checks the current user is a admin
- *
- * @param {CompanyExecutionContext} context
- * @returns {Promise<boolean>}
- */
-export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<boolean> => {
-  if (context.user?.application_id) {
-    //Applications do everything (if they are added to the company)
-    if (
-      !!(
-        await globalResolver.services.applications.companyApps.get({
-          company_id: context.company.id,
-          application_id: context.user?.application_id,
-        })
-      )?.application?.id
-    ) {
-      return true;
-    }
-  }
-
-  const userRole = await globalResolver.services.companies.getUserRole(
-    context.company.id,
-    context.user?.id,
-  );
-
-  return userRole === "admin";
-};
-
-/**
  * Calculates the size of the Drive Item
  *
  * @param {DriveFile} item - The file or directory
@@ -222,11 +136,11 @@ export const isCompanyAdmin = async (context: CompanyExecutionContext): Promise<
  * @returns {Promise<number>} - the size of the Drive Item
  */
 export const calculateItemSize = async (
-  item: DriveFile | TrashType | RootType,
+  item: DriveFile | { id: string; is_directory: boolean; size: number },
   repository: Repository<DriveFile>,
   context: CompanyExecutionContext,
 ): Promise<number> => {
-  if (item === "trash") {
+  if (item.id === "trash") {
     const trashedItems = await repository.find(
       { company_id: context.company.id, parent_id: "trash" },
       {},
@@ -236,9 +150,9 @@ export const calculateItemSize = async (
     return trashedItems.getEntities().reduce((acc, curr) => acc + curr.size, 0);
   }
 
-  if (item === "root" || !item) {
+  if (isVirtualFolder(item.id) || !item) {
     const rootFolderItems = await repository.find(
-      { company_id: context.company.id, parent_id: "root" },
+      { company_id: context.company.id, parent_id: item.id || "root" },
       {},
       context,
     );
@@ -275,7 +189,7 @@ export const updateItemSize = async (
   repository: Repository<DriveFile>,
   context: CompanyExecutionContext,
 ): Promise<void> => {
-  if (!id || id === "root" || id === "trash") return;
+  if (!id || isVirtualFolder(id)) return;
 
   const item = await repository.findOne({ id, company_id: context.company.id });
 
@@ -287,7 +201,7 @@ export const updateItemSize = async (
 
   await repository.save(item);
 
-  if (item.parent_id === "root" || item.parent_id === "trash") {
+  if (isVirtualFolder(item.parent_id)) {
     return;
   }
 
@@ -310,12 +224,12 @@ export const getPath = async (
   context?: DriveExecutionContext,
 ): Promise<DriveFile[]> => {
   id = id || "root";
-  if (id === "root" || id === "trash")
+  if (isVirtualFolder(id))
     return !context.public_token || ignoreAccess
       ? [
           {
             id,
-            name: id === "root" ? "Home" : "Trash",
+            name: getVirtualFoldersNames(id),
           } as DriveFile,
         ]
       : [];
@@ -330,234 +244,6 @@ export const getPath = async (
   }
 
   return [...(await getPath(item.parent_id, repository, ignoreAccess, context)), item];
-};
-
-/**
- * checks if access can be granted for the drive item
- *
- * @param {string} id
- * @param {DriveFile | null} item
- * @param {DriveFileAccessLevel} level
- * @param {Repository<DriveFile>} repository
- * @param {CompanyExecutionContext} context
- * @param {string} token
- * @returns {Promise<boolean>}
- */
-export const checkAccess = async (
-  id: string,
-  item: DriveFile | null,
-  level: DriveFileAccessLevel,
-  repository: Repository<DriveFile>,
-  context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
-): Promise<boolean> => {
-  if (context.user?.server_request) {
-    return true;
-  }
-
-  const grantedLevel = await getAccessLevel(id, item, repository, context);
-  const hasAccess = hasAccessLevel(level, grantedLevel);
-  logger.info(
-    `Got level ${grantedLevel} for drive item ${id} and required ${level} - returning ${hasAccess}`,
-  );
-  return hasAccess;
-};
-
-/**
- * get maximum level for the drive item
- *
- * @param {string} id
- * @param {DriveFile | null} item
- * @param {Repository<DriveFile>} repository
- * @param {CompanyExecutionContext} context
- * @param {string} token
- * @returns {Promise<boolean>}
- */
-export const getAccessLevel = async (
-  id: string,
-  item: DriveFile | null,
-  repository: Repository<DriveFile>,
-  context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
-): Promise<DriveFileAccessLevel | "none"> => {
-  if (!id || id === "root")
-    return !context?.user?.id ? "none" : (await isCompanyGuest(context)) ? "read" : "manage";
-  if (id === "trash")
-    return (await isCompanyGuest(context)) || !context?.user?.id
-      ? "none"
-      : (await isCompanyAdmin(context))
-      ? "manage"
-      : "write";
-
-  let publicToken = context.public_token;
-
-  try {
-    item =
-      item ||
-      (await repository.findOne({
-        id,
-        company_id: context.company.id,
-      }));
-
-    if (!item) {
-      throw Error("Drive item doesn't exist");
-    }
-
-    if (context.user?.application_id) {
-      //Applications do everything (if they are added to the company)
-      if (
-        !!(
-          await globalResolver.services.applications.companyApps.get({
-            company_id: context.company.id,
-            application_id: context.user?.application_id,
-          })
-        )?.application?.id
-      ) {
-        return "manage";
-      }
-    }
-
-    /*
-     * Specific user or channel rule is applied first. Then less restrictive level will be chosen
-     * between the parent folder and company accesses.
-     */
-
-    //Public access
-    if (publicToken) {
-      if (!item.access_info.public.token) return "none";
-      const { token: itemToken, level: itemLevel, password, expiration } = item.access_info.public;
-      if (expiration && expiration < Date.now()) return "none";
-      if (password) {
-        const data = publicToken.split("+");
-        if (data.length !== 2) return "none";
-        const [extractedPublicToken, publicTokenPassword] = data;
-        if (publicTokenPassword !== password) return "none";
-        publicToken = extractedPublicToken;
-      }
-      if (itemToken === publicToken) return itemLevel;
-    }
-
-    const accessEntities = item.access_info.entities || [];
-    const otherLevels = [];
-
-    //From there a user must be logged in
-    if (context?.user?.id) {
-      //Users
-      const matchingUser = accessEntities.find(a => a.type === "user" && a.id === context.user?.id);
-      if (matchingUser) return matchingUser.level;
-
-      //Channels
-      if (context.tdrive_tab_token) {
-        try {
-          const [channelId] = context.tdrive_tab_token.split("+"); //First item will be the channel id
-          const matchingChannel = accessEntities.find(
-            a => a.type === "channel" && a.id === channelId,
-          );
-          if (matchingChannel) return matchingChannel.level;
-        } catch (e) {
-          console.log(e);
-        }
-      }
-
-      //Companies
-      const matchingCompany = accessEntities.find(
-        a => a.type === "company" && a.id === context.company.id,
-      );
-      if (matchingCompany) otherLevels.push(matchingCompany.level);
-    }
-
-    //Parent folder
-    const maxParentFolderLevel =
-      accessEntities.find(a => a.type === "folder" && a.id === "parent")?.level || "none";
-    if (maxParentFolderLevel === "none") {
-      otherLevels.push(maxParentFolderLevel);
-    } else {
-      const parentFolderLevel = await getAccessLevel(item.parent_id, null, repository, context);
-      otherLevels.push(parentFolderLevel);
-    }
-
-    //Return least restrictive level of otherLevels
-    return otherLevels.reduce(
-      (previousValue, b) =>
-        hasAccessLevel(b as DriveFileAccessLevel, previousValue as DriveFileAccessLevel)
-          ? previousValue
-          : b,
-      "none",
-    ) as DriveFileAccessLevel | "none";
-  } catch (error) {
-    throw Error(error);
-  }
-};
-
-/**
- * Isolate access level information from parent folder logic
- * Used when putting folder in the trash
- * @param id
- * @param item
- * @param repository
- */
-export const makeStandaloneAccessLevel = async (
-  companyId: string,
-  id: string,
-  item: DriveFile | null,
-  repository: Repository<DriveFile>,
-  options: { removePublicAccess?: boolean } = { removePublicAccess: true },
-): Promise<DriveFile["access_info"]> => {
-  item =
-    item ||
-    (await repository.findOne({
-      id,
-      company_id: companyId,
-    }));
-
-  if (!item) {
-    throw Error("Drive item doesn't exist");
-  }
-
-  const accessInfo = _.cloneDeep(item.access_info);
-
-  if (options?.removePublicAccess && accessInfo?.public?.level) accessInfo.public.level = "none";
-
-  const parentFolderAccess = accessInfo.entities.find(
-    a => a.type === "folder" && a.id === "parent",
-  );
-
-  if (!parentFolderAccess || parentFolderAccess.level === "none") {
-    return accessInfo;
-  } else if (item.parent_id !== "root" && item.parent_id !== "trash") {
-    // Get limitations from parent folder
-    const accessEntitiesFromParent = await makeStandaloneAccessLevel(
-      companyId,
-      item.parent_id,
-      null,
-      repository,
-      options,
-    );
-
-    let mostRestrictiveFolderLevel = parentFolderAccess.level as DriveFileAccessLevel | "none";
-
-    const keptEntities = accessEntitiesFromParent.entities.filter(a => {
-      if (["user", "channel"].includes(a.type)) {
-        return !accessInfo.entities.find(b => b.type === a.type && b.id === a.id);
-      } else {
-        if (a.type === "folder" && a.id === "parent") {
-          mostRestrictiveFolderLevel = hasAccessLevel(a.level, mostRestrictiveFolderLevel)
-            ? a.level
-            : mostRestrictiveFolderLevel;
-        }
-        return false;
-      }
-    });
-
-    accessInfo.entities = accessInfo.entities.map(a => {
-      if (a.type === "folder" && a.id === "parent") {
-        a.level = mostRestrictiveFolderLevel;
-      }
-      return a;
-    }) as DriveFile["access_info"]["entities"];
-
-    accessInfo.entities = [...accessInfo.entities, ...keptEntities];
-  }
-
-  return accessInfo;
 };
 
 /**
@@ -798,7 +484,7 @@ export const canMoveItem = async (
   context: CompanyExecutionContext,
 ): Promise<boolean> => {
   if (source === target) return false;
-  if (target === "root" || target === "trash") return true;
+  if (isVirtualFolder(target)) return true;
 
   const item = await repository.findOne({
     id: source,

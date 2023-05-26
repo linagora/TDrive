@@ -1,4 +1,3 @@
-import { Button } from '@atoms/button/button';
 import { Title } from '@atoms/text';
 import { DriveItem } from '@features/drive/types';
 import { useEffect, useState } from 'react';
@@ -30,18 +29,48 @@ export const PathRender = ({
   inTrash: boolean;
   onClick: (id: string) => void;
 }) => {
+  const pathLength = (path || []).reduce((acc, curr) => acc + curr.name.length, 0);
   return (
-    <Title className="overflow-hidden whitespace-nowrap mr-2 pl-px inline-flex">
-      {(path || [])?.map((a, i) => (
-        <PathItem
-          key={a.id}
-          item={a}
-          first={i === 0}
-          last={i + 1 === path?.length}
-          onClick={onClick}
-        />
-      ))}
-    </Title>
+    <nav className="overflow-hidden whitespace-nowrap mr-2 pl-px inline-flex">
+      {pathLength < 70 ? (
+        (path || [])?.map((a, i) => (
+          <PathItem
+            key={a.id}
+            item={a}
+            first={i === 0}
+            last={i + 1 === path?.length}
+            onClick={onClick}
+          />
+        ))
+      ) : (
+        <>
+          <PathItem
+            key={path[path.length - 3]?.id}
+            item={{
+              ...path[path?.length - 3],
+              name: '...',
+            }}
+            first={true}
+            last={false}
+            onClick={onClick}
+          />
+          <PathItem
+            key={path[path.length - 2]?.id}
+            item={path[path?.length - 2]}
+            first={false}
+            last={false}
+            onClick={onClick}
+          />
+          <PathItem
+            key={path[path.length - 1]?.id}
+            item={path[path?.length - 1]}
+            first={false}
+            last={true}
+            onClick={onClick}
+          />
+        </>
+      )}
+    </nav>
   );
 };
 
@@ -57,24 +86,34 @@ const PathItem = ({
   onClick: (id: string) => void;
 }) => {
   return (
-    <Button
-      theme={last ? 'primary' : 'default'}
-      className={
-        '-ml-px shrink overflow-hidden whitespace-nowrap last:flex-[1_0_auto_!important] first:flex-[0_0_auto] first:flex-shrink-0 ' +
-        (!first ? 'rounded-l-none ' : '') +
-        (!last ? 'rounded-r-none ' : '') +
-        (!first && !last ? 'max-w-[15ch] ' : '')
-      }
-      onClick={() => {
-        onClick(item?.id || '');
-      }}
-    >
-      <span className="text-ellipsis overflow-hidden whitespace-nowrap" style={{ maxWidth: 120 }}>
-        {item?.name || ''}
-      </span>
+    <div className="flex items-center">
+      <a
+        href="#"
+        className="text-sm font-medium text-gray-700 hover:text-blue-600 dark:text-gray-400 dark:hover:text-white"
+        onClick={() => {
+          onClick(item?.id || '');
+        }}
+      >
+        <Title>{item?.name || ''}</Title>
+      </a>
       {item?.access_info?.public?.level && item?.access_info?.public?.level !== 'none' && (
         <PublicIcon className="h-5 w-5 ml-2" />
       )}
-    </Button>
+      {!last && (
+        <svg
+          aria-hidden="true"
+          className="w-6 h-6 text-gray-400 mx-1"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fillRule="evenodd"
+            d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+            clipRule="evenodd"
+          ></path>
+        </svg>
+      )}
+    </div>
   );
 };

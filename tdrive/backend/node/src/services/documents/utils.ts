@@ -495,12 +495,14 @@ export const canMoveItem = async (
     return true;
   }
 
-  const targetItem = await repository.findOne({
-    id: target,
-    company_id: context.company.id,
-  });
+  const targetItem = isVirtualFolder(target)
+    ? null
+    : await repository.findOne({
+        id: target,
+        company_id: context.company.id,
+      });
 
-  if (!targetItem || !targetItem.is_directory) {
+  if (!isVirtualFolder(target) && (!targetItem || !targetItem.is_directory)) {
     throw Error("target item doesn't exist or not a directory");
   }
 

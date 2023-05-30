@@ -9,6 +9,23 @@ export default {
     added: entity.added,
     name: entity.name,
     company_id: entity.company_id,
+    access_users: ["user_1234", "user_454"],
+    access_users_x_initiator: ["user_1234_x_user_4343", "user_1234_x_user_4343"],
+
+    access_entities: [
+      {
+        type: "user",
+        level: "read",
+        target: "user_1234",
+        source: "user_5678",
+      },
+      {
+        type: "user",
+        level: "read",
+        target: "user_abcd",
+        source: "user_5678",
+      },
+    ],
   }),
   mongoMapping: {
     text: {

@@ -484,7 +484,6 @@ export const canMoveItem = async (
   context: CompanyExecutionContext,
 ): Promise<boolean> => {
   if (source === target) return false;
-  if (isVirtualFolder(target)) return true;
 
   const item = await repository.findOne({
     id: source,

@@ -490,10 +490,6 @@ export const canMoveItem = async (
     company_id: context.company.id,
   });
 
-  if (!item.is_directory) {
-    return true;
-  }
-
   const targetItem = isVirtualFolder(target)
     ? null
     : await repository.findOne({

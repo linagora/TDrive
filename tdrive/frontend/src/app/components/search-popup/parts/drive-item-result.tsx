@@ -1,5 +1,4 @@
 import { FolderIcon } from '@heroicons/react/solid';
-import { ArrowRight } from 'react-feather';
 import Highlighter from 'react-highlight-words';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { onDriveItemDownloadClick, openDriveItem } from '../common';
@@ -25,6 +24,7 @@ import { useSearchModal } from '@features/search/hooks/use-search';
 import { SearchInputState } from '@features/search/state/search-input';
 import { UserType } from '@features/users/types/user';
 import { useFileViewerModal } from '@features/viewer/hooks/use-viewer';
+import { useDrivePreview } from '@features/drive/hooks/use-drive-preview';
 import Media from '@molecules/media';
 import { DriveCurrentFolderAtom } from '@views/client/body/drive/browser';
 
@@ -43,11 +43,12 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
 
   const { setOpen } = useSearchModal();
   const { open: openViewer } = useFileViewerModal();
+  const { open } = useDrivePreview();
 
   return (
     <div
       className="flex items-center p-2 hover:bg-zinc-50 dark:hover:bg-zinc-800 rounded-md cursor-pointer"
-      onClick={() => openViewer(file)}
+      onClick={() => open(file)}
     >
       <FileResultMedia file={file} className="w-16 h-16 mr-3" />
       <div className="grow mr-3 overflow-hidden">
@@ -78,25 +79,6 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
           onClick={() => onDriveItemDownloadClick(file)}
         >
           <DownloadIcon className="text-blue-500 w-6 h-6" />
-        </Button>
-      </div>
-      <div
-        className="whitespace-nowrap"
-        onClick={e => {
-          e.preventDefault();
-          e.stopPropagation();
-        }}
-      >
-        <Button
-          theme="outline"
-          className="w-9 !p-0 flex items-center justify-center ml-2 rounded-full border-none"
-          onClick={() => {
-            openDriveItem(file, currentWorkspaceId, tdriveDriveApplicationId);
-            setParentId(file.parent_id);
-            setOpen(false);
-          }}
-        >
-          <ArrowRight className="text-blue-500 w-6 h-6" />
         </Button>
       </div>
     </div>

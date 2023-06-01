@@ -100,7 +100,8 @@ describe("the Drive feature", () => {
     const response = await e2e_getDocument(platform, "");
     const result = deserialize<DriveItemDetailsMockClass>(DriveItemDetailsMockClass, response.body);
 
-    expect(result.item.name).toEqual("root");
+    expect(result.item.id).toEqual("root");
+    expect(result.item.name).toEqual("Home");
 
     done?.();
   });
@@ -111,7 +112,8 @@ describe("the Drive feature", () => {
     const response = await e2e_getDocument(platform, "trash");
     const result = deserialize<DriveItemDetailsMockClass>(DriveItemDetailsMockClass, response.body);
 
-    expect(result.item.name).toEqual("trash");
+    expect(result.item.id).toEqual("trash");
+    expect(result.item.name).toEqual("Trash");
 
     done?.();
   });
@@ -162,7 +164,7 @@ describe("the Drive feature", () => {
       listTrashResponse.body,
     );
 
-    expect(listTrashResult.item.name).toEqual("trash");
+    expect(listTrashResult.item.name).toEqual("Trash");
     expect(listTrashResult.children.some(({ id }) => id === createItemResult.id)).toBeTruthy();
 
     done?.();

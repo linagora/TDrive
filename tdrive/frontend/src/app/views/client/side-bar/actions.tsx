@@ -12,72 +12,84 @@ import { ConfirmDeleteModalAtom } from '../body/drive/modals/confirm-delete';
 import { CreateModal, CreateModalAtom } from '../body/drive/modals/create';
 import { Button } from '@atoms/button/button';
 
-export default () => {
+export const CreateModalWithUploadZones = () => {
   const companyId = useRouterCompany();
+  const uploadZoneRef = useRef<UploadZone | null>(null);
+  const uploadFolderZoneRef = useRef<UploadZone | null>(null);
+  const setCreationModalState = useSetRecoilState(CreateModalAtom);
+  const { uploadTree, uploadFromUrl } = useDriveUpload();
+  const [parentId, _] = useRecoilState(DriveCurrentFolderAtom('root'));
+
+  return (
+    <>
+      <UploadZone
+        overClassName={'!hidden'}
+        className="hidden"
+        disableClick
+        parent={''}
+        multiple={true}
+        ref={uploadZoneRef}
+        driveCollectionKey={'side-menu'}
+        onAddFiles={async (_, event) => {
+          const tree = await getFilesTree(event);
+          setCreationModalState({ parent_id: '', open: false });
+          uploadTree(tree, {
+            companyId,
+            parentId,
+          });
+        }}
+      />
+      <UploadZone
+        overClassName={'!hidden'}
+        className="hidden"
+        disableClick
+        parent={''}
+        multiple={true}
+        ref={uploadFolderZoneRef}
+        directory={true}
+        driveCollectionKey={'side-menu'}
+        onAddFiles={async (_, event) => {
+          const tree = await getFilesTree(event);
+          setCreationModalState({ parent_id: '', open: false });
+          uploadTree(tree, {
+            companyId,
+            parentId,
+          });
+        }}
+      />
+      <CreateModal
+        selectFolderFromDevice={() => uploadFolderZoneRef.current?.open()}
+        selectFromDevice={() => uploadZoneRef.current?.open()}
+        addFromUrl={(url, name) => {
+          setCreationModalState({ parent_id: '', open: false });
+          uploadFromUrl(url, name, {
+            companyId,
+            parentId,
+          });
+        }}
+      />
+    </>
+  );
+};
+
+export default () => {
   const [parentId, _] = useRecoilState(DriveCurrentFolderAtom('root'));
   const { access, item, inTrash } = useDriveItem(parentId);
   const { children: trashChildren } = useDriveItem('trash');
   const uploadZoneRef = useRef<UploadZone | null>(null);
-  const uploadFolderZoneRef = useRef<UploadZone | null>(null);
 
   const setConfirmDeleteModalState = useSetRecoilState(ConfirmDeleteModalAtom);
   const setCreationModalState = useSetRecoilState(CreateModalAtom);
-  const { uploadTree, uploadFromUrl } = useDriveUpload();
 
   const openItemModal = useCallback(() => {
     if (item?.id) setCreationModalState({ open: true, parent_id: item.id });
   }, [item?.id, setCreationModalState]);
 
   return (
-    <div className="-m-4">
+    <div className="-m-4 overflow-hidden">
       <AnimatedHeight>
         <div className="p-4">
-          <UploadZone
-            overClassName={'!hidden'}
-            className="hidden"
-            disableClick
-            parent={''}
-            multiple={true}
-            ref={uploadZoneRef}
-            driveCollectionKey={'side-menu'}
-            onAddFiles={async (_, event) => {
-              const tree = await getFilesTree(event);
-              setCreationModalState({ parent_id: '', open: false });
-              uploadTree(tree, {
-                companyId,
-                parentId,
-              });
-            }}
-          />
-          <UploadZone
-            overClassName={'!hidden'}
-            className="hidden"
-            disableClick
-            parent={''}
-            multiple={true}
-            ref={uploadFolderZoneRef}
-            directory={true}
-            driveCollectionKey={'side-menu'}
-            onAddFiles={async (_, event) => {
-              const tree = await getFilesTree(event);
-              setCreationModalState({ parent_id: '', open: false });
-              uploadTree(tree, {
-                companyId,
-                parentId,
-              });
-            }}
-          />
-          <CreateModal
-            selectFolderFromDevice={() => uploadFolderZoneRef.current?.open()}
-            selectFromDevice={() => uploadZoneRef.current?.open()}
-            addFromUrl={(url, name) => {
-              setCreationModalState({ parent_id: '', open: false });
-              uploadFromUrl(url, name, {
-                companyId,
-                parentId,
-              });
-            }}
-          />
+          <CreateModalWithUploadZones />
 
           {inTrash && access === 'manage' && (
             <>

@@ -46,7 +46,7 @@ export default React.memo((): JSX.Element => {
           <FeatureToggles features={activeFeatureNames}>
             <>
               <Header openSideMenu={() => setMenuIsOpen(true)} />
-              <div className="grow flex flex-row grid-cols-2 sm:px-2 sm:pb-2">
+              <div className="grow flex flex-row grid-cols-2 sm:px-2 sm:pb-2 overflow-hidden">
                 <div
                   style={
                     menuIsOpen

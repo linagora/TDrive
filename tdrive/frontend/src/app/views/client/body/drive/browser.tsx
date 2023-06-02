@@ -118,7 +118,7 @@ export default memo(
     return (
       <UploadZone
         overClassName={''}
-        className="min-h-full"
+        className="h-full overflow-hidden"
         disableClick
         parent={''}
         multiple={true}
@@ -146,7 +146,7 @@ export default memo(
 
         <div
           className={
-            'flex flex-col grow h-full overflow-auto ' +
+            'flex flex-col grow h-full overflow-hidden ' +
             (loading && (!children?.length || loadingParentChange) ? 'opacity-50 ' : '')
           }
         >
@@ -167,7 +167,7 @@ export default memo(
             </Menu>
           </div>
 
-          <div className="grow">
+          <div className="grow overflow-auto">
             {folders.length > 0 && (
               <>
                 <Title className="mb-2 block">Folders</Title>

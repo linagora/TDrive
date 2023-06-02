@@ -41,7 +41,7 @@ export const PublicLinkManager = ({ id, disabled }: { id: string; disabled?: boo
           </div>
           <div className="shrink-0">
             <AccessLevel
-              hiddenLevels={['manage', 'write']}
+              hiddenLevels={['manage']}
               disabled={loading || disabled}
               level={item?.access_info?.public?.level || null}
               onChange={level => {

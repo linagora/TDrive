@@ -8,7 +8,7 @@ import { PropertiesModalAtom } from './modals/properties';
 import { SelectorModalAtom } from './modals/selector';
 import { AccessModalAtom } from './modals/update-access';
 import { VersionsModalAtom } from './modals/versions';
-import { DriveApiClient } from '@features/drive/api-client/api-client';
+import { DriveApiClient, getPublicLinkToken } from '@features/drive/api-client/api-client';
 import { useDriveActions } from '@features/drive/hooks/use-drive-actions';
 import { getPublicLink } from '@features/drive/hooks/use-drive-item';
 import { useDrivePreview } from '@features/drive/hooks/use-drive-preview';
@@ -71,8 +71,8 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             },
             {
               type: 'menu',
-              text: 'Manage access',
-              hide: access === 'read',
+              text: 'Manage access and sharing',
+              hide: access === 'read' || getPublicLinkToken(),
               onClick: () => setAccessModalState({ open: true, id: item.id }),
             },
             {

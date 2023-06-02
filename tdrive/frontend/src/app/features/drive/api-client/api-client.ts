@@ -24,6 +24,10 @@ export const setPublicLinkToken = (token: string | null) => {
   publicLinkToken = token;
 };
 
+export const getPublicLinkToken = () => {
+  return publicLinkToken;
+};
+
 export const setTdriveTabToken = (token: string | null) => {
   tdriveTabToken = token;
 };

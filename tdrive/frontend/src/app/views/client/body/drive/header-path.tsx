@@ -70,7 +70,7 @@ const PathItem = ({
         (!first && !last ? 'max-w-[15ch] ' : '')
       }
       onClick={evt => {
-        if (first) {
+        if (first && user?.id) {
           MenusManager.openMenu(
             [
               { type: 'menu', text: 'Home', onClick: () => onClick('root') },
@@ -90,7 +90,7 @@ const PathItem = ({
       {item?.access_info?.public?.level && item?.access_info?.public?.level !== 'none' && (
         <PublicIcon className="h-5 w-5 ml-2" />
       )}
-      {first && (
+      {first && !!user?.id && (
         <span className="ml-2 -mr-1">
           <ChevronDownIcon className="w-4 h-4" />
         </span>

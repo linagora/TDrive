@@ -6,18 +6,17 @@ import { useRecoilState } from 'recoil';
 import { CurrentUserState } from '../state/atoms/current-user';
 import { useRealtimeRoom } from '@features/global/hooks/use-realtime';
 import Languages from '@features/global/services/languages-service';
-import { RealtimeApplicationEvent } from '@features/global/types/realtime-types';
 import { useSetUserList } from './use-user-list';
+import { getPublicLinkToken } from 'app/features/drive/api-client/api-client';
 
 export const useCurrentUser = () => {
-  console.log("getting current user");
   const [user, setUser] = useRecoilState(CurrentUserState);
   const { set: setUserList } = useSetUserList('useCurrentUser');
 
   //Depreciated way to get use update from LoginService
   LoginService.recoilUpdateUser = setUser;
   useEffect(() => {
-    if (!user) {
+    if (!user && !getPublicLinkToken()) {
       LoginService.init();
       LoginService.login({});
     }
@@ -29,17 +28,13 @@ export const useCurrentUser = () => {
     if (user?.preferences?.locale) Languages.setLanguage(user?.preferences?.locale);
   }, [user?.preferences?.locale]);
 
-  const updateStatus = async (userStatus: string[]) => {
-    await UserAPIClient.updateUserStatus(`${userStatus[0]} ${userStatus[1]}`);
-
-    await refresh();
-  };
-
   const refresh = async () => {
-    await LoginService.updateUser();
+    if (!getPublicLinkToken()) {
+      await LoginService.updateUser();
+    }
   };
 
-  return { user, refresh, updateStatus };
+  return { user, refresh };
 };
 
 export const useCurrentUserRealtime = () => {

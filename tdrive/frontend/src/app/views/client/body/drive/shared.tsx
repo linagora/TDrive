@@ -6,15 +6,20 @@ import Languages from '@features/global/services/languages-service';
 import { addApiUrlIfNeeded } from '@features/global/utils/URLUtils';
 import RouterService from '@features/router/services/router-service';
 import Drive from '@views/client/body/drive';
+import { Button } from 'app/atoms/button/button';
+import { Input } from 'app/atoms/input/input-text';
+import { Base, Subtitle, Title } from 'app/atoms/text';
+import UploadsViewer from 'app/components/file-uploads/uploads-viewer';
+import { useDriveItem } from 'app/features/drive/hooks/use-drive-item';
+import { useDriveUpload } from 'app/features/drive/hooks/use-drive-upload';
 import { useParams } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
 import shortUUID from 'short-uuid';
 import Avatar from '../../../../atoms/avatar';
 import { setPublicLinkToken } from '../../../../features/drive/api-client/api-client';
 import useRouterCompany from '../../../../features/router/hooks/use-router-company';
-import { useDriveItem } from 'app/features/drive/hooks/use-drive-item';
-import { Base, Subtitle, Title } from 'app/atoms/text';
-import { Input } from 'app/atoms/input/input-text';
-import { Button } from 'app/atoms/button/button';
+import { CreateModalAtom } from './modals/create';
+import { CreateModalWithUploadZones } from '../../side-bar/actions';
 
 export default () => {
   const companyId = useRouterCompany();
@@ -71,6 +76,8 @@ export default () => {
         </AccessChecker>
       </div>
       <MenusBodyLayer />
+      <UploadsViewer />
+      <CreateModalWithUploadZones />
     </div>
   );
 };

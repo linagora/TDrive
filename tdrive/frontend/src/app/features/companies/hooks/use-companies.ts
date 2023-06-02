@@ -106,7 +106,9 @@ export const useCurrentCompanyRealtime = () => {
  * @param user
  * @returns CompanyType | undefined
  */
-export function useBestCandidateCompany(user: UserType | undefined): CompanyType | undefined {
+export function useBestCandidateCompany(
+  user: UserType | undefined | null,
+): CompanyType | undefined {
   const routerCompanyId = useRouterCompany();
   const storageCompanyId = (LocalStorage.getItem('default_company_id') as string) || null;
 

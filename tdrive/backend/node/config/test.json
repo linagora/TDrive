@@ -19,5 +19,11 @@
     "amqp": {
       "urls": ["amqp://guest:guest@rabbitmq:5672"]
     }
+  },
+  "search": {
+    "type": "elasticsearch",
+    "elasticsearch": {
+      "endpoint": "https://localhost:9200"
+    }
   }
 }

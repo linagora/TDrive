@@ -6,6 +6,12 @@
       "level": "warn"
     }
   },
+  "search": {
+    "type": "elasticsearch",
+    "elasticsearch": {
+      "endpoint": "http://localhost:9200"
+    }
+  },
   "websocket": {
     "path": "/socket",
     "adapters": {

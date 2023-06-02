@@ -1,7 +1,10 @@
 import SearchRepository from "../../../core/platform/services/search/repository";
 import { getLogger, logger, TdriveLogger } from "../../../core/platform/framework";
 import { CrudException, ListResult } from "../../../core/platform/framework/api/crud-service";
-import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
+import Repository, {
+  inType,
+  comparisonType,
+} from "../../../core/platform/services/database/services/orm/repository/repository";
 import { PublicFile } from "../../../services/files/entities/file";
 import globalResolver from "../../../services/global-resolver";
 import { hasCompanyAdminLevel } from "../../../utils/company";
@@ -291,9 +294,9 @@ export class DocumentsService {
       await this.repository.save(driveItem);
       await updateItemSize(driveItem.parent_id, this.repository, context);
 
-      this.notifyWebsocket(driveItem.parent_id, context);
+      await this.notifyWebsocket(driveItem.parent_id, context);
 
-      globalResolver.platformServices.messageQueue.publish<DocumentsMessageQueueRequest>(
+      await globalResolver.platformServices.messageQueue.publish<DocumentsMessageQueueRequest>(
         "services:documents:process",
         {
           data: {
@@ -307,7 +310,7 @@ export class DocumentsService {
       return driveItem;
     } catch (error) {
       this.logger.error("Failed to create drive item", error);
-      throw new CrudException("Failed to create item", 500);
+      CrudException.throwMe(error, new CrudException("Failed to create item", 500));
     }
   };
 
@@ -768,12 +771,37 @@ export class DocumentsService {
         pagination: {
           limitStr: "100",
         },
-        ...(options.company_id ? { $in: [["company_id", [options.company_id]]] } : {}),
-        ...(options.creator ? { $in: [["creator", [options.creator]]] } : {}),
-        ...(options.added ? { $in: [["added", [options.added]]] } : {}),
-        $text: {
-          $search: options.search,
-        },
+        $in: [
+          ["access_entities", [context.user.id, context.company.id]],
+          ...(options.company_id ? [["company_id", [options.company_id]] as inType] : []),
+          ...(options.creator ? [["creator", [options.creator]] as inType] : []),
+          ...(options.added ? [["company_id", [options.added]] as inType] : []),
+          ...(options.mime_type
+            ? [
+                [
+                  "mime_type",
+                  Array.isArray(options.mime_type) ? options.mime_type : [options.mime_type],
+                ] as inType,
+              ]
+            : []),
+        ],
+        $lte: [
+          ...(options.last_modified_lt
+            ? [["last_modified", options.last_modified_lt] as comparisonType]
+            : []),
+        ],
+        $gte: [
+          ...(options.last_modified_gt
+            ? [["last_modified", options.last_modified_gt] as comparisonType]
+            : []),
+        ],
+        ...(options.search
+          ? {
+              $text: {
+                $search: options.search,
+              },
+            }
+          : {}),
       },
       context,
     );

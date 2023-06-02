@@ -41,6 +41,9 @@ export type SearchDocumentsOptions = {
   company_id?: string;
   creator?: string;
   added?: string;
+  mime_type?: Array<string>;
+  last_modified_lt?: number;
+  last_modified_gt?: number;
 };
 
 export type SearchDocumentsBody = {
@@ -48,6 +51,9 @@ export type SearchDocumentsBody = {
   company_id?: string;
   creator?: string;
   added?: string;
+  mime_type?: [string];
+  last_modified_lt?: number;
+  last_modified_gt?: number;
 };
 
 export type DocumentsMessageQueueRequest = {

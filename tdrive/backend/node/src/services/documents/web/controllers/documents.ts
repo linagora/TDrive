@@ -65,7 +65,7 @@ export class DocumentsController {
       );
     } catch (error) {
       logger.error("Failed to create Drive item", error);
-      throw new CrudException("Failed to create Drive item", 500);
+      CrudException.throwMe(error, new CrudException("Failed to create Drive item", 500));
     }
   };
 
@@ -73,6 +73,7 @@ export class DocumentsController {
    * Deletes a DriveFile item or empty the trash or delete root folder contents
    *
    * @param {FastifyRequest} request
+   * @param {FastifyReply} reply
    * @returns {Promise<void>}
    */
   delete = async (
@@ -227,7 +228,7 @@ export class DocumentsController {
    * If the item is a folder, a zip will be automatically generated.
    *
    * @param {FastifyRequest} request
-   * @param {FastifyReply} reply
+   * @param {FastifyReply} response
    */
   download = async (
     request: FastifyRequest<{
@@ -342,25 +343,26 @@ export class DocumentsController {
   ): Promise<ListResult<DriveFile>> => {
     try {
       const context = getDriveExecutionContext(request);
-      const { search = "", added = "", company_id = "", creator = "" } = request.body;
 
       const options: SearchDocumentsOptions = {
-        company_id: company_id || context.company.id,
-        ...(search ? { search } : {}),
-        ...(added ? { added } : {}),
-        ...(creator ? { creator } : {}),
+        ...request.body,
+        company_id: request.body.company_id || context.company.id,
       };
 
       if (!Object.keys(options).length) {
-        throw Error("Search options are empty");
+        this.throw500Search();
       }
 
       return await globalResolver.services.documents.documents.search(options, context);
     } catch (error) {
       logger.error("error while searching for document", error);
-      throw new CrudException("Failed to search for documents", 500);
+      this.throw500Search();
     }
   };
+
+  private throw500Search() {
+    throw new CrudException("Failed to search for documents", 500);
+  }
 
   getTab = async (
     request: FastifyRequest<{

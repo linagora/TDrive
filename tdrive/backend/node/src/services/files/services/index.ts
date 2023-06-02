@@ -187,6 +187,9 @@ export class FileServiceImpl {
     },
   ): Promise<File> {
     let entity = await this.repository.findOne(pk, {}, context);
+    if (entity == null) {
+      throw new CrudException(`File not found ${pk.company_id}|${pk.id}`, 404);
+    }
 
     if (options?.waitForThumbnail) {
       for (let i = 1; i < 100; i++) {

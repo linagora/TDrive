@@ -13,9 +13,11 @@ import {
   e2e_searchDocument,
   e2e_updateDocument,
 } from "./utils";
+import TestHelpers from "../common/common_test_helpers";
 
 describe("the Drive feature", () => {
   let platform: TestPlatform;
+  let helpers: TestHelpers;
 
   class DriveFileMockClass {
     id: string;
@@ -59,6 +61,7 @@ describe("the Drive feature", () => {
         "documents",
       ],
     });
+    helpers = new TestHelpers(platform);
   });
 
   afterEach(async () => {
@@ -79,6 +82,28 @@ describe("the Drive feature", () => {
     };
 
     const version = {};
+
+    const response = await e2e_createDocument(platform, item, version);
+    return deserialize<DriveFileMockClass>(DriveFileMockClass, response.body);
+  };
+
+  const createItemFromFile = async (file: File): Promise<DriveFileMockClass> => {
+    await TestDbService.getInstance(platform, true);
+
+    const item = {
+      name: file.metadata.name,
+      parent_id: "root",
+      company_id: file.company_id,
+    };
+
+    const version = {
+      file_metadata: {
+        name: file.metadata.name,
+        size: file.upload_data?.size,
+        thumbnails: [],
+        external_id: file.id
+      }
+    }
 
     const response = await e2e_createDocument(platform, item, version);
     return deserialize<DriveFileMockClass>(DriveFileMockClass, response.body);
@@ -170,7 +195,6 @@ describe("the Drive feature", () => {
     done?.();
   });
 
-  // TODO: wait for elastic search index
   it("did search for an item", async done => {
     const createItemResult = await createItem();
 
@@ -237,4 +261,65 @@ describe("the Drive feature", () => {
 
     done?.();
   });
+
+  it("did search by mime type", async done => {
+    // given:: all the sample files uploaded and documents for them created
+    await Promise.all((await helpers.uploadAllFiles()).map(createItemFromFile))
+
+    const filters = {
+      mime_type: "application/pdf",
+    };
+
+    jest.setTimeout(10000);
+    await new Promise(r => setTimeout(r, 3000));
+
+
+    const failSearchResponse = await e2e_searchDocument(platform, filters);
+    const failSearchResult = deserialize<SearchResultMockClass>(
+        SearchResultMockClass,
+        failSearchResponse.body,
+    );
+
+    expect(failSearchResult.entities).toHaveLength(1);
+    const actualFile = failSearchResult.entities[0];
+    expect(actualFile.name).toEqual("sample.pdf");
+
+    done?.();
+  });
+
+  it("did search a file shared by another user", async done => {
+    const dbService = await TestDbService.getInstance(platform, true);
+    const ws0pk = {
+      id: platform.workspace.workspace_id,
+      company_id: platform.workspace.company_id,
+    };
+    const otherUser = await dbService.createUser([ws0pk]);
+
+    //TODO make it possible to send requests from another user
+    done?.();
+  });
+
+  it("did search a file by file owner", async done => {
+    // given:: all the sample files uploaded and documents for them created
+    await Promise.all((await helpers.uploadAllFiles()).map(createItemFromFile))
+    //TODO add files uploaded by another user
+
+    const searchFilters = {
+      creator: platform.currentUser.id,
+    };
+
+    jest.setTimeout(10000);
+    await new Promise(r => setTimeout(r, 3000));
+
+    const failSearchResponse = await e2e_searchDocument(platform, searchFilters);
+    const failSearchResult = deserialize<SearchResultMockClass>(
+        SearchResultMockClass,
+        failSearchResponse.body,
+    );
+
+    expect(failSearchResult.entities).toHaveLength(6);
+
+    done?.();
+  });
+
 });

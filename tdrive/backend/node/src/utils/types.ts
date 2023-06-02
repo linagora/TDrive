@@ -103,7 +103,9 @@ export interface ResourceEventsPayload {
 }
 
 export interface PaginationQueryParameters {
+  // It is offset for MongoDB and pointer to the next page for ScyllaDB
   page_token?: string;
+  // Page size
   limit?: string;
   websockets?: boolean;
 }

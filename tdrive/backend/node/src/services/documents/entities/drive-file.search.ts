@@ -9,23 +9,9 @@ export default {
     added: entity.added,
     name: entity.name,
     company_id: entity.company_id,
-    access_users: ["user_1234", "user_454"],
-    access_users_x_initiator: ["user_1234_x_user_4343", "user_1234_x_user_4343"],
-
-    access_entities: [
-      {
-        type: "user",
-        level: "read",
-        target: "user_1234",
-        source: "user_5678",
-      },
-      {
-        type: "user",
-        level: "read",
-        target: "user_abcd",
-        source: "user_5678",
-      },
-    ],
+    access_entities: entity.access_info?.entities?.map(e => e.id),
+    last_modified: entity.last_modified,
+    mime_type: entity.last_version_cache?.file_metadata?.mime,
   }),
   mongoMapping: {
     text: {
@@ -35,6 +21,9 @@ export default {
       added: "text",
       name: "text",
       company_id: "text",
+      access_entities: "text",
+      mime_type: "text",
+      last_modified: "number",
     },
   },
   esMapping: {
@@ -45,6 +34,9 @@ export default {
       creator: { type: "keyword" },
       added: { type: "keyword" },
       company_id: { type: "keyword" },
+      access_entities: { type: "keyword" },
+      mime_type: { type: "keyword" },
+      last_modified: { type: "unsigned_long" },
     },
   },
 };

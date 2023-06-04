@@ -58,6 +58,10 @@ export function buildSearchQuery<Entity>(
     });
   }
 
+  if (options.$sort) {
+    sort = options.$sort;
+  }
+
   return {
     project,
     query,

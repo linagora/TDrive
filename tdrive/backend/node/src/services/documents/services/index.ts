@@ -775,7 +775,6 @@ export class DocumentsService {
           ["access_entities", [context.user.id, context.company.id]],
           ...(options.company_id ? [["company_id", [options.company_id]] as inType] : []),
           ...(options.creator ? [["creator", [options.creator]] as inType] : []),
-          ...(options.added ? [["company_id", [options.added]] as inType] : []),
           ...(options.mime_type
             ? [
                 [
@@ -789,11 +788,13 @@ export class DocumentsService {
           ...(options.last_modified_lt
             ? [["last_modified", options.last_modified_lt] as comparisonType]
             : []),
+          ...(options.added_lt ? [["added", options.added_lt] as comparisonType] : []),
         ],
         $gte: [
           ...(options.last_modified_gt
             ? [["last_modified", options.last_modified_gt] as comparisonType]
             : []),
+          ...(options.added_gt ? [["added", options.added_gt] as comparisonType] : []),
         ],
         ...(options.search
           ? {
@@ -802,6 +803,7 @@ export class DocumentsService {
               },
             }
           : {}),
+        ...(options.sort ? { $sort: options.sort } : {}),
       },
       context,
     );

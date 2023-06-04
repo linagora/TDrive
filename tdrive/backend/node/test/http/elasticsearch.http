@@ -14,34 +14,16 @@ PUT https://localhost:9200/tdrive_files_extended
 Content-Type: application/json
 
 {
-   "mappings": {
-         "properties": {
-           "last_modifier": {
-             "type": "number"
-           },
-            "file_name": {
-              "type": "text"
-            },
-            "access_info": {
-               "type": "nested",
-               "properties": {
-                  "id": {
-                     "type": "keyword"
-                  },
-                  "type": {
-                     "type": "keyword"
-                  },
-                  "level": {
-                     "type": "keyword"
-                  },
-                  "grantor": {
-                     "type": "keyword"
-                  }
-               }
-            }
-         }
+  "drive_files": {
+    "aliases": {},
+    "mappings": {
+      "_source": {
+        "enabled": true
       }
+    }
+  }
 }
+
 
 
 ### Check that it is created
@@ -49,6 +31,10 @@ GET https://localhost:9200/_cat/indices
 
 ### GET index info
 GET https://localhost:9200/drive_files
+
+### GET data to the index
+GET https://localhost:9200/drive_files/_doc/8c03c5a1-0146-11ee-82d9-f503f8a58e9d
+Content-Type: application/json
 
 ### Put data to the index
 PUT https://localhost:9200/tdrive_files_extended/_doc/0001
@@ -67,7 +53,7 @@ Content-Type: application/json
 }
 
 ###
-PUT https://localhost:9200/tdrive_files_extended/_doc/0002
+PUT https://localhost:9200/tdrive_files_extended/_doc/8c03c5a1-0146-11ee-82d9-f503f8a58e9d
 Content-Type: application/json
 
 {
@@ -86,8 +72,3 @@ Content-Type: application/json
 GET https://localhost:9200/drive_files/_search
 Content-Type: application/json
 
-{
-    "query": {
-        "match_all": {}
-    }
-}

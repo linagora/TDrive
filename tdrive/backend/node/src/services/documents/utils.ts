@@ -47,11 +47,11 @@ export const getDefaultDriveItem = (
 ): DriveFile => {
   const defaultDriveItem = merge<DriveFile, Partial<DriveFile>>(new DriveFile(), {
     company_id: context.company.id,
-    added: item.added || new Date().getTime().toString(),
+    added: item.added || new Date().getTime(),
     creator: item.creator || context.user?.id,
     is_directory: item.is_directory || false,
     is_in_trash: item.is_in_trash || false,
-    last_modified: new Date().getTime().toString(),
+    last_modified: new Date().getTime(),
     parent_id: item.parent_id || "root",
     content_keywords: item.content_keywords || "",
     description: item.description || "",
@@ -422,7 +422,9 @@ export const getFileMetadata = async (
  * Finds a suitable name for an item based on items inside the same folder.
  *
  * @param {string} parent_id - the parent id.
+ * @param id
  * @param {string} name - the item name.
+ * @param is_directory
  * @param {Repository<DriveFile>} repository - the drive repository.
  * @param {CompanyExecutionContext} context - the execution context.
  * @returns {Promise<string>} - the drive item name.

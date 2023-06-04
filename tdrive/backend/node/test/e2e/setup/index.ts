@@ -24,7 +24,7 @@ type TokenPayload = {
   };
 };
 
-type User = {
+export type User = {
   id: string;
   isWorkspaceModerator?: boolean;
 };

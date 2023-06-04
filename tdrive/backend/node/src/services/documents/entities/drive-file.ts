@@ -48,13 +48,13 @@ export class DriveFile {
   @Column("tags", "encoded_json")
   tags: string[];
 
-  @Type(() => String)
-  @Column("added", "string")
-  added: string;
+  @Type(() => Number)
+  @Column("added", "number")
+  added: number;
 
-  @Type(() => String)
-  @Column("last_modified", "string")
-  last_modified: string;
+  @Type(() => Number)
+  @Column("last_modified", "number")
+  last_modified: number;
 
   @Column("access_info", "encoded_json")
   access_info: AccessInformation;

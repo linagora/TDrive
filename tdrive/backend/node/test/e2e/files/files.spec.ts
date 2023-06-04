@@ -18,7 +18,7 @@ describe("The Files feature", () => {
       services: ["webserver", "database", "storage", "files", "previews"],
     });
     await platform.database.getConnector().init();
-    helpers = new TestHelpers(platform)
+    helpers = await TestHelpers.getInstance(platform)
   });
 
   afterAll(async done => {
@@ -33,7 +33,7 @@ describe("The Files feature", () => {
     it("Download file should return 500 if file doesn't exists", async () => {
       //given file
       const filesUpload = await helpers.uploadRandomFile();
-      expect(filesUpload.resource.id).toBeTruthy();
+      expect(filesUpload.id).toBeTruthy();
       //clean files directory
       expect(platform.storage.getConnector()).toBeInstanceOf(LocalConnectorService)
       const path = (<LocalConnectorService>platform.storage.getConnector()).configuration.path;
@@ -41,7 +41,7 @@ describe("The Files feature", () => {
       //when try to download the file
       const fileDownloadResponse = await platform.app.inject({
         method: "GET",
-        url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.resource.id}/download`,
+        url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.id}/download`,
       });
       //then file should be not found with 404 error and "File not found message"
       expect(fileDownloadResponse).toBeTruthy();
@@ -52,14 +52,14 @@ describe("The Files feature", () => {
     it("Download file should return 200 if file exists", async () => {
       //given file
       const filesUpload = await helpers.uploadRandomFile()
-      expect(filesUpload.resource.id).toBeTruthy();
+      expect(filesUpload.id).toBeTruthy();
       //clean files directory
       expect(platform.storage.getConnector()).toBeInstanceOf(LocalConnectorService)
 
       //when try to download the file
       const fileDownloadResponse = await platform.app.inject({
         method: "GET",
-        url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.resource.id}/download`,
+        url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.id}/download`,
       });
       //then file should be not found with 404 error and "File not found message"
       expect(fileDownloadResponse).toBeTruthy();
@@ -74,15 +74,15 @@ describe("The Files feature", () => {
 
         const filesUpload = await helpers.uploadFile(file);
 
-        expect(filesUpload.resource.id).not.toBeFalsy();
-        expect(filesUpload.resource.encryption_key).toBeFalsy(); //This must not be disclosed
-        expect(filesUpload.resource.thumbnails.length).toBe(thumbnails[i]);
+        expect(filesUpload.id).not.toBeFalsy();
+        expect(filesUpload.encryption_key).toBeFalsy(); //This must not be disclosed
+        expect(filesUpload.thumbnails.length).toBe(thumbnails[i]);
 
-        for (const thumb of filesUpload.resource.thumbnails) {
+        for (const thumb of filesUpload.thumbnails) {
           const thumbnails = await platform.app.inject({
             headers: {"authorization": `Bearer ${await platform.auth.getJWTToken()}`},
             method: "GET",
-            url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.resource.id}/thumbnails/${thumb.index}`,
+            url: `${url}/companies/${platform.workspace.company_id}/files/${filesUpload.id}/thumbnails/${thumb.index}`,
           });
           expect(thumbnails.statusCode).toBe(200);
         }

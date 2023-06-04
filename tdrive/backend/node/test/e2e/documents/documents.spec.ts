@@ -1,5 +1,5 @@
 import { describe, beforeEach, afterEach, it, expect, afterAll } from "@jest/globals";
-import { deserialize } from "class-transformer";
+import {deserialize} from "class-transformer";
 import { File } from "../../../src/services/files/entities/file";
 import { ResourceUpdateResponse } from "../../../src/utils/types";
 import { init, TestPlatform } from "../setup";
@@ -14,29 +14,12 @@ import {
   e2e_updateDocument,
 } from "./utils";
 import TestHelpers from "../common/common_test_helpers";
+import {DriveFileMockClass, DriveItemDetailsMockClass, SearchResultMockClass} from "../common/entities/mock_entities";
 
 describe("the Drive feature", () => {
   let platform: TestPlatform;
-  let helpers: TestHelpers;
-
-  class DriveFileMockClass {
-    id: string;
-    name: string;
-    size: number;
-    added: string;
-    parent_id: string;
-  }
-
-  class DriveItemDetailsMockClass {
-    path: string[];
-    item: DriveFileMockClass;
-    children: DriveFileMockClass[];
-    versions: Record<string, unknown>[];
-  }
-
-  class SearchResultMockClass {
-    entities: DriveFileMockClass[];
-  }
+  let currentUser: TestHelpers;
+  let dbService: TestDbService;
 
   beforeEach(async () => {
     platform = await init({
@@ -61,7 +44,8 @@ describe("the Drive feature", () => {
         "documents",
       ],
     });
-    helpers = new TestHelpers(platform);
+    currentUser = await TestHelpers.getInstance(platform);
+    dbService = await TestDbService.getInstance(platform, true);
   });
 
   afterEach(async () => {
@@ -264,7 +248,7 @@ describe("the Drive feature", () => {
 
   it("did search by mime type", async done => {
     // given:: all the sample files uploaded and documents for them created
-    await Promise.all((await helpers.uploadAllFiles()).map(createItemFromFile))
+    await Promise.all((await currentUser.uploadFiles()).map(f => currentUser.createDocumentFromFile(f)))
 
     const filters = {
       mime_type: "application/pdf",
@@ -274,52 +258,217 @@ describe("the Drive feature", () => {
     await new Promise(r => setTimeout(r, 3000));
 
 
-    const failSearchResponse = await e2e_searchDocument(platform, filters);
-    const failSearchResult = deserialize<SearchResultMockClass>(
-        SearchResultMockClass,
-        failSearchResponse.body,
-    );
+    let documents = await currentUser.searchDocument(filters);
+    expect(documents.entities).toHaveLength(1);
 
-    expect(failSearchResult.entities).toHaveLength(1);
-    const actualFile = failSearchResult.entities[0];
+    const actualFile = documents.entities[0];
     expect(actualFile.name).toEqual("sample.pdf");
 
     done?.();
   });
 
-  it("did search a file shared by another user", async done => {
-    const dbService = await TestDbService.getInstance(platform, true);
-    const ws0pk = {
-      id: platform.workspace.workspace_id,
-      company_id: platform.workspace.company_id,
-    };
-    const otherUser = await dbService.createUser([ws0pk]);
+  it("did search by last modified", async done => {
+    jest.setTimeout(100000000);
+    const user = await TestHelpers.getInstance(platform, true);
+    // given:: all the sample files uploaded and documents for them created
+    const start = new Date().getTime();
+    await user.uploadAllFilesOneByOne()
+    const end = new Date().getTime();
+    await user.uploadAllFilesOneByOne()
+    //wait for putting docs to elastic and its indexing
+    await new Promise(r => setTimeout(r, 3000));
 
-    //TODO make it possible to send requests from another user
+    //then:: all the files are searchable without filters
+    let documents = await user.searchDocument({});
+    expect(documents.entities).toHaveLength(TestHelpers.ALL_FILES.length * 2);
+
+    //then:: only file uploaded in the [start, end] interval are shown in the search results
+    const filters = {
+      last_modified_gt: start.toString(),
+      last_modified_lt: end.toString()
+    };
+    documents = await user.searchDocument(filters);
+    expect(documents.entities).toHaveLength(TestHelpers.ALL_FILES.length);
+
+    done?.();
+  });
+
+  it("did search a file shared by another user", async done => {
+    jest.setTimeout(30000);
+    //given:
+    const oneUser = await TestHelpers.getInstance(platform, true);
+    const anotherUser = await TestHelpers.getInstance(platform, true);
+    //upload files
+    let files = await oneUser.uploadAllFilesOneByOne()
+
+    await new Promise(r => setTimeout(r, 5000));
+
+    //then:: files are not searchable for user without permissions
+    expect((await anotherUser.searchDocument({})).entities).toHaveLength(0);
+
+    //and searchable for user that have
+    expect((await oneUser.searchDocument({})).entities).toHaveLength(TestHelpers.ALL_FILES.length);
+
+    //give permissions to the file
+    files[0].access_info.entities.push({
+      type: "user",
+      id: anotherUser.user.id,
+      level: "read"
+    })
+    await oneUser.updateDocument(files[0].id, files[0]);
+    await new Promise(r => setTimeout(r, 3000));
+
+    //then file become searchable
+    expect((await anotherUser.searchDocument({})).entities).toHaveLength(1);
+
     done?.();
   });
 
   it("did search a file by file owner", async done => {
-    // given:: all the sample files uploaded and documents for them created
-    await Promise.all((await helpers.uploadAllFiles()).map(createItemFromFile))
-    //TODO add files uploaded by another user
+    jest.setTimeout(30000);
+    //given:
+    const oneUser = await TestHelpers.getInstance(platform, true);
+    const anotherUser = await TestHelpers.getInstance(platform, true);
+    //upload files
+    let files = await oneUser.uploadAllFilesOneByOne()
+    await anotherUser.uploadAllFilesOneByOne()
+    //give permissions for all files to 'another user'
+    await Promise.all(files.map(f => {
+      f.access_info.entities.push({
+        type: "user",
+        id: anotherUser.user.id,
+        level: "read"
+      })
+      return oneUser.updateDocument(f.id, f);
+    }));
 
-    const searchFilters = {
-      creator: platform.currentUser.id,
-    };
+    await new Promise(r => setTimeout(r, 5000));
 
+    //then:: all files are searchable for 'another user'
+    expect((await anotherUser.searchDocument({})).entities).toHaveLength(TestHelpers.ALL_FILES.length * 2);
+
+    //and searchable for user that have
+    expect((await oneUser.searchDocument({
+      creator: oneUser.user.id,
+    })).entities).toHaveLength(TestHelpers.ALL_FILES.length);
+
+    done?.();
+
+  });
+
+  it("did search by 'added' date", async done => {
     jest.setTimeout(10000);
+    const user = await TestHelpers.getInstance(platform, true);
+    // given:: all the sample files uploaded and documents for them created
+    await user.uploadRandomFileAndCreateDocument();
+    const start = new Date().getTime();
+    await user.uploadAllFilesAndCreateDocuments()
+    const end = new Date().getTime();
+    await user.uploadRandomFileAndCreateDocument();
+    //wait for putting docs to elastic and its indexing
     await new Promise(r => setTimeout(r, 3000));
 
-    const failSearchResponse = await e2e_searchDocument(platform, searchFilters);
-    const failSearchResult = deserialize<SearchResultMockClass>(
-        SearchResultMockClass,
-        failSearchResponse.body,
-    );
+    //then:: all the files are searchable without filters
+    let documents = await user.searchDocument({});
+    expect(documents.entities).toHaveLength(TestHelpers.ALL_FILES.length + 2);
 
-    expect(failSearchResult.entities).toHaveLength(6);
+    //then:: only file uploaded in the [start, end] interval are shown in the search results
+    const filters = {
+      added_gt: start.toString(),
+      added_lt: end.toString()
+    };
+    documents = await user.searchDocument(filters);
+    expect(documents.entities).toHaveLength(TestHelpers.ALL_FILES.length);
 
     done?.();
   });
+
+  it("did search order by name", async done => {
+    jest.setTimeout(10000);
+    const user = await TestHelpers.getInstance(platform, true);
+    // given:: all the sample files uploaded and documents for them created
+    await user.uploadAllFilesAndCreateDocuments()
+    //wait for putting docs to elastic and its indexing
+    await new Promise(r => setTimeout(r, 5000));
+
+    //when:: sort files by name is ascending order
+    const options = {
+      sort: {
+        name: "asc",
+      }
+    };
+    const documents = await user.searchDocument(options);
+
+    //then all the files are sorted properly by name
+    expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES.sort());
+    done?.();
+  });
+
+  it("did search order by name desc", async done => {
+    jest.setTimeout(10000);
+    const user = await TestHelpers.getInstance(platform, true);
+    // given:: all the sample files uploaded and documents for them created
+    await user.uploadAllFilesOneByOne()
+    //wait for putting docs to elastic and its indexing
+    await new Promise(r => setTimeout(r, 5000));
+
+    //when:: sort files by name is ascending order
+    const options = {
+      sort: {
+        name: "desc",
+      }
+    };
+    const documents = await user.searchDocument(options);
+
+    //then all the files are sorted properly by name
+    expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES.sort().reverse());
+    done?.();
+  });
+
+  it("did search order by added date", async done => {
+    jest.setTimeout(10000);
+    const user = await TestHelpers.getInstance(platform, true);
+    // given:: all the sample files uploaded and documents for them created
+    await user.uploadAllFilesOneByOne();
+    //wait for putting docs to elastic and its indexing
+    await new Promise(r => setTimeout(r, 5000));
+
+    //when:: ask to sort files by the 'added' field
+    const options = {
+      sort: {
+        added: "asc",
+      }
+    };
+    const documents = await user.searchDocument(options);
+
+    //then:: files should be sorted properly
+    expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES);
+
+    done?.();
+  });
+
+  it("did search order by added date desc", async done => {
+    jest.setTimeout(10000);
+    const user = await TestHelpers.getInstance(platform, true);
+    // given:: all the sample files uploaded and documents for them created
+    await user.uploadAllFilesOneByOne();
+    //wait for putting docs to elastic and its indexing
+    await new Promise(r => setTimeout(r, 5000));
+
+    //when:: ask to sort files by the 'added' field desc
+    const options = {
+      sort: {
+        added: "desc",
+      }
+    };
+    const documents = await user.searchDocument(options);
+
+    //then:: files should be sorted properly
+    expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES.reverse());
+
+    done?.();
+  });
+
+
 
 });

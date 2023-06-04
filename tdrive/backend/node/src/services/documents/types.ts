@@ -1,6 +1,7 @@
 import { ExecutionContext } from "../../core/platform/framework/api/crud-service";
 import { DriveFile } from "./entities/drive-file";
 import { FileVersion } from "./entities/file-version";
+import {SortType} from "src/core/platform/services/search/api";
 
 export interface CompanyExecutionContext extends ExecutionContext {
   company: { id: string };
@@ -40,20 +41,24 @@ export type SearchDocumentsOptions = {
   search?: string;
   company_id?: string;
   creator?: string;
-  added?: string;
+  added_gt?: number;
+  added_lt?: number;
   mime_type?: Array<string>;
-  last_modified_lt?: number;
   last_modified_gt?: number;
+  last_modified_lt?: number;
+  sort?: SortType;
 };
 
 export type SearchDocumentsBody = {
   search?: string;
   company_id?: string;
   creator?: string;
-  added?: string;
+  added_gt?: number;
+  added_lt?: number;
   mime_type?: [string];
-  last_modified_lt?: number;
   last_modified_gt?: number;
+  last_modified_lt?: number;
+  sort?: SortType;
 };
 
 export type DocumentsMessageQueueRequest = {

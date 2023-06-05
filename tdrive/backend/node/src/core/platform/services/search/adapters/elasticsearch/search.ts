@@ -3,6 +3,7 @@ import { TransportRequestOptions } from "@elastic/elasticsearch/lib/Transport";
 import { logger } from "../../../../../../core/platform/framework/logger";
 import { EntityTarget, FindFilter, FindOptions, getEntityDefinition } from "../../api";
 import { asciiFold } from "../utils";
+import { comparisonType } from "src/core/platform/services/database/services/orm/repository/repository";
 
 export function buildSearchQuery<Entity>(
   entityType: EntityTarget<Entity>,
@@ -45,7 +46,44 @@ export function buildSearchQuery<Entity>(
     }
   }
 
-  //TODO implement $gte, $lt, etc
+  function buildRangeQuery(
+    lteOperations: comparisonType[],
+    key: "gte" | "lte" | "lt" | "gt",
+  ): void {
+    for (const lteOperation of lteOperations) {
+      if (lteOperation?.length == 2 && lteOperation[0]) {
+        const field_name = lteOperation[0];
+        esBody.query.bool.must.push({
+          range: {
+            [field_name]: {
+              [key]: lteOperation[1] ? parseInt(lteOperation[1]) : 0,
+            },
+          },
+        });
+      } else {
+        logger.warn(`Not enough data to include to the query: ${lteOperation}`);
+      }
+    }
+  }
+
+  if (options.$lte?.length) {
+    esBody.query.bool.must = esBody.query.bool.must || [];
+    buildRangeQuery(options.$lte, "lte");
+  }
+
+  if (options.$gte?.length) {
+    esBody.query.bool.must = esBody.query.bool.must || [];
+    buildRangeQuery(options.$gte, "gte");
+  }
+
+  if (options.$lt?.length) {
+    esBody.query.bool.must = esBody.query.bool.must || [];
+    buildRangeQuery(options.$lt, "lt");
+  }
+  if (options.$gt?.length) {
+    esBody.query.bool.must = esBody.query.bool.must || [];
+    buildRangeQuery(options.$gt, "gt");
+  }
 
   if (options.$text) {
     esBody.query.bool.minimum_should_match = 1;

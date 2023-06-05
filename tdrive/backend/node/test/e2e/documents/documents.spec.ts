@@ -71,28 +71,6 @@ describe("the Drive feature", () => {
     return deserialize<DriveFileMockClass>(DriveFileMockClass, response.body);
   };
 
-  const createItemFromFile = async (file: File): Promise<DriveFileMockClass> => {
-    await TestDbService.getInstance(platform, true);
-
-    const item = {
-      name: file.metadata.name,
-      parent_id: "root",
-      company_id: file.company_id,
-    };
-
-    const version = {
-      file_metadata: {
-        name: file.metadata.name,
-        size: file.upload_data?.size,
-        thumbnails: [],
-        external_id: file.id
-      }
-    }
-
-    const response = await e2e_createDocument(platform, item, version);
-    return deserialize<DriveFileMockClass>(DriveFileMockClass, response.body);
-  };
-
   it("did create the drive item", async done => {
     const result = await createItem();
 
@@ -180,6 +158,7 @@ describe("the Drive feature", () => {
   });
 
   it("did search for an item", async done => {
+    jest.setTimeout(10000);
     const createItemResult = await createItem();
 
     expect(createItemResult.id).toBeDefined();
@@ -255,7 +234,7 @@ describe("the Drive feature", () => {
     };
 
     jest.setTimeout(10000);
-    await new Promise(r => setTimeout(r, 3000));
+    await new Promise(r => setTimeout(r, 5000));
 
 
     let documents = await currentUser.searchDocument(filters);
@@ -268,7 +247,7 @@ describe("the Drive feature", () => {
   });
 
   it("did search by last modified", async done => {
-    jest.setTimeout(100000000);
+    jest.setTimeout(10000);
     const user = await TestHelpers.getInstance(platform, true);
     // given:: all the sample files uploaded and documents for them created
     const start = new Date().getTime();
@@ -394,7 +373,7 @@ describe("the Drive feature", () => {
     //when:: sort files by name is ascending order
     const options = {
       sort: {
-        name: "asc",
+        name_keyword: "asc",
       }
     };
     const documents = await user.searchDocument(options);
@@ -415,7 +394,7 @@ describe("the Drive feature", () => {
     //when:: sort files by name is ascending order
     const options = {
       sort: {
-        name: "desc",
+        name_keyword: "desc",
       }
     };
     const documents = await user.searchDocument(options);

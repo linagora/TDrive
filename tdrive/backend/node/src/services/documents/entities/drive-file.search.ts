@@ -8,6 +8,8 @@ export default {
     creator: entity.creator,
     added: entity.added,
     name: entity.name,
+    //especially for ES because it doesn't allow to sort by not a keyword fields
+    name_keyword: entity.name,
     company_id: entity.company_id,
     access_entities: entity.access_info?.entities?.filter(e => e.level != "none").map(e => e.id),
     last_modified: entity.last_modified,
@@ -19,6 +21,7 @@ export default {
       tags: "text",
       creator: "text",
       name: "text",
+      name_keyword: "text",
       company_id: "text",
       mime_type: "text",
     },
@@ -26,10 +29,11 @@ export default {
   esMapping: {
     properties: {
       name: { type: "text", index_prefixes: { min_chars: 1 } },
+      name_keyword: { type: "keyword" },
       content_keywords: { type: "text", index_prefixes: { min_chars: 1 } },
       tags: { type: "keyword" },
       creator: { type: "keyword" },
-      added: { type: "keyword" },
+      added: { type: "unsigned_long" },
       company_id: { type: "keyword" },
       access_entities: { type: "keyword" },
       mime_type: { type: "keyword" },

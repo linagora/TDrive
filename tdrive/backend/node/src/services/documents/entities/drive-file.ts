@@ -89,4 +89,5 @@ type AuthEntity = {
   type: "user" | "channel" | "company" | "folder";
   id: string | "parent";
   level: publicAccessLevel | DriveFileAccessLevel;
+  grantor: string;
 };

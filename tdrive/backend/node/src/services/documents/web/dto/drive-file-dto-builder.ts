@@ -1,6 +1,10 @@
 import { DriveFile } from "../../entities/drive-file";
 import { DriveFileDTO } from "./drive-file-dto";
-import { ListResult, Paginable, Pagination } from "../../../../core/platform/framework/api/crud-service";
+import {
+  ListResult,
+  Paginable,
+  Pagination,
+} from "../../../../core/platform/framework/api/crud-service";
 import _ from "lodash";
 import { CompanyExecutionContext } from "../../types";
 import globalResolver from "../../../../services/global-resolver";

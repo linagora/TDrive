@@ -23,7 +23,14 @@ describe("the public links feature", () => {
   }
 
   class AccessTokenMockClass {
-    access_token: any;
+    access_token: {
+      time: 0;
+      expiration: number;
+      refresh_expiration: number;
+      value: string;
+      refresh: string;
+      type: "Bearer";
+    };
   }
 
   class FullDriveInfoMockClass {
@@ -134,12 +141,13 @@ describe("the public links feature", () => {
       AccessTokenMockClass,
       accessRes.body,
     );
+    expect(access_token).toBeDefined();
 
     const resPublicRaw = await platform.app.inject({
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${access_token.value}`,
       },
     });
     const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
@@ -181,7 +189,7 @@ describe("the public links feature", () => {
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${access_token.value}`,
       },
     });
     const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
@@ -204,7 +212,7 @@ describe("the public links feature", () => {
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
       headers: {
-        authorization: `Bearer ${access_token}`,
+        authorization: `Bearer ${access_token.value}`,
       },
     });
     expect(resPublicRaw.statusCode).toBe(401);
@@ -269,7 +277,7 @@ describe("the public links feature", () => {
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
       headers: {
-        Authorization: `Bearer ${access_token}`,
+        Authorization: `Bearer ${access_token.value}`,
       },
     });
     let resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);

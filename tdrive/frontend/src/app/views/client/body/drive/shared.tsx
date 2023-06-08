@@ -22,6 +22,8 @@ import {
 } from '../../../../features/drive/api-client/api-client';
 import useRouterCompany from '../../../../features/router/hooks/use-router-company';
 import { CreateModalWithUploadZones } from '../../side-bar/actions';
+import { useRecoilState } from 'recoil';
+import { DriveCurrentFolderAtom } from './browser';
 
 export default () => {
   const companyId = useRouterCompany();
@@ -78,7 +80,7 @@ export default () => {
       </div>
       <MenusBodyLayer />
       <UploadsViewer />
-      <CreateModalWithUploadZones />
+      <CreateModalWithUploadZones initialParentId={documentId} />
     </div>
   );
 };

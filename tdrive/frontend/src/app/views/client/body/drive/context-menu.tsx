@@ -24,7 +24,9 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
   const [checkedIds, setChecked] = useRecoilState(DriveItemSelectedList);
   const checked = children.filter(c => checkedIds[c.id]);
 
-  const [_, setParentId] = useRecoilState(DriveCurrentFolderAtom(initialParentId || 'root'));
+  const [_, setParentId] = useRecoilState(
+    DriveCurrentFolderAtom({ initialFolderId: initialParentId || 'root' }),
+  );
 
   const { download, downloadZip, update } = useDriveActions();
   const setCreationModalState = useSetRecoilState(CreateModalAtom);

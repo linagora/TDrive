@@ -12,13 +12,17 @@ import { ConfirmDeleteModalAtom } from '../body/drive/modals/confirm-delete';
 import { CreateModal, CreateModalAtom } from '../body/drive/modals/create';
 import { Button } from '@atoms/button/button';
 
-export const CreateModalWithUploadZones = () => {
+export const CreateModalWithUploadZones = ({ initialParentId }: { initialParentId?: string }) => {
   const companyId = useRouterCompany();
   const uploadZoneRef = useRef<UploadZone | null>(null);
   const uploadFolderZoneRef = useRef<UploadZone | null>(null);
   const setCreationModalState = useSetRecoilState(CreateModalAtom);
   const { uploadTree, uploadFromUrl } = useDriveUpload();
-  const [parentId, _] = useRecoilState(DriveCurrentFolderAtom('root'));
+  const [parentId, _] = useRecoilState(
+    DriveCurrentFolderAtom({ initialFolderId: initialParentId || 'root' }),
+  );
+
+  console.log(parentId);
 
   return (
     <>
@@ -73,7 +77,7 @@ export const CreateModalWithUploadZones = () => {
 };
 
 export default () => {
-  const [parentId, _] = useRecoilState(DriveCurrentFolderAtom('root'));
+  const [parentId, _] = useRecoilState(DriveCurrentFolderAtom({ initialFolderId: 'root' }));
   const { access, item, inTrash } = useDriveItem(parentId);
   const { children: trashChildren } = useDriveItem('trash');
   const uploadZoneRef = useRef<UploadZone | null>(null);
@@ -89,7 +93,7 @@ export default () => {
     <div className="-m-4 overflow-hidden">
       <AnimatedHeight>
         <div className="p-4">
-          <CreateModalWithUploadZones />
+          <CreateModalWithUploadZones initialParentId={parentId} />
 
           {inTrash && access === 'manage' && (
             <>

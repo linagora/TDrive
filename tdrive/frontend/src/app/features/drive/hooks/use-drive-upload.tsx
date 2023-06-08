@@ -45,6 +45,8 @@ export const useDriveUpload = () => {
     tree: FileTreeObject,
     context: { companyId: string; parentId: string },
   ) => {
+    console.log('uploadTree', tree, context);
+
     const filesPerParentId: { [key: string]: File[] } = {};
 
     // Create all directories

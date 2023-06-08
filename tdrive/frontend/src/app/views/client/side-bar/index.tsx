@@ -19,7 +19,9 @@ import DiskUsage from '../common/disk-usage';
 import Actions from './actions';
 
 export default () => {
-  const [parentId, setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
+  const [parentId, setParentId] = useRecoilState(
+    DriveCurrentFolderAtom({ initialFolderId: 'root' }),
+  );
   const { user } = useCurrentUser();
   const active = false;
   const { access: rootAccess } = useDriveItem('root');

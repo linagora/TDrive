@@ -26,17 +26,22 @@ import { PropertiesModal } from './modals/properties';
 import { AccessModal } from './modals/update-access';
 import { VersionsModal } from './modals/versions';
 
-export const DriveCurrentFolderAtom = atomFamily<string, string>({
+export const DriveCurrentFolderAtom = atomFamily<
+  string,
+  { context?: string; initialFolderId: string }
+>({
   key: 'DriveCurrentFolderAtom',
-  default: startingParentId => startingParentId || 'root',
+  default: options => options.initialFolderId || 'root',
 });
 
 export default memo(
   ({
+    context,
     initialParentId,
     tdriveTabContextToken,
     inPublicSharing,
   }: {
+    context?: string;
     initialParentId?: string;
     tdriveTabContextToken?: string;
     inPublicSharing?: boolean;
@@ -45,7 +50,7 @@ export default memo(
     setTdriveTabToken(tdriveTabContextToken || null);
 
     const [parentId, _setParentId] = useRecoilState(
-      DriveCurrentFolderAtom(initialParentId || 'root'),
+      DriveCurrentFolderAtom({ context: context, initialFolderId: initialParentId || 'root' }),
     );
 
     const [loadingParentChange, setLoadingParentChange] = useState(false);
@@ -118,7 +123,7 @@ export default memo(
     return (
       <UploadZone
         overClassName={''}
-        className="h-full overflow-hidden"
+        className="h-full overflow-hidden w-full relative"
         disableClick
         parent={''}
         multiple={true}
@@ -126,6 +131,7 @@ export default memo(
         ref={uploadZoneRef}
         driveCollectionKey={uploadZone}
         onAddFiles={async (_, event) => {
+          console.log('event', event);
           const tree = await getFilesTree(event);
           setCreationModalState({ parent_id: '', open: false });
           uploadTree(tree, {

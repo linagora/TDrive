@@ -3,7 +3,7 @@ import { checkUserBelongsToCompany } from "../../../utils/company";
 import { Tag } from "../types";
 import { TagsController } from "./controllers";
 import gr from "../../global-resolver";
-import CompanyUser from "src/services/user/entities/company_user";
+import CompanyUser from "../../../services/user/entities/company_user";
 
 const tagsUrl = "/companies/:company_id/tags";
 

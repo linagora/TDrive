@@ -1,5 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
-import { getInstance } from "src/services/user/entities/user";
+import { getInstance } from "../../../../services/user/entities/user";
 import { logger } from "../../../../core/platform/framework";
 import { CrudException, ListResult } from "../../../../core/platform/framework/api/crud-service";
 import { File } from "../../../../services/files/entities/file";

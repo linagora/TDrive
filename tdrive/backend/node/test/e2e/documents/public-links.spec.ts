@@ -16,10 +16,14 @@ describe("the public links feature", () => {
     id: string;
     name: string;
     size: number;
-    added: string;
+    added: number;
     parent_id: string;
     company_id: string;
     access_info: AccessInformation;
+  }
+
+  class AccessTokenMockClass {
+    access_token: any;
   }
 
   class FullDriveInfoMockClass {
@@ -116,10 +120,27 @@ describe("the public links feature", () => {
     const file = deserialize<DriveFileMockClass>(DriveFileMockClass, res.body);
     expect(file.access_info.public?.level).toBe("read");
 
+    const accessRes = await platform.app.inject({
+      method: "POST",
+      url: `${url}/companies/${publicFile.company_id}/anonymous/token`,
+      headers: {},
+      payload: {
+        company_id: publicFile.company_id,
+        document_id: publicFile.id,
+        token: publicFile.access_info.public?.token,
+      },
+    });
+    const { access_token } = deserialize<AccessTokenMockClass>(
+      AccessTokenMockClass,
+      accessRes.body,
+    );
+
     const resPublicRaw = await platform.app.inject({
       method: "GET",
-      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
-      headers: {},
+      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     });
     const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
@@ -141,10 +162,27 @@ describe("the public links feature", () => {
       },
     });
 
+    const accessRes = await platform.app.inject({
+      method: "POST",
+      url: `${url}/companies/${publicFile.company_id}/anonymous/token`,
+      headers: {},
+      payload: {
+        company_id: publicFile.company_id,
+        document_id: publicFile.id,
+        token: publicFile.access_info.public?.token,
+      },
+    });
+    const { access_token } = deserialize<AccessTokenMockClass>(
+      AccessTokenMockClass,
+      accessRes.body,
+    );
+
     let resPublicRaw = await platform.app.inject({
       method: "GET",
-      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
-      headers: {},
+      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     });
     const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
@@ -164,8 +202,10 @@ describe("the public links feature", () => {
 
     resPublicRaw = await platform.app.inject({
       method: "GET",
-      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
-      headers: {},
+      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
+      headers: {
+        authorization: `Bearer ${access_token}`,
+      },
     });
     expect(resPublicRaw.statusCode).toBe(401);
 
@@ -197,23 +237,44 @@ describe("the public links feature", () => {
       },
     });
 
+    const badAccessRes = await platform.app.inject({
+      method: "POST",
+      url: `${url}/companies/${publicFile.company_id}/anonymous/token`,
+      headers: {},
+      payload: {
+        company_id: publicFile.company_id,
+        document_id: publicFile.id,
+        token: publicFile.access_info.public?.token,
+      },
+    });
+    expect(badAccessRes.statusCode).toBe(401);
+
+    const accessRes = await platform.app.inject({
+      method: "POST",
+      url: `${url}/companies/${publicFile.company_id}/anonymous/token`,
+      headers: {},
+      payload: {
+        company_id: publicFile.company_id,
+        document_id: publicFile.id,
+        token: publicFile.access_info.public?.token,
+        token_password: "abcdef",
+      },
+    });
+    const { access_token } = deserialize<AccessTokenMockClass>(
+      AccessTokenMockClass,
+      accessRes.body,
+    );
+
     let resPublicRaw = await platform.app.inject({
       method: "GET",
-      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${
-        publicFile.access_info.public?.token
-      }%2B${"abcdef"}`,
-      headers: {},
+      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}`,
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     });
     let resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
     expect(resPublic.item?.id).toBe(publicFile.id);
-
-    resPublicRaw = await platform.app.inject({
-      method: "GET",
-      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
-      headers: {},
-    });
-    expect(resPublicRaw.statusCode).toBe(401);
 
     await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,

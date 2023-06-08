@@ -147,7 +147,7 @@ export const getAccessLevel = async (
   id: string,
   item: DriveFile | null,
   repository: Repository<DriveFile>,
-  context: CompanyExecutionContext & { tdrive_tab_token?: string },
+  context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
 ): Promise<DriveFileAccessLevel | "none"> => {
   if (!id || id === "root")
     return !context?.user?.id || (await isCompanyGuest(context)) ? "none" : "manage";
@@ -164,7 +164,8 @@ export const getAccessLevel = async (
     if (await isCompanyApplication(context)) return "manage";
   }
 
-  let publicToken = context.user.public_token_document_id;
+  let publicToken = context.public_token;
+  const prevalidatedPublicTokenDocumentId = context.user.public_token_document_id;
 
   try {
     item =
@@ -188,10 +189,13 @@ export const getAccessLevel = async (
      */
 
     //Public access
-    if (publicToken) {
+    if (publicToken || prevalidatedPublicTokenDocumentId) {
       if (!item.access_info.public.token) return "none";
       const { token: itemToken, level: itemLevel, password, expiration } = item.access_info.public;
       if (expiration && expiration < Date.now()) return "none";
+      if (prevalidatedPublicTokenDocumentId) {
+        return itemLevel;
+      }
       if (password) {
         const data = publicToken.split("+");
         if (data.length !== 2) return "none";

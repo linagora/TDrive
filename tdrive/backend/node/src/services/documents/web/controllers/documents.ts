@@ -418,12 +418,8 @@ export class DocumentsController {
   }> {
     const document = await globalResolver.services.documents.documents.get(req.body.document_id, {
       public_token: req.body.token + (req.body.token_password ? "+" + req.body.token_password : ""),
-      user: req.currentUser,
+      user: null,
       company: { id: req.body.company_id },
-      url: req.url,
-      method: req.routerMethod,
-      reqId: req.id,
-      transport: "http",
     });
 
     if (!document || !document.access || document.access === "none")

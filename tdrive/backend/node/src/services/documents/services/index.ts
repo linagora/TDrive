@@ -370,7 +370,14 @@ export class DocumentsService {
             oldParent = item.parent_id;
           }
 
-          if (key === "name") {
+          if (key === "access_info") {
+            item.access_info = content.access_info;
+            item.access_info.entities.forEach(info => {
+              if (!info.grantor) {
+                info.grantor = context.user.id;
+              }
+            });
+          } else if (key === "name") {
             item.name = await getItemName(
               content.parent_id || item.parent_id,
               item.id,
@@ -885,6 +892,7 @@ export class DocumentsService {
               type: "channel",
               id: channelId,
               level: level === "write" ? "write" : "read",
+              grantor: context.user.id,
             },
           ],
         },

@@ -59,7 +59,7 @@ describe("the Drive Tdrive tabs feature", () => {
     await platform.app.close();
   });
 
-  it("did create a tab configuration on Drive side", async done => {
+  it("did create a tab configuration on Drive side", async () => {
     await TestDbService.getInstance(platform, true);
 
     const item = {
@@ -126,10 +126,9 @@ describe("the Drive Tdrive tabs feature", () => {
       ),
     ).toBeDefined();
 
-    done?.();
   });
 
-  it("did refuse to create a tab configuration for an item I can't manage", async done => {
+  it("did refuse to create a tab configuration for an item I can't manage", async () => {
     const dbService = await TestDbService.getInstance(platform, true);
     const ws0pk = {
       id: platform.workspace.workspace_id,
@@ -178,6 +177,5 @@ describe("the Drive Tdrive tabs feature", () => {
 
     expect(createdTab.statusCode).toBe(403);
 
-    done?.();
   });
 });

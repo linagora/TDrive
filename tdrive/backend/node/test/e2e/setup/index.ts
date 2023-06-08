@@ -26,6 +26,7 @@ type TokenPayload = {
 
 export type User = {
   id: string;
+  first_name?: string;
   isWorkspaceModerator?: boolean;
 };
 

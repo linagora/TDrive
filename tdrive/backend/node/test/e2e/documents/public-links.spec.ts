@@ -16,7 +16,7 @@ describe("the public links feature", () => {
     id: string;
     name: string;
     size: number;
-    added: string;
+    added: number;
     parent_id: string;
     company_id: string;
     access_info: AccessInformation;
@@ -77,7 +77,7 @@ describe("the public links feature", () => {
 
   let publicFile: DriveFileMockClass;
 
-  it("did create the drive item", async done => {
+  it("did create the drive item", async () => {
     const result = await createItem();
     publicFile = result;
 
@@ -86,10 +86,9 @@ describe("the public links feature", () => {
     expect(result.added).toBeDefined();
     expect(result.access_info).toBeDefined();
 
-    done?.();
   });
 
-  it("unable to access non public file", async done => {
+  it("unable to access non public file", async () => {
     const res = await platform.app.inject({
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
@@ -98,10 +97,9 @@ describe("the public links feature", () => {
 
     expect(res.statusCode).toBe(401);
 
-    done?.();
   });
 
-  it("should access public file", async done => {
+  it("should access public file", async () => {
     const res = await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
       access_info: {
@@ -125,10 +123,9 @@ describe("the public links feature", () => {
     expect(resPublicRaw.statusCode).toBe(200);
     expect(resPublic.item?.id).toBe(publicFile.id);
 
-    done?.();
   });
 
-  it("unable to access expired public file link", async done => {
+  it("unable to access expired public file link", async () => {
     await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
       access_info: {
@@ -181,10 +178,9 @@ describe("the public links feature", () => {
       },
     });
 
-    done?.();
   });
 
-  it("access public file link with password", async done => {
+  it("access public file link with password", async () => {
     await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
       access_info: {
@@ -201,7 +197,7 @@ describe("the public links feature", () => {
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${
         publicFile.access_info.public?.token
-      }%2B${"abcdef"}`,
+      }%2Babcdef`,
       headers: {},
     });
     let resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
@@ -227,6 +223,5 @@ describe("the public links feature", () => {
       },
     });
 
-    done?.();
   });
 });

@@ -1,18 +1,18 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tests in unit/" type="JavaScriptTestRunnerJest" nameIsGenerated="true">
+  <configuration default="false" name="Run all e2e [ElsticSearch]" type="JavaScriptTestRunnerJest">
     <node-interpreter value="project" />
     <jest-package value="$PROJECT_DIR$/tdrive/backend/node/node_modules/jest" />
     <working-dir value="$PROJECT_DIR$/tdrive/backend/node" />
-    <jest-options value="--testTimeout=30000" />
+    <jest-options value="--forceExit --coverage --detectOpenHandles --maxWorkers=1 --testTimeout=30000" />
     <envs>
       <env name="DB_DRIVER" value="mongodb" />
       <env name="DB_MONGO_URI" value="mongodb://localhost:27017" />
       <env name="PUBSUB_TYPE" value="local" />
-      <env name="SEARCH_DRIVER" value="mongodb" />
+      <env name="SEARCH_DRIVER" value="elasticsearch" />
       <env name="STORAGE_LOCAL_PATH" value="$USER_HOME$/dev/linagora/TDrive/tdrive/docker-data" />
     </envs>
     <scope-kind value="DIRECTORY" />
-    <test-directory value="$PROJECT_DIR$/tdrive/backend/node/test/unit" />
+    <test-directory value="$PROJECT_DIR$/tdrive/backend/node/test/e2e" />
     <method v="2" />
   </configuration>
 </component>

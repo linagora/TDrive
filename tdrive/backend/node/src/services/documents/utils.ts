@@ -225,7 +225,7 @@ export const getPath = async (
 ): Promise<DriveFile[]> => {
   id = id || "root";
   if (isVirtualFolder(id))
-    return !context.public_token || ignoreAccess
+    return !context?.user?.public_token_document_id || ignoreAccess
       ? [
           {
             id,

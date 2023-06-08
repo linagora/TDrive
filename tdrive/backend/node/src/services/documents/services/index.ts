@@ -94,7 +94,10 @@ export class DocumentsService {
    * @param {DriveExecutionContext} context
    * @returns {Promise<DriveItemDetails>}
    */
-  get = async (id: string, context: DriveExecutionContext): Promise<DriveItemDetails> => {
+  get = async (
+    id: string,
+    context: DriveExecutionContext & { public_token?: string },
+  ): Promise<DriveItemDetails> => {
     if (!context) {
       this.logger.error("invalid context");
       return null;

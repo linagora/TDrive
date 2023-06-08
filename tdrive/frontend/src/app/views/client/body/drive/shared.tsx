@@ -119,7 +119,10 @@ const AccessChecker = ({
   };
 
   useEffect(() => {
-    refresh(folderId);
+    (async () => {
+      await setPublicToken(token || '');
+      refresh(folderId);
+    })();
   }, []);
 
   if (!details?.item?.id && loading) {

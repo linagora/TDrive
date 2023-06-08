@@ -149,6 +149,8 @@ export const getAccessLevel = async (
   repository: Repository<DriveFile>,
   context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
 ): Promise<DriveFileAccessLevel | "none"> => {
+  console.log("Checking access to " + id + " (" + item?.name + ")");
+
   if (!id || id === "root")
     return !context?.user?.id || (await isCompanyGuest(context)) ? "none" : "manage";
   if (id === "trash")
@@ -166,6 +168,8 @@ export const getAccessLevel = async (
 
   let publicToken = context.public_token;
   const prevalidatedPublicTokenDocumentId = context?.user?.public_token_document_id;
+
+  console.log("==== publicToken", publicToken, "context:", context);
 
   try {
     item =
@@ -189,7 +193,7 @@ export const getAccessLevel = async (
      */
 
     //Public access
-    if (publicToken || prevalidatedPublicTokenDocumentId) {
+    if (publicToken || prevalidatedPublicTokenDocumentId === item.id) {
       if (!item.access_info.public.token) return "none";
       const { token: itemToken, level: itemLevel, password, expiration } = item.access_info.public;
       if (expiration && expiration < Date.now()) return "none";

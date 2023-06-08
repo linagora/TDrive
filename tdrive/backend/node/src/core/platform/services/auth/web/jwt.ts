@@ -22,6 +22,7 @@ const jwtPlugin: FastifyPluginCallback = (fastify, _opts, next) => {
       ...{ application_id: jwt.application_id || null },
       ...{ server_request: jwt.server_request || false },
       ...{ allow_tracking: jwt.track || false },
+      ...{ public_token_document_id: jwt.public_token_document_id || null },
     };
     request.log.debug(`Authenticated as user ${request.currentUser.id}`);
   };

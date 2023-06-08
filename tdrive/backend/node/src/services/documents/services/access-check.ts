@@ -43,6 +43,7 @@ export const hasAccessLevel = (
 
 /**
  * checks the current user is a guest
+ * Company guests can be users accessing with a public link
  *
  * @param {CompanyExecutionContext} context
  * @returns {Promise<boolean>}
@@ -146,10 +147,10 @@ export const getAccessLevel = async (
   id: string,
   item: DriveFile | null,
   repository: Repository<DriveFile>,
-  context: CompanyExecutionContext & { public_token?: string; tdrive_tab_token?: string },
+  context: CompanyExecutionContext & { tdrive_tab_token?: string },
 ): Promise<DriveFileAccessLevel | "none"> => {
   if (!id || id === "root")
-    return !context?.user?.id ? "none" : (await isCompanyGuest(context)) ? "read" : "manage";
+    return !context?.user?.id || (await isCompanyGuest(context)) ? "none" : "manage";
   if (id === "trash")
     return (await isCompanyGuest(context)) || !context?.user?.id
       ? "none"
@@ -163,7 +164,7 @@ export const getAccessLevel = async (
     if (await isCompanyApplication(context)) return "manage";
   }
 
-  let publicToken = context.public_token;
+  let publicToken = context.user.public_token_document_id;
 
   try {
     item =
@@ -227,7 +228,7 @@ export const getAccessLevel = async (
       const matchingCompany = accessEntities.find(
         a => a.type === "company" && a.id === context.company.id,
       );
-      if (matchingCompany) otherLevels.push(matchingCompany.level);
+      if (matchingCompany && !isCompanyGuest(context)) otherLevels.push(matchingCompany.level);
     }
 
     //Parent folder

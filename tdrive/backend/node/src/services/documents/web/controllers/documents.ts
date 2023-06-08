@@ -1,4 +1,5 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { getInstance } from "src/services/user/entities/user";
 import { logger } from "../../../../core/platform/framework";
 import { CrudException, ListResult } from "../../../../core/platform/framework/api/crud-service";
 import { File } from "../../../../services/files/entities/file";
@@ -395,6 +396,69 @@ export class DocumentsController {
       context,
     );
   };
+
+  async getAnonymousToken(
+    req: FastifyRequest<{
+      Body: {
+        company_id: string;
+        document_id: string;
+        token: string;
+        token_password?: string;
+      };
+    }>,
+  ): Promise<{
+    access_token: {
+      time: number;
+      expiration: number;
+      refresh_expiration: number;
+      value: string;
+      refresh: string;
+      type: string;
+    };
+  }> {
+    const document = await globalResolver.services.documents.documents.get(req.body.document_id, {
+      public_token: req.body.token + (req.body.token_password ? "+" + req.body.token_password : ""),
+      user: req.currentUser,
+      company: { id: req.body.company_id },
+      url: req.url,
+      method: req.routerMethod,
+      reqId: req.id,
+      transport: "http",
+    });
+
+    if (!document || !document.access || document.access === "none")
+      throw new CrudException("You don't have access to this document", 403);
+
+    const email = document.item.company_id + "-anonymous@tdrive.com";
+    let user = await globalResolver.services.users.getByEmail(email);
+    if (!user) {
+      user = (
+        await globalResolver.services.users.create(
+          getInstance({
+            first_name: "Anonymous",
+            last_name: "",
+            email_canonical: email,
+            username_canonical: (email.replace("@", ".") || "").toLocaleLowerCase(),
+            phone: "",
+            identity_provider: "anonymous",
+            identity_provider_id: email,
+            mail_verified: true,
+          }),
+        )
+      ).entity;
+    }
+    await globalResolver.services.companies.setUserRole(document.item.company_id, user.id, "guest");
+
+    const token = globalResolver.platformServices.auth.generateJWT(user.id, user.email_canonical, {
+      track: false,
+      provider_id: "tdrive",
+      public_token_document_id: req.body.document_id,
+    });
+
+    return {
+      access_token: token,
+    };
+  }
 }
 
 /**
@@ -404,9 +468,8 @@ export class DocumentsController {
  * @returns {CompanyExecutionContext}
  */
 const getDriveExecutionContext = (
-  req: FastifyRequest<{ Params: { company_id: string }; Querystring?: { public_token?: string } }>,
+  req: FastifyRequest<{ Params: { company_id: string } }>,
 ): DriveExecutionContext => ({
-  public_token: req.query?.public_token,
   user: req.currentUser,
   company: { id: req.params.company_id },
   url: req.url,

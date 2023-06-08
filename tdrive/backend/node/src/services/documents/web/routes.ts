@@ -101,6 +101,12 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, _options, next)
     handler: documentsController.setTab.bind(documentsController),
   });
 
+  fastify.route({
+    method: "POST",
+    url: `${baseUrl}/anonymous/token`,
+    handler: documentsController.getAnonymousToken.bind(documentsController),
+  });
+
   return next();
 };
 

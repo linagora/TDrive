@@ -2,6 +2,7 @@ import Api from '../../global/framework/api-service';
 import { DriveItem, DriveItemDetails, DriveItemVersion } from '../types';
 import Workspace from '@deprecated/workspaces/workspaces';
 import Logger from 'features/global/framework/logger-service';
+import { JWTDataType } from 'app/features/auth/jwt-storage-service';
 export interface BaseSearchOptions {
   company_id?: string;
   workspace_id?: string;
@@ -32,10 +33,7 @@ export const setTdriveTabToken = (token: string | null) => {
   tdriveTabToken = token;
 };
 
-const appendPublicAndTdriveToken = (useAnd?: boolean) => {
-  if (publicLinkToken) {
-    return `${useAnd ? '&' : '?'}public_token=${publicLinkToken}`;
-  }
+const appendTdriveToken = (useAnd?: boolean) => {
   if (tdriveTabToken) {
     return `${useAnd ? '&' : '?'}tdrive_tab_token=${tdriveTabToken}`;
   }
@@ -44,21 +42,39 @@ const appendPublicAndTdriveToken = (useAnd?: boolean) => {
 
 export class DriveApiClient {
   private static logger = Logger.getLogger('MessageAPIClientService');
+
+  static async getAnonymousToken(
+    companyId: string,
+    id: string,
+    publicToken: string,
+    password?: string,
+  ) {
+    return await Api.post<
+      { company_id: string; document_id: string; token: string; token_password?: string },
+      { access_token: JWTDataType }
+    >(`/internal/services/documents/v1/companies/${companyId}/anonymous/token`, {
+      company_id: companyId,
+      document_id: id,
+      token: publicToken,
+      token_password: password,
+    });
+  }
+
   static async get(companyId: string, id: string | 'trash' | '') {
     return await Api.get<DriveItemDetails>(
-      `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendPublicAndTdriveToken()}`,
+      `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendTdriveToken()}`,
     );
   }
 
   static async remove(companyId: string, id: string | 'trash' | '') {
     return await Api.delete<void>(
-      `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendPublicAndTdriveToken()}`,
+      `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendTdriveToken()}`,
     );
   }
 
   static async update(companyId: string, id: string, update: Partial<DriveItem>) {
     return await Api.post<Partial<DriveItem>, DriveItem>(
-      `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendPublicAndTdriveToken()}`,
+      `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendTdriveToken()}`,
       update,
     );
   }
@@ -72,14 +88,14 @@ export class DriveApiClient {
       { item: Partial<DriveItem>; version: Partial<DriveItemVersion> },
       DriveItem
     >(
-      `/internal/services/documents/v1/companies/${companyId}/item${appendPublicAndTdriveToken()}`,
+      `/internal/services/documents/v1/companies/${companyId}/item${appendTdriveToken()}`,
       data as { item: Partial<DriveItem>; version: Partial<DriveItemVersion> },
     );
   }
 
   static async createVersion(companyId: string, id: string, version: Partial<DriveItemVersion>) {
     return await Api.post<Partial<DriveItemVersion>, DriveItemVersion>(
-      `/internal/services/documents/v1/companies/${companyId}/item/${id}/version${appendPublicAndTdriveToken()}`,
+      `/internal/services/documents/v1/companies/${companyId}/item/${id}/version${appendTdriveToken()}`,
       version,
     );
   }
@@ -88,7 +104,7 @@ export class DriveApiClient {
     return Api.get<{ token: string }>(
       `/internal/services/documents/v1/companies/${companyId}/item/download/token` +
         `?items=${ids.join(',')}&version_id=${versionId}` +
-        appendPublicAndTdriveToken(true),
+        appendTdriveToken(true),
     );
   }
 
@@ -96,12 +112,12 @@ export class DriveApiClient {
     const { token } = await DriveApiClient.getDownloadToken(companyId, [id], versionId);
     if (versionId)
       return Api.route(
-        `/internal/services/documents/v1/companies/${companyId}/item/${id}/download?version_id=${versionId}&token=${token}${appendPublicAndTdriveToken(
+        `/internal/services/documents/v1/companies/${companyId}/item/${id}/download?version_id=${versionId}&token=${token}${appendTdriveToken(
           true,
         )}`,
       );
     return Api.route(
-      `/internal/services/documents/v1/companies/${companyId}/item/${id}/download?token=${token}${appendPublicAndTdriveToken(
+      `/internal/services/documents/v1/companies/${companyId}/item/${id}/download?token=${token}${appendTdriveToken(
         true,
       )}`,
     );
@@ -112,7 +128,7 @@ export class DriveApiClient {
     return Api.route(
       `/internal/services/documents/v1/companies/${companyId}/item/download/zip` +
         `?items=${ids.join(',')}&token=${token}` +
-        appendPublicAndTdriveToken(true),
+        appendTdriveToken(true),
     );
   }
 

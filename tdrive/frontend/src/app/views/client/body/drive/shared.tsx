@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import MenusBodyLayer from '@components/menus/menus-body-layer';
+import JWTStorage from '@features/auth/jwt-storage-service';
 import Api from '@features/global/framework/api-service';
 import Languages from '@features/global/services/languages-service';
 import { addApiUrlIfNeeded } from '@features/global/utils/URLUtils';
@@ -11,14 +12,15 @@ import { Input } from 'app/atoms/input/input-text';
 import { Base, Subtitle, Title } from 'app/atoms/text';
 import UploadsViewer from 'app/components/file-uploads/uploads-viewer';
 import { useDriveItem } from 'app/features/drive/hooks/use-drive-item';
-import { useDriveUpload } from 'app/features/drive/hooks/use-drive-upload';
+import { ToasterService } from 'app/features/global/services/toaster-service';
 import { useParams } from 'react-router-dom';
-import { useSetRecoilState } from 'recoil';
 import shortUUID from 'short-uuid';
 import Avatar from '../../../../atoms/avatar';
-import { setPublicLinkToken } from '../../../../features/drive/api-client/api-client';
+import {
+  DriveApiClient,
+  setPublicLinkToken,
+} from '../../../../features/drive/api-client/api-client';
 import useRouterCompany from '../../../../features/router/hooks/use-router-company';
-import { CreateModalAtom } from './modals/create';
 import { CreateModalWithUploadZones } from '../../side-bar/actions';
 
 export default () => {
@@ -44,7 +46,6 @@ export default () => {
 
   const { token, documentId: _documentId } = useParams() as { token?: string; documentId?: string };
   const documentId = _documentId ? shortUUID().toUUID(_documentId || '') : '';
-  setPublicLinkToken(token || null);
 
   if (!companyId) {
     return <></>;
@@ -92,7 +93,30 @@ const AccessChecker = ({
   folderId: string;
 }) => {
   const { details, loading, refresh } = useDriveItem(folderId);
+  const companyId = useRouterCompany();
   const [password, setPassword] = useState((token || '').split('+')[1] || '');
+
+  const setPublicToken = async (token: string, password?: string) => {
+    try {
+      setPublicLinkToken(token || null);
+
+      const { access_token } = await DriveApiClient.getAnonymousToken(
+        companyId,
+        folderId,
+        token,
+        password,
+      );
+
+      if (!access_token) {
+        throw new Error('Invalid password or token, or expired link.');
+      }
+
+      JWTStorage.updateJWT(access_token);
+    } catch (e) {
+      console.error(e);
+      ToasterService.error('Unable to access documents: ' + e);
+    }
+  };
 
   useEffect(() => {
     refresh(folderId);
@@ -125,8 +149,8 @@ const AccessChecker = ({
             <Button
               className="rounded-l-none"
               theme="primary"
-              onClick={() => {
-                setPublicLinkToken(token ? encodeURIComponent(token + '+' + password) : null);
+              onClick={async () => {
+                await setPublicToken(token || '', password);
                 refresh(folderId);
               }}
             >

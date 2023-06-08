@@ -28,6 +28,7 @@ export default interface AuthServiceAPI extends TdriveServiceProvider {
       track: boolean;
       provider_id: string;
       application_id?: string;
+      public_token_document_id?: string;
     } & any,
   ): AccessToken;
 }

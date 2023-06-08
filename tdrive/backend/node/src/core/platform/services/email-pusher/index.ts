@@ -125,7 +125,7 @@ export default class EmailPusherClass
         this.logger.info("email sent");
       }
     } catch (error) {
-      this.logger.error({ error }, "Failed to send email");
+      this.logger.error({ error: `${error}` }, "Failed to send email");
     }
   }
 }

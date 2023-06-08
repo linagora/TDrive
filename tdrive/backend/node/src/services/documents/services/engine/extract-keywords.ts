@@ -70,7 +70,7 @@ export class DocumentsProcessor
       content_keywords = extractKeywords(content_strings);
     } catch (error) {
       console.debug(error);
-      logger.error({ error }, "Failed to generate content keywords");
+      logger.error({ error: `${error}` }, "Failed to generate content keywords");
     }
 
     return { content_keywords, item: message.item };

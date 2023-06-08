@@ -165,7 +165,7 @@ export const getAccessLevel = async (
   }
 
   let publicToken = context.public_token;
-  const prevalidatedPublicTokenDocumentId = context.user.public_token_document_id;
+  const prevalidatedPublicTokenDocumentId = context?.user?.public_token_document_id;
 
   try {
     item =

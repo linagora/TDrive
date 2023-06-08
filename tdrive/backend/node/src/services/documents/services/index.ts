@@ -81,7 +81,7 @@ export class DocumentsService {
           DriveTdriveTabEntity,
         );
     } catch (error) {
-      logger.error({ error }, "Error while initializing Documents Service");
+      logger.error({ error: `${error}` }, "Error while initializing Documents Service");
     }
 
     return this;
@@ -127,7 +127,8 @@ export class DocumentsService {
         throw Error("user does not have access to this item");
       }
     } catch (error) {
-      this.logger.error({ error }, "Failed to grant access to the drive item");
+      console.log(error);
+      this.logger.error({ error: `${error}` }, "Failed to grant access to the drive item");
       throw new CrudException("User does not have access to this item or its children", 401);
     }
 
@@ -309,7 +310,7 @@ export class DocumentsService {
 
       return driveItem;
     } catch (error) {
-      this.logger.error({ error }, "Failed to create drive item");
+      this.logger.error({ error: `${error}` }, "Failed to create drive item");
       CrudException.throwMe(error, new CrudException("Failed to create item", 500));
     }
   };
@@ -416,7 +417,7 @@ export class DocumentsService {
       return item;
     } catch (error) {
       console.error(error);
-      this.logger.error({ error }, "Failed to update drive item");
+      this.logger.error({ error: `${error}` }, "Failed to update drive item");
       throw new CrudException("Failed to update item", 500);
     }
   };
@@ -461,7 +462,7 @@ export class DocumentsService {
           }),
         );
       } catch (error) {
-        this.logger.error({ error }, "Failed to empty trash");
+        this.logger.error({ error: `${error}` }, "Failed to empty trash");
         throw new CrudException("Failed to empty trash", 500);
       }
 
@@ -485,7 +486,7 @@ export class DocumentsService {
           throw Error("user does not have access to this item");
         }
       } catch (error) {
-        this.logger.error({ error }, "Failed to grant access to the drive item");
+        this.logger.error({ error: `${error}` }, "Failed to grant access to the drive item");
         throw new CrudException("User does not have access to this item or its children", 401);
       }
 
@@ -619,7 +620,7 @@ export class DocumentsService {
 
       return driveItemVersion;
     } catch (error) {
-      this.logger.error({ error }, "Failed to create Drive item version");
+      this.logger.error({ error: `${error}` }, "Failed to create Drive item version");
       throw new CrudException("Failed to create Drive item version", 500);
     }
   };

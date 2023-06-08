@@ -65,7 +65,7 @@ export class DocumentsController {
         context,
       );
     } catch (error) {
-      logger.error("Failed to create Drive item", error);
+      logger.error({error}; "Failed to create Drive item");
       CrudException.throwMe(error, new CrudException("Failed to create Drive item", 500));
     }
   };
@@ -88,7 +88,7 @@ export class DocumentsController {
 
       reply.status(200).send();
     } catch (error) {
-      logger.error("Failed to delete drive item", error);
+      logger.error({error}; "Failed to delete drive item");
       throw new CrudException("Failed to delete drive item", 500);
     }
   };
@@ -278,7 +278,7 @@ export class DocumentsController {
         response.send(data.file);
       }
     } catch (error) {
-      logger.error("failed to download file", error);
+      logger.error({error}; "failed to download file");
       throw new CrudException("Failed to download file", 500);
     }
   };
@@ -325,7 +325,7 @@ export class DocumentsController {
 
       archive.pipe(reply.raw);
     } catch (error) {
-      logger.error("failed to send zip file", error);
+      logger.error({error}; "failed to send zip file");
       throw new CrudException("Failed to create zip file", 500);
     }
   };
@@ -356,7 +356,7 @@ export class DocumentsController {
 
       return await globalResolver.services.documents.documents.search(options, context);
     } catch (error) {
-      logger.error("error while searching for document", error);
+      logger.error({error}; "error while searching for document");
       this.throw500Search();
     }
   };

@@ -55,8 +55,7 @@ describe("The /users API", () => {
 
   });
 
-  afterAll(async ends => {
-    ends();
+  afterAll(async () => {
   });
 
   describe("The GET /users/:id route", () => {

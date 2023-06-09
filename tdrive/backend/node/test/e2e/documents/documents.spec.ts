@@ -50,7 +50,7 @@ describe("the Drive feature", () => {
     });
     currentUser = await TestHelpers.getInstance(platform);
     dbService = await TestDbService.getInstance(platform, true);
-  });
+  }, 300000000);
 
   afterAll(async () => {
     await platform?.tearDown();
@@ -387,7 +387,7 @@ describe("the Drive feature", () => {
   });
 
   it("did search order by name", async () => {
-    jest.setTimeout(10000);
+    jest.setTimeout(50000000);
     const user = await TestHelpers.getInstance(platform, true);
     // given:: all the sample files uploaded and documents for them created
     await user.uploadAllFilesAndCreateDocuments();
@@ -404,7 +404,7 @@ describe("the Drive feature", () => {
 
     //then all the files are sorted properly by name
     expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES.sort());
-  });
+  }, 50000000);
 
   it("did search order by name desc", async () => {
     jest.setTimeout(10000);

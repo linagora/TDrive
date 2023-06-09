@@ -56,7 +56,7 @@ describe("The Tag feature", () => {
           },
         });
 
-        const tagResult: ResourceCreateResponse<Tag> = deserialize(
+        const tagResult: ResourceCreateResponse<Tag> = deserialize<ResourceCreateResponse<Tag>>(
           ResourceCreateResponse,
           createTag.body,
         );
@@ -98,7 +98,7 @@ describe("The Tag feature", () => {
       });
       expect(createTag.statusCode).toBe(401);
 
-      const tagResult: ResourceCreateResponse<Tag> = deserialize(
+      const tagResult: ResourceCreateResponse<Tag> = deserialize<ResourceCreateResponse<Tag>>(
         ResourceCreateResponse,
         createTag.body,
       );
@@ -121,7 +121,7 @@ describe("The Tag feature", () => {
       });
       expect(getTag.statusCode).toBe(200);
 
-      const getResult: ResourceGetResponse<Tag> = deserialize(ResourceGetResponse, getTag.body);
+      const getResult: ResourceGetResponse<Tag> = deserialize<ResourceGetResponse<Tag>>(ResourceGetResponse, getTag.body);
       expect(getResult.resource).toBeDefined();
       expect(getResult.resource.name).toBe("test0");
       expect(getResult.resource.colour).toBe("#000000");
@@ -144,7 +144,7 @@ describe("The Tag feature", () => {
       });
       expect(getTag.statusCode).toBe(200);
 
-      const getResult: ResourceGetResponse<Tag> = deserialize(ResourceGetResponse, getTag.body);
+      const getResult: ResourceGetResponse<Tag> = deserialize<ResourceGetResponse<Tag>>(ResourceGetResponse, getTag.body);
       expect(getResult.resource).toBe(null);
 
       
@@ -170,7 +170,7 @@ describe("The Tag feature", () => {
       });
       expect(updateTag.statusCode).toBe(201);
 
-      const tagUpdatedResult: ResourceCreateResponse<Tag> = deserialize(
+      const tagUpdatedResult: ResourceCreateResponse<Tag> = deserialize<ResourceCreateResponse<Tag>>(
         ResourceCreateResponse,
         updateTag.body,
       );
@@ -210,7 +210,7 @@ describe("The Tag feature", () => {
       });
       expect(createTag.statusCode).toBe(401);
 
-      const tagResult: ResourceCreateResponse<Tag> = deserialize(
+      const tagResult: ResourceCreateResponse<any> = deserialize(
         ResourceCreateResponse,
         createTag.body,
       );
@@ -236,7 +236,7 @@ describe("The Tag feature", () => {
       });
       expect(listTag.statusCode).toBe(200);
 
-      const tagResult: ResourceListResponse<Tag> = deserialize(ResourceListResponse, listTag.body);
+      const tagResult: ResourceListResponse<any> = deserialize(ResourceListResponse, listTag.body);
       expect(tagResult.resources).toBeDefined();
       for (const tag of tagResult.resources) {
         expect(tag.name).toBeDefined();

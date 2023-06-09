@@ -77,7 +77,7 @@ export default class TestHelpers {
             ...form,
         });
 
-        const filesUpload: ResourceUpdateResponse<File> = deserialize(
+        const filesUpload: ResourceUpdateResponse<File> = deserialize<ResourceUpdateResponse<File>>(
             ResourceUpdateResponse,
             filesUploadRaw.body,
         );

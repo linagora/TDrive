@@ -6,6 +6,11 @@ export const RouterCompanySelector = selector<string>({
   get: ({ get }) => get(RouterState)?.companyId || '',
 });
 
+export const RouteViewSelector = selector<string>({
+  key: 'RouterViewSelector',
+  get: ({ get }) => get(RouterState)?.viewId || '',
+});
+
 export const RouterWorkspaceSelector = selector<string>({
   key: 'RouterWorkspaceSelector',
   get: ({ get }) => get(RouterState)?.workspaceId || '',

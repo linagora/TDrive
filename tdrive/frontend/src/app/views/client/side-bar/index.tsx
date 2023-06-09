@@ -7,6 +7,7 @@ import {
   ShareIcon,
   TrashIcon,
   UserIcon,
+  UserGroupIcon,
 } from '@heroicons/react/outline';
 import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
 import { useRecoilState } from 'recoil';
@@ -17,8 +18,11 @@ import Account from '../common/account';
 import AppGrid from '../common/app-grid';
 import DiskUsage from '../common/disk-usage';
 import Actions from './actions';
+import { useHistory, useLocation } from 'react-router-dom';
 
 export default () => {
+  const history = useHistory();
+const location = useLocation();
   const [parentId, setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
   const { user } = useCurrentUser();
   const active = false;
@@ -62,6 +66,14 @@ export default () => {
           className={'w-full mb-1 ' + (folderType === 'personal' ? activeClass : '')}
         >
           <UserIcon className="w-5 h-5 mr-4" /> My Drive
+        </Button>
+        <Button
+          onClick={() => history.push(`${location.pathname}/shared-with-me`)}
+          size="lg"
+          theme="white"
+          className={'w-full mb-1 ' + (folderType === 'personal' ? activeClass : '')}
+        >
+          <UserGroupIcon className="w-5 h-5 mr-4" /> Shared with me
         </Button>
         {false && (
           <>

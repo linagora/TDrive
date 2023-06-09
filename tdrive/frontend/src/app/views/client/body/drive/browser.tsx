@@ -11,6 +11,7 @@ import { useDriveUpload } from '@features/drive/hooks/use-drive-upload';
 import { DriveItemSelectedList } from '@features/drive/state/store';
 import { formatBytes } from '@features/drive/utils';
 import useRouterCompany from '@features/router/hooks/use-router-company';
+import useRouterView from '@features/router/hooks/use-router-view';
 import _ from 'lodash';
 import { memo, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { atomFamily, useRecoilState, useSetRecoilState } from 'recoil';
@@ -25,6 +26,7 @@ import { CreateModalAtom } from './modals/create';
 import { PropertiesModal } from './modals/properties';
 import { AccessModal } from './modals/update-access';
 import { VersionsModal } from './modals/versions';
+
 
 export const DriveCurrentFolderAtom = atomFamily<string, string>({
   key: 'DriveCurrentFolderAtom',
@@ -114,7 +116,8 @@ export default memo(
       .sort((a, b) => a.name.localeCompare(b.name));
 
     const onBuildContextMenu = useOnBuildContextMenu(children, initialParentId);
-
+    const viewId = useRouterView();
+    console.log("view id is: ", viewId);
     return (
       <UploadZone
         overClassName={''}
@@ -143,6 +146,11 @@ export default memo(
         <Suspense fallback={<></>}>
           <DrivePreview />
         </Suspense>
+        {(viewId == "shared-with-me") ?? (
+          <span>
+          This is shared with me view
+          </span>
+        )}
 
         <div
           className={

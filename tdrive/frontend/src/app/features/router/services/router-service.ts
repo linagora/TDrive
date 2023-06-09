@@ -25,6 +25,7 @@ export type RouteType = {
 
 export type ClientStateType = {
   companyId?: string;
+  viewId?: string;
   workspaceId?: string;
   channelId?: string;
   messageId?: string;
@@ -47,6 +48,7 @@ class RouterServices extends Observable {
   //List of client sub paths
   clientSubPathnames: Readonly<string[]> = [
     '/client/:companyId',
+    '/client/:companyId/v/:viewId',
     '/client/:companyId/w/:workspaceId',
     '/client/:companyId/w/:workspaceId/c/:channelId',
     '/client/:companyId/w/:workspaceId/c/:channelId/t/:threadId',
@@ -61,6 +63,7 @@ class RouterServices extends Observable {
 
   pathnames: Readonly<Pathnames> = {
     CLIENT: '/client',
+    SHARED_WITH_ME: '/client/:companyId/shared-with-me',
     SHARED: '/shared/:companyId/:appName/:documentId/t/:token',
     LOGIN: '/login',
     LOGOUT: '/logout',
@@ -101,6 +104,15 @@ class RouterServices extends Observable {
     {
       path: this.pathnames.CLIENT,
       key: 'client',
+      exact: false,
+      component: App,
+      options: {
+        withErrorBoundary: true,
+      },
+    },
+    {
+      path: this.pathnames.SHARED_WITH_ME,
+      key: 'client_shared',
       exact: false,
       component: App,
       options: {
@@ -167,6 +179,7 @@ class RouterServices extends Observable {
 
     const reducedState: any = {
       companyId: match?.params?.companyId || '',
+      viewId: match?.params?.viewId || '',
       workspaceId: match?.params?.workspaceId || '',
       channelId: match?.params?.channelId || '',
       messageId: match?.params?.messageId || '',
@@ -177,6 +190,7 @@ class RouterServices extends Observable {
       token: match?.params?.token || '',
       appName: match?.params?.appName || '',
       shared: !!this.match(this.pathnames.SHARED),
+      sharedWithMe: !!this.match(this.pathnames.SHARED_WITH_ME),
     };
 
     const queryParameters = this.allowedQueryParameters[match?.path];
@@ -270,6 +284,8 @@ class RouterServices extends Observable {
     return (
       `${this.pathnames.CLIENT}` +
       (state.companyId ? `/${state.companyId}` : '') +
+      (state.viewId ? `/v/${state.viewId}` : '') +
+      (state.sharedWithMe ? `/shared-with-me` : '') +
       (state.workspaceId ? `/w/${state.workspaceId}` : '') +
       (state.channelId ? `/c/${state.channelId}` : '') +
       (state.threadId ? `/t/${state.threadId}` : '') +

@@ -19,8 +19,12 @@ import {
   SearchDocumentsBody,
   SearchDocumentsOptions,
 } from "../../types";
+import { DriveFileDTO } from "../dto/drive-file-dto";
+import { DriveFileDTOBuilder } from "../dto/drive-file-dto-builder";
 
 export class DocumentsController {
+  private driveFileDTOBuilder = new DriveFileDTOBuilder();
+
   /**
    * Creates a DriveFile item
    *
@@ -341,7 +345,7 @@ export class DocumentsController {
       Body: SearchDocumentsBody;
       Querystring: { public_token?: string };
     }>,
-  ): Promise<ListResult<DriveFile>> => {
+  ): Promise<ListResult<DriveFileDTO>> => {
     try {
       const context = getDriveExecutionContext(request);
 
@@ -354,7 +358,9 @@ export class DocumentsController {
         this.throw500Search();
       }
 
-      return await globalResolver.services.documents.documents.search(options, context);
+      const fileList = await globalResolver.services.documents.documents.search(options, context);
+
+      return this.driveFileDTOBuilder.build(fileList, context, options.fields, options.view);
     } catch (error) {
       logger.error({ error: `${error}` }, "error while searching for document");
       this.throw500Search();

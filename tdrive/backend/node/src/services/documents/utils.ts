@@ -61,16 +61,19 @@ export const getDefaultDriveItem = (
           id: "parent",
           type: "folder",
           level: "manage",
+          grantor: null,
         },
         {
           id: item.company_id,
           type: "company",
           level: "none",
+          grantor: null,
         },
         {
           id: context.user?.id,
           type: "user",
           level: "manage",
+          grantor: null,
         },
       ],
       public: {
@@ -476,7 +479,7 @@ export const getItemName = async (
  * @param {string} source - the to be moved item id.
  * @param {string} target - the to be moved to item id.
  * @param {string} repository - the Drive item repository.
- * @param {CompanyExecutionContex} context - the execution context.
+ * @param {CompanyExecutionContext} context - the execution context.
  * @returns {Promise<boolean>} - whether the move is possible or not.
  */
 export const canMoveItem = async (
@@ -531,7 +534,11 @@ export const canMoveItem = async (
   return true;
 };
 
-export function isFileType(fileMime: string, fileName: string, requiredExtensions: string[]): any {
+export function isFileType(
+  fileMime: string,
+  fileName: string,
+  requiredExtensions: string[],
+): boolean {
   const extension = fileName.split(".").pop();
   const secondaryExtensions = Object.keys(mimes).filter(k => mimes[k] === fileMime);
   const fileExtensions = [extension, ...secondaryExtensions];

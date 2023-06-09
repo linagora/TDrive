@@ -7,7 +7,7 @@ describe("The /users API", () => {
   const url = "/internal/services/users/v1";
   let platform: TestPlatform;
 
-  beforeEach(async ends => {
+  beforeEach(async () => {
     platform = await init({
       services: [
         "database",
@@ -26,17 +26,15 @@ describe("The /users API", () => {
         "platform-services",
       ],
     });
-    ends();
   });
 
-  afterEach(async ends => {
+  afterEach(async () => {
     platform && (await platform.tearDown());
     platform = null;
-    ends();
   });
 
   describe("The GET /users/?search=... route", () => {
-    it("Should find the searched users", async done => {
+    it("Should find the searched users", async () => {
       const testDbService = new TestDbService(platform);
       await testDbService.createCompany(platform.workspace.company_id);
       const workspacePk = {
@@ -122,7 +120,6 @@ describe("The /users API", () => {
       resources = await search("rbs@tdrive.app", uuidv1());
       expect(resources.length).toBe(0);
 
-      done();
     }, 1200000);
   });
 

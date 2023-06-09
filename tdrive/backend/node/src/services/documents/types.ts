@@ -45,6 +45,8 @@ export type SearchDocumentsOptions = {
   last_modified_gt?: number;
   last_modified_lt?: number;
   sort?: SortType;
+  view?: string;
+  fields?: string[];
 };
 
 export type SearchDocumentsBody = {
@@ -57,6 +59,8 @@ export type SearchDocumentsBody = {
   last_modified_gt?: number;
   last_modified_lt?: number;
   sort?: SortType;
+  view?: string;
+  fields?: string[];
 };
 
 export type DocumentsMessageQueueRequest = {

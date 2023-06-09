@@ -3,7 +3,7 @@ import _ from "lodash";
 import { logger } from "../../../core/platform/framework";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import globalResolver from "../../global-resolver";
-import { DriveFile } from "../entities/drive-file";
+import { AccessInformation, DriveFile } from "../entities/drive-file";
 import { CompanyExecutionContext, DriveFileAccessLevel } from "../types";
 
 /**
@@ -329,4 +329,23 @@ export const makeStandaloneAccessLevel = async (
   }
 
   return accessInfo;
+};
+
+export const getSharedByUser = (
+  accessInfo: AccessInformation,
+  context: CompanyExecutionContext,
+): string => {
+  // Try to find entity that matches user the most
+  // at first user, and then company
+  // we don't consider right now the access level by folder or channel or workspace
+  for (const idx in accessInfo?.entities) {
+    const entity = accessInfo.entities[idx];
+    if (entity.type === "user" && entity.id === context.user?.id) {
+      return entity.grantor;
+    }
+    if (entity.type === "company" && entity.id === context.company.id) {
+      return entity.grantor;
+    }
+  }
+  return null;
 };

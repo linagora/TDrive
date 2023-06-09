@@ -23,6 +23,7 @@ describe("the My Drive feature", () => {
     size: number;
     added: string;
     parent_id: string;
+    is_directory: boolean;
   }
 
   class DriveItemDetailsMockClass {
@@ -61,12 +62,9 @@ describe("the My Drive feature", () => {
     });
   });
 
-  afterEach(async () => {
-    await platform.tearDown();
-  });
-
   afterAll(async () => {
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
   const createItem = async (): Promise<DriveFileMockClass> => {
@@ -84,17 +82,15 @@ describe("the My Drive feature", () => {
     return deserialize<DriveFileMockClass>(DriveFileMockClass, response.body);
   };
 
-  it("did create the drive item in my user folder", async done => {
+  it("did create the drive item in my user folder", async () => {
     const result = await createItem();
 
     expect(result).toBeDefined();
     expect(result.name).toEqual("new test file");
     expect(result.added).toBeDefined();
-
-    done?.();
   });
 
-  it("did move an item to root and back", async done => {
+  it("did move an item to root and back", async () => {
     const createItemResult = await createItem();
 
     expect(createItemResult.id).toBeDefined();
@@ -117,11 +113,9 @@ describe("the My Drive feature", () => {
 
     expect(createItemResult.id).toEqual(updateItemResult.id);
     expect(updateItemResult.parent_id).toEqual("user_" + platform.currentUser.id);
-
-    done?.();
   });
 
-  it("can't move an item to another user folder", async done => {
+  it("can't move an item to another user folder", async () => {
     const createItemResult = await createItem();
 
     expect(createItemResult.id).toBeDefined();
@@ -131,7 +125,5 @@ describe("the My Drive feature", () => {
     });
 
     expect(updateItemResponse.statusCode).not.toBe(200);
-
-    done?.();
   });
 });

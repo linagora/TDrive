@@ -67,8 +67,8 @@ describe("the public links feature", () => {
   });
 
   afterAll(async () => {
-    await platform.tearDown();
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
   const createItem = async (): Promise<DriveFileMockClass> => {
@@ -88,7 +88,7 @@ describe("the public links feature", () => {
 
   let publicFile: DriveFileMockClass;
 
-  it("did create the drive item", async done => {
+  it("did create the drive item", async () => {
     const result = await createItem();
     publicFile = result;
 
@@ -96,11 +96,9 @@ describe("the public links feature", () => {
     expect(result.name).toEqual("public file");
     expect(result.added).toBeDefined();
     expect(result.access_info).toBeDefined();
-
-    done?.();
   });
 
-  it("unable to access non public file", async done => {
+  it("unable to access non public file", async () => {
     const res = await platform.app.inject({
       method: "GET",
       url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}`,
@@ -108,11 +106,9 @@ describe("the public links feature", () => {
     });
 
     expect(res.statusCode).toBe(401);
-
-    done?.();
   });
 
-  it("should access public file", async done => {
+  it("should access public file", async () => {
     const res = await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
       access_info: {
@@ -153,11 +149,9 @@ describe("the public links feature", () => {
     const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
     expect(resPublic.item?.id).toBe(publicFile.id);
-
-    done?.();
   });
 
-  it("unable to access expired public file link", async done => {
+  it("unable to access expired public file link", async () => {
     await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
       access_info: {
@@ -228,11 +222,9 @@ describe("the public links feature", () => {
         },
       },
     });
-
-    done?.();
   });
 
-  it("access public file link with password", async done => {
+  it("access public file link with password", async () => {
     await e2e_updateDocument(platform, publicFile.id, {
       ...publicFile,
       access_info: {
@@ -295,7 +287,5 @@ describe("the public links feature", () => {
         },
       },
     });
-
-    done?.();
   });
 });

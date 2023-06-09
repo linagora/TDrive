@@ -5,7 +5,7 @@ import { websocketEventBus } from "../../../../../../../src/core/platform/servic
 import { ResourcePath } from "../../../../../../../src/core/platform/services/realtime/types";
 
 describe("The RealtimeDeleted decorator", () => {
-  it("should call the original method send back original result but do not emit event if result type is wrong", async done => {
+  it("should call the original method send back original result but do not emit event if result type is wrong", async () => {
     const emitSpy = jest.spyOn(websocketEventBus, "emit");
 
     class TestMe {
@@ -27,10 +27,10 @@ describe("The RealtimeDeleted decorator", () => {
     expect(emitSpy).toHaveBeenCalledTimes(0);
 
     emitSpy.mockRestore();
-    done();
+    
   });
 
-  it("should call the original method send back original result and emit event", async done => {
+  it("should call the original method send back original result and emit event", async () => {
     const emitSpy = jest.spyOn(websocketEventBus, "emit");
 
     class TestMe {
@@ -68,10 +68,10 @@ describe("The RealtimeDeleted decorator", () => {
     });
 
     emitSpy.mockRestore();
-    done();
+    
   });
 
-  it("should emit event with path computed from function", async done => {
+  it("should emit event with path computed from function", async () => {
     const emitSpy = jest.spyOn(websocketEventBus, "emit");
 
     class TestMe {
@@ -111,6 +111,6 @@ describe("The RealtimeDeleted decorator", () => {
     });
 
     emitSpy.mockRestore();
-    done();
+    
   });
 });

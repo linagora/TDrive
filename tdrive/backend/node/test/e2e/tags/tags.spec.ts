@@ -16,15 +16,14 @@ describe("The Tag feature", () => {
   let testDbService: TestDbService;
   const tagIds: string[] = [];
 
-  beforeAll(async ends => {
+  beforeAll(async () => {
     platform = await init({
       services: ["webserver", "database", "storage", "message-queue", "tags"],
     });
     testDbService = await TestDbService.getInstance(platform, true);
-    ends();
   });
 
-  afterAll(async done => {
+  afterAll(async () => {
     for (let i = 0; i < tagIds.length; i++) {
       for (let j = 0; j < tagIds.length; j++) {
         if (tagIds[j] === tagIds[i] && j !== i) {
@@ -34,11 +33,10 @@ describe("The Tag feature", () => {
     }
     await platform?.tearDown();
     platform = null;
-    done();
   });
 
   describe("Create tag", () => {
-    it("should 201 if creator is a company admin", async done => {
+    it("should 201 if creator is a company admin", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "admin",
       });
@@ -80,10 +78,9 @@ describe("The Tag feature", () => {
 
         tagIds.push(tagResult.resource.tag_id);
       }
-      done();
     });
 
-    it("should 401 if creator is not a company admin", async done => {
+    it("should 401 if creator is not a company admin", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "member",
       });
@@ -106,12 +103,11 @@ describe("The Tag feature", () => {
         createTag.body,
       );
       expect(tagResult.resource).toBe(undefined);
-      done();
     });
   });
 
   describe("Get tag", () => {
-    it("should 200 get a tag", async done => {
+    it("should 200 get a tag", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "member",
       });
@@ -131,10 +127,10 @@ describe("The Tag feature", () => {
       expect(getResult.resource.colour).toBe("#000000");
       expect(getResult.resource.company_id).toBe(platform.workspace.company_id);
 
-      done();
+      
     });
 
-    it("should 200 tag does not exist", async done => {
+    it("should 200 tag does not exist", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "member",
       });
@@ -151,12 +147,12 @@ describe("The Tag feature", () => {
       const getResult: ResourceGetResponse<Tag> = deserialize(ResourceGetResponse, getTag.body);
       expect(getResult.resource).toBe(null);
 
-      done();
+      
     });
   });
 
   describe("Update tag", () => {
-    it("Should 204 if user is admin", async done => {
+    it("Should 204 if user is admin", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "admin",
       });
@@ -193,10 +189,10 @@ describe("The Tag feature", () => {
       });
       expect(getUpdatedTag.statusCode).toBe(200);
 
-      done();
+      
     });
 
-    it("should 401 if creator is not a company admin", async done => {
+    it("should 401 if creator is not a company admin", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "member",
       });
@@ -221,12 +217,12 @@ describe("The Tag feature", () => {
       console.log("tagResult2", tagResult, jwtToken);
       expect(tagResult.resource).toBe(undefined);
 
-      done();
+      
     });
   });
 
   describe("List tags", () => {
-    it("should 200 list a tag", async done => {
+    it("should 200 list a tag", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "member",
       });
@@ -249,12 +245,12 @@ describe("The Tag feature", () => {
         expect(tag.tag_id).toBeDefined();
       }
 
-      done();
+      
     });
   });
 
   describe("Delete tag", () => {
-    it("should 200 if admin delete a tag", async done => {
+    it("should 200 if admin delete a tag", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "admin",
       });
@@ -268,10 +264,10 @@ describe("The Tag feature", () => {
       });
       expect(deleteTag.statusCode).toBe(200);
 
-      done();
+      
     });
 
-    it("should 200 if tag does not exist", async done => {
+    it("should 200 if tag does not exist", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "admin",
       });
@@ -284,10 +280,10 @@ describe("The Tag feature", () => {
         },
       });
       expect(deleteTag.statusCode).toBe(200);
-      done();
+      
     });
 
-    it("should 401 if not admin", async done => {
+    it("should 401 if not admin", async () => {
       const user = await testDbService.createUser([testDbService.defaultWorkspace()], {
         companyRole: "member",
       });
@@ -300,7 +296,7 @@ describe("The Tag feature", () => {
         },
       });
       expect(deleteTag.statusCode).toBe(401);
-      done();
+      
     });
   });
 });

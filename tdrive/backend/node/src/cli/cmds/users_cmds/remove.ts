@@ -56,7 +56,8 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
 
     if (!user) {
       console.error("Error: You need to provide User ID");
-      return spinner.stop();
+      spinner.stop();
+      return;
     }
 
     if (user) {
@@ -79,6 +80,8 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
     }
 
     exit();
+
+    return;
   },
 };
 

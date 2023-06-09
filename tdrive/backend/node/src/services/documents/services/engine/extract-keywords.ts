@@ -43,7 +43,7 @@ export class DocumentsProcessor
   async generate(message: DocumentsMessageQueueRequest): Promise<DocumentsMessageQueueCallback> {
     let content_keywords = "";
     let content_strings = "";
-/*
+
     try {
       const storedFile = await globalResolver.services.files.download(
         message.version.file_metadata.external_id,
@@ -72,7 +72,7 @@ export class DocumentsProcessor
       console.debug(error);
       logger.error("Failed to generate content keywords", error);
     }
-*/
+
     return { content_keywords, item: message.item };
   }
 }

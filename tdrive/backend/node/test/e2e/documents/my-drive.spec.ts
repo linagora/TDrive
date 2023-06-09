@@ -62,12 +62,9 @@ describe("the My Drive feature", () => {
     });
   });
 
-  afterEach(async () => {
-    await platform.tearDown();
-  });
-
   afterAll(async () => {
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
   const createItem = async (): Promise<DriveFileMockClass> => {
@@ -91,7 +88,6 @@ describe("the My Drive feature", () => {
     expect(result).toBeDefined();
     expect(result.name).toEqual("new test file");
     expect(result.added).toBeDefined();
-
   });
 
   it("did move an item to root and back", async () => {
@@ -117,7 +113,6 @@ describe("the My Drive feature", () => {
 
     expect(createItemResult.id).toEqual(updateItemResult.id);
     expect(updateItemResult.parent_id).toEqual("user_" + platform.currentUser.id);
-
   });
 
   it("can't move an item to another user folder", async () => {
@@ -130,6 +125,5 @@ describe("the My Drive feature", () => {
     });
 
     expect(updateItemResponse.statusCode).not.toBe(200);
-
   });
 });

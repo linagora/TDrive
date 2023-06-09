@@ -56,8 +56,8 @@ describe("the public links feature", () => {
   });
 
   afterAll(async () => {
-    await platform.tearDown();
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
   const createItem = async (): Promise<DriveFileMockClass> => {
@@ -85,7 +85,6 @@ describe("the public links feature", () => {
     expect(result.name).toEqual("public file");
     expect(result.added).toBeDefined();
     expect(result.access_info).toBeDefined();
-
   });
 
   it("unable to access non public file", async () => {
@@ -96,7 +95,6 @@ describe("the public links feature", () => {
     });
 
     expect(res.statusCode).toBe(401);
-
   });
 
   it("should access public file", async () => {
@@ -122,7 +120,6 @@ describe("the public links feature", () => {
     const resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
     expect(resPublicRaw.statusCode).toBe(200);
     expect(resPublic.item?.id).toBe(publicFile.id);
-
   });
 
   it("unable to access expired public file link", async () => {
@@ -177,7 +174,6 @@ describe("the public links feature", () => {
         },
       },
     });
-
   });
 
   it("access public file link with password", async () => {
@@ -195,9 +191,7 @@ describe("the public links feature", () => {
 
     let resPublicRaw = await platform.app.inject({
       method: "GET",
-      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${
-        publicFile.access_info.public?.token
-      }%2Babcdef`,
+      url: `${url}/companies/${publicFile.company_id}/item/${publicFile.id}?public_token=${publicFile.access_info.public?.token}%2Babcdef`,
       headers: {},
     });
     let resPublic = deserialize<DriveItemDetails>(FullDriveInfoMockClass, resPublicRaw.body);
@@ -222,6 +216,5 @@ describe("the public links feature", () => {
         },
       },
     });
-
   });
 });

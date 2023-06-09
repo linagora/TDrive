@@ -1,5 +1,5 @@
 import { describe, beforeEach, afterEach, it, expect, afterAll } from "@jest/globals";
-import {deserialize} from "class-transformer";
+import { deserialize } from "class-transformer";
 import { File } from "../../../src/services/files/entities/file";
 import { ResourceUpdateResponse } from "../../../src/utils/types";
 import { init, TestPlatform } from "../setup";
@@ -14,7 +14,11 @@ import {
   e2e_updateDocument,
 } from "./utils";
 import TestHelpers from "../common/common_test_helpers";
-import {DriveFileMockClass, DriveItemDetailsMockClass, SearchResultMockClass} from "../common/entities/mock_entities";
+import {
+  DriveFileMockClass,
+  DriveItemDetailsMockClass,
+  SearchResultMockClass,
+} from "../common/entities/mock_entities";
 
 describe("the Drive feature", () => {
   let platform: TestPlatform;
@@ -48,12 +52,9 @@ describe("the Drive feature", () => {
     dbService = await TestDbService.getInstance(platform, true);
   });
 
-  afterEach(async () => {
-    await platform.tearDown();
-  });
-
   afterAll(async () => {
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
   const createItem = async (): Promise<DriveFileMockClass> => {
@@ -77,7 +78,6 @@ describe("the Drive feature", () => {
     expect(result).toBeDefined();
     expect(result.name).toEqual("new test file");
     expect(result.added).toBeDefined();
-
   });
 
   it("did fetch the drive item", async () => {
@@ -88,7 +88,6 @@ describe("the Drive feature", () => {
 
     expect(result.item.id).toEqual("root");
     expect(result.item.name).toEqual("Home");
-
   });
 
   it("did fetch the trash", async () => {
@@ -99,7 +98,6 @@ describe("the Drive feature", () => {
 
     expect(result.item.id).toEqual("trash");
     expect(result.item.name).toEqual("Trash");
-
   });
 
   it("did delete an item", async () => {
@@ -109,7 +107,6 @@ describe("the Drive feature", () => {
 
     const deleteResponse = await e2e_deleteDocument(platform, createItemResult.id);
     expect(deleteResponse.statusCode).toEqual(200);
-
   });
 
   it("did update an item", async () => {
@@ -129,7 +126,6 @@ describe("the Drive feature", () => {
 
     expect(createItemResult.id).toEqual(updateItemResult.id);
     expect(updateItemResult.name).toEqual("somethingelse");
-
   });
 
   it("did move an item to trash", async () => {
@@ -148,7 +144,6 @@ describe("the Drive feature", () => {
 
     expect(listTrashResult.item.name).toEqual("Trash");
     expect(listTrashResult.children.some(({ id }) => id === createItemResult.id)).toBeTruthy();
-
   });
 
   it("did search for an item", async () => {
@@ -173,7 +168,6 @@ describe("the Drive feature", () => {
     );
 
     expect(searchResult.entities.length).toBeGreaterThanOrEqual(1);
-
   });
 
   it("did search for an item and check that all the fields for 'shared_with_me' view", async () => {
@@ -190,16 +184,16 @@ describe("the Drive feature", () => {
       id: anotherUser.user.id,
       level: "read",
       grantor: null,
-    })
+    });
     await oneUser.updateDocument(doc.id, doc);
 
     await new Promise(resolve => setTimeout(resolve, 3000));
 
     //when:: user search for a doc
-    const searchResponse = await anotherUser.searchDocument({ view: "shared_with_me"});
+    const searchResponse = await anotherUser.searchDocument({ view: "shared_with_me" });
 
     //then::
-    expect(searchResponse.entities?.length).toEqual(1)
+    expect(searchResponse.entities?.length).toEqual(1);
     const actual = searchResponse.entities[0];
 
     //file name
@@ -230,7 +224,6 @@ describe("the Drive feature", () => {
     );
 
     expect(failSearchResult.entities).toHaveLength(0);
-
   });
 
   it("did create a version for a drive item", async () => {
@@ -254,13 +247,14 @@ describe("the Drive feature", () => {
     );
 
     expect(fetchItemResult.versions).toHaveLength(4);
-
   });
 
   it("did search by mime type", async () => {
     jest.setTimeout(10000);
     // given:: all the sample files uploaded and documents for them created
-    await Promise.all((await currentUser.uploadFiles()).map(f => currentUser.createDocumentFromFile(f)))
+    await Promise.all(
+      (await currentUser.uploadFiles()).map(f => currentUser.createDocumentFromFile(f)),
+    );
 
     const filters = {
       mime_type: "application/pdf",
@@ -273,7 +267,6 @@ describe("the Drive feature", () => {
 
     const actualFile = documents.entities[0];
     expect(actualFile.name).toEqual("sample.pdf");
-
   });
 
   it("did search by last modified", async () => {
@@ -281,9 +274,9 @@ describe("the Drive feature", () => {
     const user = await TestHelpers.getInstance(platform, true);
     // given:: all the sample files uploaded and documents for them created
     const start = new Date().getTime();
-    await user.uploadAllFilesOneByOne()
+    await user.uploadAllFilesOneByOne();
     const end = new Date().getTime();
-    await user.uploadAllFilesOneByOne()
+    await user.uploadAllFilesOneByOne();
     //wait for putting docs to elastic and its indexing
     await new Promise(r => setTimeout(r, 5000));
 
@@ -294,11 +287,10 @@ describe("the Drive feature", () => {
     //then:: only file uploaded in the [start, end] interval are shown in the search results
     const filters = {
       last_modified_gt: start.toString(),
-      last_modified_lt: end.toString()
+      last_modified_lt: end.toString(),
     };
     documents = await user.searchDocument(filters);
     expect(documents.entities).toHaveLength(TestHelpers.ALL_FILES.length);
-
   });
 
   it("did search a file shared by another user", async () => {
@@ -307,7 +299,7 @@ describe("the Drive feature", () => {
     const oneUser = await TestHelpers.getInstance(platform, true);
     const anotherUser = await TestHelpers.getInstance(platform, true);
     //upload files
-    let files = await oneUser.uploadAllFilesOneByOne()
+    let files = await oneUser.uploadAllFilesOneByOne();
 
     await new Promise(r => setTimeout(r, 5000));
 
@@ -323,7 +315,7 @@ describe("the Drive feature", () => {
       id: anotherUser.user.id,
       level: "read",
       grantor: null,
-    })
+    });
     await oneUser.updateDocument(files[0].id, files[0]);
     await new Promise(r => setTimeout(r, 3000));
 
@@ -337,29 +329,36 @@ describe("the Drive feature", () => {
     const oneUser = await TestHelpers.getInstance(platform, true);
     const anotherUser = await TestHelpers.getInstance(platform, true);
     //upload files
-    let files = await oneUser.uploadAllFilesOneByOne()
-    await anotherUser.uploadAllFilesOneByOne()
+    let files = await oneUser.uploadAllFilesOneByOne();
+    await anotherUser.uploadAllFilesOneByOne();
     //give permissions for all files to 'another user'
-    await Promise.all(files.map(f => {
-      f.access_info.entities.push({
-        type: "user",
-        id: anotherUser.user.id,
-        level: "read",
-        grantor: null,
-      })
-      return oneUser.updateDocument(f.id, f);
-    }));
+    await Promise.all(
+      files.map(f => {
+        f.access_info.entities.push({
+          type: "user",
+          id: anotherUser.user.id,
+          level: "read",
+          grantor: null,
+        });
+        return oneUser.updateDocument(f.id, f);
+      }),
+    );
 
     await new Promise(r => setTimeout(r, 5000));
 
     //then:: all files are searchable for 'another user'
-    expect((await anotherUser.searchDocument({})).entities).toHaveLength(TestHelpers.ALL_FILES.length * 2);
+    expect((await anotherUser.searchDocument({})).entities).toHaveLength(
+      TestHelpers.ALL_FILES.length * 2,
+    );
 
     //and searchable for user that have
-    expect((await oneUser.searchDocument({
-      creator: oneUser.user.id,
-    })).entities).toHaveLength(TestHelpers.ALL_FILES.length);
-
+    expect(
+      (
+        await oneUser.searchDocument({
+          creator: oneUser.user.id,
+        })
+      ).entities,
+    ).toHaveLength(TestHelpers.ALL_FILES.length);
   });
 
   it("did search by 'added' date", async () => {
@@ -368,7 +367,7 @@ describe("the Drive feature", () => {
     // given:: all the sample files uploaded and documents for them created
     await user.uploadRandomFileAndCreateDocument();
     const start = new Date().getTime();
-    await user.uploadAllFilesAndCreateDocuments()
+    await user.uploadAllFilesAndCreateDocuments();
     const end = new Date().getTime();
     await user.uploadRandomFileAndCreateDocument();
     //wait for putting docs to elastic and its indexing
@@ -381,7 +380,7 @@ describe("the Drive feature", () => {
     //then:: only file uploaded in the [start, end] interval are shown in the search results
     const filters = {
       added_gt: start.toString(),
-      added_lt: end.toString()
+      added_lt: end.toString(),
     };
     documents = await user.searchDocument(filters);
     expect(documents.entities).toHaveLength(TestHelpers.ALL_FILES.length);
@@ -391,7 +390,7 @@ describe("the Drive feature", () => {
     jest.setTimeout(10000);
     const user = await TestHelpers.getInstance(platform, true);
     // given:: all the sample files uploaded and documents for them created
-    await user.uploadAllFilesAndCreateDocuments()
+    await user.uploadAllFilesAndCreateDocuments();
     //wait for putting docs to elastic and its indexing
     await new Promise(r => setTimeout(r, 5000));
 
@@ -399,7 +398,7 @@ describe("the Drive feature", () => {
     const options = {
       sort: {
         name_keyword: "asc",
-      }
+      },
     };
     const documents = await user.searchDocument(options);
 
@@ -411,7 +410,7 @@ describe("the Drive feature", () => {
     jest.setTimeout(10000);
     const user = await TestHelpers.getInstance(platform, true);
     // given:: all the sample files uploaded and documents for them created
-    await user.uploadAllFilesOneByOne()
+    await user.uploadAllFilesOneByOne();
     //wait for putting docs to elastic and its indexing
     await new Promise(r => setTimeout(r, 5000));
 
@@ -419,7 +418,7 @@ describe("the Drive feature", () => {
     const options = {
       sort: {
         name_keyword: "desc",
-      }
+      },
     };
     const documents = await user.searchDocument(options);
 
@@ -439,7 +438,7 @@ describe("the Drive feature", () => {
     const options = {
       sort: {
         added: "asc",
-      }
+      },
     };
     const documents = await user.searchDocument(options);
 
@@ -459,14 +458,11 @@ describe("the Drive feature", () => {
     const options = {
       sort: {
         added: "desc",
-      }
+      },
     };
     const documents = await user.searchDocument(options);
 
     //then:: files should be sorted properly
     expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES.reverse());
   });
-
-
-
 });

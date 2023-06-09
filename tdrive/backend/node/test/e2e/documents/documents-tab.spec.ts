@@ -51,12 +51,9 @@ describe("the Drive Tdrive tabs feature", () => {
     });
   });
 
-  afterEach(async () => {
-    await platform.tearDown();
-  });
-
   afterAll(async () => {
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
   it("did create a tab configuration on Drive side", async () => {
@@ -125,7 +122,6 @@ describe("the Drive Tdrive tabs feature", () => {
         a => a?.type === "channel" && a.id === "abcdefghij" && a.level === "write",
       ),
     ).toBeDefined();
-
   });
 
   it("did refuse to create a tab configuration for an item I can't manage", async () => {
@@ -176,6 +172,5 @@ describe("the Drive Tdrive tabs feature", () => {
     });
 
     expect(createdTab.statusCode).toBe(403);
-
   });
 });

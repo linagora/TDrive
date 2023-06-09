@@ -13,7 +13,27 @@ import { getSharedByUser } from "../../services/access-check";
 
 export class DriveFileDTOBuilder {
   private views: Map<string, string[]> = new Map([
-    ["default", Object.getOwnPropertyNames(new DriveFile())],
+    [
+      "default",
+      [
+        "company_id",
+        "id",
+        "parent_id",
+        "is_in_trash",
+        "is_directory",
+        "name",
+        "extension",
+        "description",
+        "added",
+        "last_modified",
+        "size",
+        "last_version_cache",
+        "tags",
+        "access_info",
+        "content_keywords",
+        "creator",
+      ],
+    ],
     [
       "shared_with_me",
       [
@@ -39,6 +59,8 @@ export class DriveFileDTOBuilder {
     fields?: string[],
     view?: string,
   ): Promise<ListResult<DriveFileDTO>> {
+    const file = new DriveFile();
+    file.id = "1";
     if (view) {
       fields = this.views.get(view);
     }

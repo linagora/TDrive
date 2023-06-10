@@ -1,5 +1,5 @@
 import * as cron from "node-cron";
-import uuid from "node-uuid";
+import uuid from "uuid";
 
 import { TdriveService } from "../../framework";
 import { CronAPI, CronJob, CronExpression, CronTask } from "./api";

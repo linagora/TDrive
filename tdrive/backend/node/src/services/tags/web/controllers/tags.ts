@@ -8,7 +8,7 @@ import {
 } from "../../../../utils/types";
 import { Tag } from "../../entities";
 import gr from "../../../global-resolver";
-import { ExecutionContext } from "src/core/platform/framework/api/crud-service";
+import { ExecutionContext } from "../../../../core/platform/framework/api/crud-service";
 import { handleError } from "../../../../utils/handleError";
 
 export class TagsController

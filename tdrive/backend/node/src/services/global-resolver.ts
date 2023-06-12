@@ -45,6 +45,9 @@ import { UserNotificationDigestService } from "./notifications/services/digest";
 import { DocumentsService } from "./documents/services";
 import { DocumentsEngine } from "./documents/services/engine";
 import { TagsService } from "./tags/services/tags";
+import { PreviewProcessService } from "./previews/services/files/processing/service";
+
+import { PreviewEngine } from "./previews/services/files/engine";
 
 type PlatformServices = {
   auth: AuthServiceAPI;
@@ -69,6 +72,9 @@ type TdriveServices = {
   console: ConsoleServiceImpl;
   statistics: StatisticsServiceImpl;
   externalUser: UserExternalLinksServiceImpl;
+  preview: {
+    files: PreviewProcessService;
+  };
   notifications: {
     badges: UserNotificationBadgeService;
     channelPreferences: ChannelMemberPreferencesServiceImpl;
@@ -137,6 +143,8 @@ class GlobalResolver {
       assert(service, `Platform service ${key} was not initialized`);
     });
 
+    await new PreviewEngine().init();
+
     this.services = {
       workspaces: await new WorkspaceServiceImpl().init(),
       companies: await new CompanyServiceImpl().init(),
@@ -144,6 +152,9 @@ class GlobalResolver {
       console: await new ConsoleServiceImpl().init(),
       statistics: await new StatisticsServiceImpl().init(),
       externalUser: await new UserExternalLinksServiceImpl().init(),
+      preview: {
+        files: await new PreviewProcessService().init(),
+      },
       notifications: {
         badges: await new UserNotificationBadgeService().init(platform),
         channelPreferences: await new ChannelMemberPreferencesServiceImpl().init(),

@@ -1,5 +1,5 @@
-import { TdriveServiceProvider, Initializable } from "src/core/platform/framework/api";
-import Repository from "src/core/platform/services/database/services/orm/repository/repository";
+import { TdriveServiceProvider, Initializable } from "../../../core/platform/framework/api";
+import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import { Tag, TagsType, TagsPrimaryKey } from "../entities";
 import gr from "../../global-resolver";
 import {

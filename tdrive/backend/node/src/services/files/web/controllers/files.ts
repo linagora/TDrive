@@ -28,6 +28,7 @@ export class FileController {
       filename: q.resumableFilename || q.filename || file?.filename || undefined,
       type: q.resumableType || q.type || file?.mimetype || undefined,
       waitForThumbnail: q.thumbnail_sync,
+      ignoreThumbnails: q.ignore_thumbnails,
     };
 
     const id = request.params.id;

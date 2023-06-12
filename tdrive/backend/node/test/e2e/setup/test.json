@@ -1,0 +1,30 @@
+{
+  "services": [],
+  "webserver": {
+    "port": 3000,
+    "logger": {
+      "level": "warn"
+    }
+  },
+  "search": {
+    "type": "elasticsearch",
+    "elasticsearch": {
+      "endpoint": "http://localhost:9200"
+    }
+  },
+  "websocket": {
+    "path": "/socket",
+    "adapters": {
+      "types": ["redis"],
+      "redis": {
+        "host": "localhost",
+        "port": 6379
+      }
+    }
+  },
+  "auth": {
+    "jwt": {
+      "secret": "supersecret"
+    }
+  }
+}

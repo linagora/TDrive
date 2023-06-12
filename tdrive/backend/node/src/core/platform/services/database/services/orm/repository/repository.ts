@@ -16,9 +16,9 @@ export type FindFilter = { [key: string]: any };
 export type RemoveFilter = { [key: string]: any };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type comparisonType = [string, any];
+export type comparisonType = [string, any];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type inType = [string, Array<any>];
+export type inType = [string, Array<any>];
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type likeType = [string, any];
 

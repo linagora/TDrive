@@ -149,6 +149,10 @@ export class CrudException extends Error {
   static badGateway(details: string): CrudException {
     return new CrudException(details, 502);
   }
+
+  static throwMe(cause: Error, newOne: CrudException): void {
+    throw cause instanceof CrudException ? cause : newOne;
+  }
 }
 
 export interface Paginable {
@@ -202,7 +206,7 @@ export interface CRUDService<Entity, PrimaryKey, Context extends ExecutionContex
    * Save a resource.
    * If the resource exists, it is updated, if it does not exists, it is created.
    *
-   * @param itemOrItems
+   * @param item
    * @param options
    * @param context
    */
@@ -223,6 +227,8 @@ export interface CRUDService<Entity, PrimaryKey, Context extends ExecutionContex
   /**
    * List a resource
    *
+   * @param pagination
+   * @param options
    * @param context
    */
   list<ListOptions>(

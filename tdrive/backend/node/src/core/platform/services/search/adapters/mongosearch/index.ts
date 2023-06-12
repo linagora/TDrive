@@ -84,7 +84,9 @@ export default class MongoSearch extends SearchAdapter implements SearchAdapterI
 
     //Create one index for each type of indexes ["text"]
     Object.keys(indexedFields).forEach(k => {
-      collection.createIndex(indexedFields[k], { default_language: "none" });
+      collection.createIndex(indexedFields[k], {
+        default_language: "none",
+      });
     });
   }
 

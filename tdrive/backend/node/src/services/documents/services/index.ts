@@ -1,7 +1,10 @@
 import SearchRepository from "../../../core/platform/services/search/repository";
 import { getLogger, logger, TdriveLogger } from "../../../core/platform/framework";
 import { CrudException, ListResult } from "../../../core/platform/framework/api/crud-service";
-import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
+import Repository, {
+  inType,
+  comparisonType,
+} from "../../../core/platform/services/database/services/orm/repository/repository";
 import { PublicFile } from "../../../services/files/entities/file";
 import globalResolver from "../../../services/global-resolver";
 import { hasCompanyAdminLevel } from "../../../utils/company";
@@ -21,22 +24,27 @@ import {
   TrashType,
   CompanyExecutionContext,
   DriveTdriveTab,
+  DriveFileAccessLevel,
 } from "../types";
 import {
   addDriveItemToArchive,
   calculateItemSize,
   canMoveItem,
-  checkAccess,
-  getAccessLevel,
   getDefaultDriveItem,
   getDefaultDriveItemVersion,
   getFileMetadata,
   getItemName,
   getPath,
-  hasAccessLevel,
-  makeStandaloneAccessLevel,
+  getVirtualFoldersNames,
+  isVirtualFolder,
   updateItemSize,
 } from "../utils";
+import {
+  checkAccess,
+  getAccessLevel,
+  hasAccessLevel,
+  makeStandaloneAccessLevel,
+} from "./access-check";
 import { websocketEventBus } from "../../../core/platform/services/realtime/bus";
 
 import archiver from "archiver";
@@ -95,19 +103,18 @@ export class DocumentsService {
     id = id || this.ROOT;
 
     //Get requested entity
-    const entity =
-      id === this.ROOT || id === this.TRASH
-        ? null
-        : await this.repository.findOne(
-            {
-              company_id: context.company.id,
-              id,
-            },
-            {},
-            context,
-          );
+    const entity = isVirtualFolder(id)
+      ? null
+      : await this.repository.findOne(
+          {
+            company_id: context.company.id,
+            id,
+          },
+          {},
+          context,
+        );
 
-    if (!entity && !(id === this.ROOT || id === this.TRASH)) {
+    if (!entity && !isVirtualFolder(id)) {
       this.logger.error("Drive item not found");
       throw new CrudException("Item not found", 404);
     }
@@ -170,9 +177,9 @@ export class DocumentsService {
         ({
           id,
           parent_id: null,
-          name: id === this.ROOT ? "root" : id === this.TRASH ? "trash" : "unknown",
+          name: getVirtualFoldersNames(id),
           size: await calculateItemSize(
-            id === this.ROOT ? this.ROOT : "trash",
+            { id, is_directory: true, size: 0 },
             this.repository,
             context,
           ),
@@ -181,6 +188,28 @@ export class DocumentsService {
       children: children,
       access: await getAccessLevel(id, entity, this.repository, context),
     };
+  };
+
+  getAccess = async (
+    id: string,
+    userId: string,
+    context: DriveExecutionContext,
+  ): Promise<DriveFileAccessLevel | "none" | null> => {
+    if (!context) {
+      this.logger.error("invalid context");
+      return null;
+    }
+
+    id = id || this.ROOT;
+
+    //Get requested entity
+    const myAccessLevel = await getAccessLevel(id, null, this.repository, context);
+
+    if (myAccessLevel !== "none") {
+      return await getAccessLevel(id, null, this.repository, { ...context, user: { id: userId } });
+    }
+
+    return null;
   };
 
   /**
@@ -265,9 +294,9 @@ export class DocumentsService {
       await this.repository.save(driveItem);
       await updateItemSize(driveItem.parent_id, this.repository, context);
 
-      this.notifyWebsocket(driveItem.parent_id, context);
+      await this.notifyWebsocket(driveItem.parent_id, context);
 
-      globalResolver.platformServices.messageQueue.publish<DocumentsMessageQueueRequest>(
+      await globalResolver.platformServices.messageQueue.publish<DocumentsMessageQueueRequest>(
         "services:documents:process",
         {
           data: {
@@ -281,7 +310,7 @@ export class DocumentsService {
       return driveItem;
     } catch (error) {
       this.logger.error("Failed to create drive item", error);
-      throw new CrudException("Failed to create item", 500);
+      CrudException.throwMe(error, new CrudException("Failed to create item", 500));
     }
   };
 
@@ -386,6 +415,7 @@ export class DocumentsService {
 
       return item;
     } catch (error) {
+      console.error(error);
       this.logger.error("Failed to update drive item", error);
       throw new CrudException("Failed to update item", 500);
     }
@@ -741,12 +771,39 @@ export class DocumentsService {
         pagination: {
           limitStr: "100",
         },
-        ...(options.company_id ? { $in: [["company_id", [options.company_id]]] } : {}),
-        ...(options.creator ? { $in: [["creator", [options.creator]]] } : {}),
-        ...(options.added ? { $in: [["added", [options.added]]] } : {}),
-        $text: {
-          $search: options.search,
-        },
+        $in: [
+          ["access_entities", [context.user.id, context.company.id]],
+          ...(options.company_id ? [["company_id", [options.company_id]] as inType] : []),
+          ...(options.creator ? [["creator", [options.creator]] as inType] : []),
+          ...(options.mime_type
+            ? [
+                [
+                  "mime_type",
+                  Array.isArray(options.mime_type) ? options.mime_type : [options.mime_type],
+                ] as inType,
+              ]
+            : []),
+        ],
+        $lte: [
+          ...(options.last_modified_lt
+            ? [["last_modified", options.last_modified_lt] as comparisonType]
+            : []),
+          ...(options.added_lt ? [["added", options.added_lt] as comparisonType] : []),
+        ],
+        $gte: [
+          ...(options.last_modified_gt
+            ? [["last_modified", options.last_modified_gt] as comparisonType]
+            : []),
+          ...(options.added_gt ? [["added", options.added_gt] as comparisonType] : []),
+        ],
+        ...(options.search
+          ? {
+              $text: {
+                $search: options.search,
+              },
+            }
+          : {}),
+        ...(options.sort ? { $sort: options.sort } : {}),
       },
       context,
     );

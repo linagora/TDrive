@@ -51,24 +51,6 @@ class CurrentUser extends Observable {
     return getUser(Login.currentUserId);
   }
 
-  updateUserStatus = (newStatus: string[]) => {
-    return () => {
-      const { updateStatus } = useCurrentUser();
-      updateStatus(newStatus);
-    };
-  };
-
-  async updateStatusIcon(status: string[]) {
-    const update = {
-      id: Login.currentUserId,
-      status_icon: status,
-    };
-
-    Collections.get('users').updateObject(update);
-    this.updateUserStatus(status);
-    await UserAPIClient.updateUserStatus(`${status[0]} ${status[1]}`);
-  }
-
   updateTutorialStatus(key: string, set_false?: unknown) {
     const user = this.get();
     if (!user) {

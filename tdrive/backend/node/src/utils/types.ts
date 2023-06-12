@@ -3,13 +3,6 @@
  */
 
 import { WorkspacePrimaryKey } from "../services/workspaces/entities/workspace";
-import {
-  Channel as ChannelEntity,
-  ChannelMember,
-  ChannelPendingEmails,
-  ChannelTab,
-} from "../services/channels/entities";
-import { ChannelParameters } from "../services/channels/web/types";
 
 export type uuid = string;
 
@@ -102,20 +95,17 @@ export interface ResourceWebsocket {
 
 export interface ResourceEventsPayload {
   user: User;
-  channel?: ChannelEntity;
-  channelParameters?: ChannelParameters;
-  guest?: ChannelPendingEmails;
-  member?: ChannelMember;
   actor?: User;
-  resourcesBefore?: (User | ChannelEntity | ChannelTab | ChannelMember)[];
-  resourcesAfter?: (User | ChannelEntity | ChannelTab | ChannelMember)[];
-  tab?: ChannelTab;
+  resourcesBefore?: User[];
+  resourcesAfter?: User[];
   company?: { id: string };
   workspace?: WorkspacePrimaryKey;
 }
 
 export interface PaginationQueryParameters {
+  // It is offset for MongoDB and pointer to the next page for ScyllaDB
   page_token?: string;
+  // Page size
   limit?: string;
   websockets?: boolean;
 }

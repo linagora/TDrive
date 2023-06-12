@@ -1,4 +1,6 @@
+import axios from "axios";
 import config from "config";
+import _ from "lodash";
 import { Prefix, TdriveService } from "../../core/platform/framework";
 import WebServerAPI from "../../core/platform/services/webserver/provider";
 import Application from "../applications/entities/application";
@@ -22,11 +24,46 @@ export default class ApplicationsApiService extends TdriveService<undefined> {
       const domain = app.internal_domain.replace(/(\/$|^\/)/gm, "");
       const prefix = app.external_prefix.replace(/(\/$|^\/)/gm, "");
       if (domain && prefix) {
-        console.log("Listening at ", "/" + prefix + "/*");
-        fastify.register(require("@fastify/http-proxy"), {
-          upstream: domain + "/" + prefix,
-          prefix: "/" + prefix,
-        });
+        try {
+          fastify.all("/" + prefix + "/*", async (req, rep) => {
+            console.log("Proxying", req.method, req.url, "to", domain);
+            try {
+              const response = await axios.request({
+                url: domain + req.url,
+                method: req.method as any,
+                headers: _.omit(req.headers, "host", "content-length") as {
+                  [key: string]: string;
+                },
+                data: req.body as any,
+                responseType: "stream",
+                maxRedirects: 0,
+                validateStatus: null,
+              });
+
+              // Headers
+              for (const key in response.headers) {
+                rep.header(key, response.headers[key]);
+              }
+              rep.statusCode = response.status;
+
+              // Redirects
+              if (response.status === 301 || response.status === 302) {
+                rep.redirect(response.headers.location);
+                return;
+              }
+
+              rep.send(response.data);
+            } catch (err) {
+              console.error(`${err}`);
+              rep.raw.statusCode = 500;
+              rep.raw.end(JSON.stringify({ error: err.message }));
+            }
+          });
+          console.log("Listening at ", "/" + prefix + "/*");
+        } catch (e) {
+          console.log(e);
+          console.log("Can't listen to ", "/" + prefix + "/*");
+        }
       }
     }
 

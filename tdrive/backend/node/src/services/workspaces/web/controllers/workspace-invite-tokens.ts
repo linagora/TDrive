@@ -227,23 +227,6 @@ export class WorkspaceInviteTokensCrudController
           );
         }
 
-        await gr.services.channelPendingEmail.proccessPendingEmails(
-          {
-            company_id,
-            user_id: userId,
-            workspace_id,
-          },
-          {
-            company_id,
-            workspace_id,
-          },
-          {
-            user: request.currentUser,
-            url: request.url,
-            method: request.routerMethod,
-            transport: "http",
-          },
-        );
         resource.company.id = company.id;
         resource.workspace.id = workspace.id;
       }

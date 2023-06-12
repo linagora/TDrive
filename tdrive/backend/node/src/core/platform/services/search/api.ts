@@ -26,7 +26,7 @@ type TextType = {
   $diacriticSensitive?: boolean; //Default false
 };
 
-type SortType = {
+export type SortType = {
   [key: string]: "asc" | "desc";
 };
 

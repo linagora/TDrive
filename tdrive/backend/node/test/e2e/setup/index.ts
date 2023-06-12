@@ -13,6 +13,7 @@ import config from "config";
 import globalResolver from "../../../src/services/global-resolver";
 import {FileServiceImpl} from "../../../src/services/files/services";
 import StorageAPI from "../../../src/core/platform/services/storage/provider";
+import {SearchServiceAPI} from "../../../src/core/platform/services/search/api";
 
 type TokenPayload = {
   sub: string;
@@ -23,7 +24,7 @@ type TokenPayload = {
   };
 };
 
-type User = {
+export type User = {
   id: string;
   isWorkspaceModerator?: boolean;
 };
@@ -42,6 +43,7 @@ export interface TestPlatform {
     getJWTToken(payload?: TokenPayload): Promise<string>;
   };
   tearDown(): Promise<void>;
+  search: SearchServiceAPI;
 }
 
 export interface TestPlatformConfiguration {
@@ -76,6 +78,7 @@ export async function init(
     const messageQueue = platform.getProvider<MessageQueueServiceAPI>("message-queue");
     const auth = platform.getProvider<AuthServiceAPI>("auth");
     const storage: StorageAPI = platform.getProvider<StorageAPI>("storage");
+    const search: SearchServiceAPI = platform.getProvider<SearchServiceAPI>("search");
 
     testPlatform = {
       platform,
@@ -91,6 +94,7 @@ export async function init(
         getJWTToken,
       },
       tearDown,
+      search,
     };
   }
 
@@ -112,7 +116,7 @@ export async function init(
       payload.sub = testPlatform.currentUser.id;
     }
 
-    if (testPlatform  .currentUser.isWorkspaceModerator) {
+    if (testPlatform.currentUser.isWorkspaceModerator) {
       payload.org = {};
       payload.org[testPlatform.workspace.company_id] = {
         role: "",

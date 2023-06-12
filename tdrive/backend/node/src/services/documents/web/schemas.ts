@@ -60,6 +60,8 @@ const documentSchema = {
           type: "object",
           properties: {
             token: { type: "string" },
+            password: { type: "string" },
+            expiration: { type: "number" },
             level: { type: "string" },
           },
         },

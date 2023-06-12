@@ -1,7 +1,4 @@
 {
-  "phpnode": {
-    "secret": "api_supersecret"
-  },
   "websocket": {
     "path": "/socket/",
     "adapters": {

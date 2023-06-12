@@ -49,7 +49,7 @@ export function buildComparison(where: any, options: FindOptions = {}): string[]
     if (operator === "$gt" || operator === "$gte" || operator === "$lt" || operator === "$lte") {
       (options[operator] || []).forEach(element => {
         if (!where[element[0]]) where[element[0]] = {};
-        where[element[0]][operator] = element[1];
+        where[element[0]][operator] = parseInt(element[1]);
       });
     }
   });

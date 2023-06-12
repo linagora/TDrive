@@ -29,7 +29,7 @@ export default () => {
             if (FeatureTogglesService.isActiveFeatureName(FeatureNames.EDIT_FILES)) {
               openFile(
                 candidates[0].app,
-                status.details?.versions?.[0]?.id || '',
+                status.details?.versions?.[0]?.file_metadata?.external_id || '',
                 status.details?.item.id || '',
               );
             } else {
@@ -63,7 +63,7 @@ export default () => {
                   onClick: () => {
                     openFile(
                       editor.app,
-                      status.details?.versions?.[0]?.id || '',
+                      status.details?.versions?.[0]?.file_metadata?.external_id || '',
                       status.details?.item.id || '',
                     );
                   },

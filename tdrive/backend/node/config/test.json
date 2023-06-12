@@ -20,7 +20,10 @@
       "urls": ["amqp://guest:guest@rabbitmq:5672"]
     }
   },
-  "phpnode": {
-    "php_endpoint": false
+  "search": {
+    "type": "elasticsearch",
+    "elasticsearch": {
+      "endpoint": "https://localhost:9200"
+    }
   }
 }

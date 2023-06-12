@@ -42,6 +42,9 @@ export default class ElasticSearch extends SearchAdapter implements SearchAdapte
     try {
       this.client = new Client({
         node: this.configuration.endpoint,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       });
     } catch (e) {
       logger.error(`Unable to connect to ElasticSearch at ${this.configuration.endpoint}`);

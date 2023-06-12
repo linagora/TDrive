@@ -7,6 +7,7 @@ import RouterServices from '@features/router/services/router-service';
 import { useSearchModal } from '@features/search/hooks/use-search';
 import { SearchInputState } from '@features/search/state/search-input';
 import { useRecoilState } from 'recoil';
+import { ToasterService } from 'app/features/global/services/toaster-service';
 
 export default (): JSX.Element => {
   const { workspaceId, channelId } = RouterServices.getStateFromRoute();
@@ -38,7 +39,9 @@ export default (): JSX.Element => {
                 'rounded-full h-7 w-7 absolute m-auto top-0 bottom-0 right-3 text-zinc-500'
               }
               icon={() => <AdjustmentsIcon className="w-5 h-5 text-zinc-500" />}
-              onClick={() => setOpen()}
+              onClick={() => {
+                ToasterService.info('This feature is coming soon 🚀');
+              }}
             />
           )}
           input={({ className }) => (

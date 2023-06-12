@@ -22,7 +22,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -44,7 +44,7 @@ jobs:
           path: tdrive/frontend/build/
 
   publish-frontend:
-#    needs: build-frontend
+    #    needs: build-frontend
     runs-on: ubuntu-20.04
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/qa' || github.ref == 'refs/heads/canary'
     steps:

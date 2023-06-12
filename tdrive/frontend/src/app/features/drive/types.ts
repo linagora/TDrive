@@ -37,6 +37,8 @@ export type DriveFileAccessLevel = 'none' | 'read' | 'write' | 'manage';
 export type DriveItemAccessInfo = {
   public?: {
     token: string;
+    expiration?: number;
+    password?: string;
     level: DriveFileAccessLevel;
   };
   entities: AuthEntity[];

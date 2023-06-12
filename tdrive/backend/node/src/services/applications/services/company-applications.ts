@@ -18,19 +18,28 @@ export class CompanyApplicationServiceImpl implements TdriveServiceProvider, Ini
     pk: Pick<CompanyApplicationPrimaryKey, "company_id" | "application_id"> & { id?: string },
     context?: CompanyExecutionContext,
   ): Promise<CompanyApplicationWithApplication> {
-    const application = await gr.services.applications.marketplaceApps.get(
-      pk.application_id,
-      context,
-    );
+    try {
+      const application = await gr.services.applications.marketplaceApps.get(
+        pk.application_id,
+        context,
+      );
 
-    return {
-      ...{
-        id: pk.application_id,
-        company_id: pk.company_id,
-        application_id: pk.application_id,
-      },
-      application: application,
-    };
+      if (!application?.id) {
+        return null;
+      }
+
+      return {
+        ...{
+          id: pk.application_id,
+          company_id: pk.company_id,
+          application_id: pk.application_id,
+        },
+        application: application,
+      };
+    } catch (err) {
+      console.error(err);
+      return null;
+    }
   }
 
   async list<ListOptions>(

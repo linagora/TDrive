@@ -1,3 +1,4 @@
+import { useCompanyApplications } from 'app/features/applications/hooks/use-company-applications';
 import Browser from './browser';
 import { SelectorModal } from './modals/selector';
 
@@ -16,6 +17,9 @@ export default ({
   context?: EmbedContext;
   inPublicSharing?: boolean;
 }) => {
+  //Preload applications mainly for shared view
+  useCompanyApplications();
+
   return (
     <>
       <SelectorModal />

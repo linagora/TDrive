@@ -7,6 +7,7 @@ import currentUserService from '@features/users/services/current-user-service';
 import AccountParameter from '@views/client/popup/UserParameter/UserParameter';
 import Languages from '../../../features/global/services/languages-service';
 import ModalManagerDepreciated from '@deprecated/popupManager/popupManager';
+import InitService from '@features/global/services/init-service';
 
 export default ({ sidebar }: { sidebar?: boolean }): JSX.Element => {
   const { user } = useCurrentUser();
@@ -22,6 +23,7 @@ export default ({ sidebar }: { sidebar?: boolean }): JSX.Element => {
           type: 'menu',
           icon: 'user',
           text: Languages.t('scenes.app.channelsbar.currentuser.title'),
+          hide: InitService.server_infos?.configuration?.accounts?.type === 'remote',
           onClick: () => {
             ModalManagerDepreciated.open(<AccountParameter />, true, 'account_parameters');
           },

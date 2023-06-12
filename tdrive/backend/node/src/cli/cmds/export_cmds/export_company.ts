@@ -3,8 +3,6 @@ import tdrive from "../../../tdrive";
 import { mkdirSync, writeFileSync } from "fs";
 import { Pagination } from "../../../core/platform/framework/api/crud-service";
 import WorkspaceUser from "../../../services/workspaces/entities/workspace_user";
-import { ChannelVisibility } from "../../../services/channels/types";
-import { Channel, ChannelMember } from "../../../services/channels/entities";
 import { formatCompany } from "../../../services/user/utils";
 import gr from "../../../services/global-resolver";
 import { formatUser } from "../../../utils/users";
@@ -104,91 +102,6 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
       );
     }
     writeFileSync(`${output}/users.json`, JSON.stringify(users));
-
-    //Channels
-    console.log("- Create channels json file");
-    const directChannels: Channel[] = [];
-    let allPublicChannels: Channel[] = [];
-
-    let pagination = new Pagination();
-    do {
-      const page = await gr.services.channels.channels.getDirectChannelsInCompany(
-        pagination,
-        company.id,
-        undefined,
-      );
-      for (const channel of page.getEntities()) {
-        const channelDetail = await gr.services.channels.channels.get(
-          {
-            company_id: channel.company_id,
-            workspace_id: "direct",
-            id: channel.id,
-          },
-          undefined,
-        );
-        directChannels.push(channelDetail);
-      }
-      pagination = page.nextPage as Pagination;
-    } while (pagination.page_token);
-
-    for (const workspace of workspaces) {
-      let pagination = new Pagination();
-
-      let publicChannels: Channel[] = [];
-      pagination = new Pagination();
-      do {
-        const page = await gr.services.channels.channels.list(
-          pagination,
-          {},
-          {
-            user: { id: "", server_request: true },
-            workspace: { workspace_id: workspace.id, company_id: company.id },
-          },
-        );
-        const chans = page.getEntities().filter(c => c.visibility == ChannelVisibility.PUBLIC);
-        allPublicChannels = [...allPublicChannels, ...chans];
-        publicChannels = [...publicChannels, ...chans];
-        pagination = page.nextPage as Pagination;
-      } while (pagination.page_token);
-
-      mkdirSync(`${output}/workspaces/${workspace.id}`, { recursive: true });
-      writeFileSync(
-        `${output}/workspaces/${workspace.id}/channels.json`,
-        JSON.stringify(publicChannels),
-      );
-    }
-    writeFileSync(`${output}/direct_channels.json`, JSON.stringify(directChannels));
-
-    //Channels users
-    console.log("- Create channels users json file");
-    for (const channel of [...allPublicChannels /*, ...directChannels*/]) {
-      let members: ChannelMember[] = [];
-      let pagination = new Pagination();
-      do {
-        const page = await gr.services.channels.members.list(
-          pagination,
-          {},
-          {
-            user: { id: "", server_request: true },
-            channel: {
-              company_id: channel.company_id,
-              workspace_id: channel.workspace_id,
-              id: channel.id,
-            },
-          },
-        );
-        members = [...members, ...page.getEntities()] as ChannelMember[];
-        pagination = page.nextPage as Pagination;
-      } while (pagination.page_token);
-
-      mkdirSync(`${output}/workspaces/${channel.workspace_id}/channels/${channel.id}`, {
-        recursive: true,
-      });
-      writeFileSync(
-        `${output}/workspaces/${channel.workspace_id}/channels/${channel.id}/members.json`,
-        JSON.stringify(members),
-      );
-    }
 
     await platform.stop();
   },

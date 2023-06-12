@@ -1,4 +1,3 @@
-import { Channel } from "../../../../services/channels/entities/channel";
 import Company from "../../../../services/user/entities/company";
 import Workspace from "../../../../services/workspaces/entities/workspace";
 import User from "../../../../services/user/entities/user";
@@ -7,7 +6,6 @@ export type EmailBuilderDataPayload = {
   user: User;
   company: Company;
   notifications: {
-    channel: Channel;
     workspace: Workspace;
   }[];
 };

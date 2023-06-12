@@ -28,17 +28,22 @@ import { AccessModal } from './modals/update-access';
 import { VersionsModal } from './modals/versions';
 import { SharedFilesTable } from './shared-files-table';
 
-export const DriveCurrentFolderAtom = atomFamily<string, string>({
+export const DriveCurrentFolderAtom = atomFamily<
+  string,
+  { context?: string; initialFolderId: string }
+>({
   key: 'DriveCurrentFolderAtom',
-  default: startingParentId => startingParentId || 'root',
+  default: options => options.initialFolderId || 'root',
 });
 
 export default memo(
   ({
+    context,
     initialParentId,
     tdriveTabContextToken,
     inPublicSharing,
   }: {
+    context?: string;
     initialParentId?: string;
     tdriveTabContextToken?: string;
     inPublicSharing?: boolean;
@@ -47,7 +52,7 @@ export default memo(
     setTdriveTabToken(tdriveTabContextToken || null);
 
     const [parentId, _setParentId] = useRecoilState(
-      DriveCurrentFolderAtom(initialParentId || 'root'),
+      DriveCurrentFolderAtom({ context: context, initialFolderId: initialParentId || 'root' }),
     );
 
     const [loadingParentChange, setLoadingParentChange] = useState(false);

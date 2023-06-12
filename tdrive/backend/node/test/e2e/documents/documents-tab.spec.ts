@@ -51,15 +51,12 @@ describe("the Drive Tdrive tabs feature", () => {
     });
   });
 
-  afterEach(async () => {
-    await platform.tearDown();
-  });
-
   afterAll(async () => {
-    await platform.app.close();
+    await platform?.tearDown();
+    platform = null;
   });
 
-  it("did create a tab configuration on Drive side", async done => {
+  it("did create a tab configuration on Drive side", async () => {
     await TestDbService.getInstance(platform, true);
 
     const item = {
@@ -125,11 +122,9 @@ describe("the Drive Tdrive tabs feature", () => {
         a => a?.type === "channel" && a.id === "abcdefghij" && a.level === "write",
       ),
     ).toBeDefined();
-
-    done?.();
   });
 
-  it("did refuse to create a tab configuration for an item I can't manage", async done => {
+  it("did refuse to create a tab configuration for an item I can't manage", async () => {
     const dbService = await TestDbService.getInstance(platform, true);
     const ws0pk = {
       id: platform.workspace.workspace_id,
@@ -177,7 +172,5 @@ describe("the Drive Tdrive tabs feature", () => {
     });
 
     expect(createdTab.statusCode).toBe(403);
-
-    done?.();
   });
 });

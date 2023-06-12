@@ -9,4 +9,5 @@ export type JwtType = {
   refresh_nbf?: number;
   iat: number;
   track: boolean;
+  public_token_document_id?: string;
 };

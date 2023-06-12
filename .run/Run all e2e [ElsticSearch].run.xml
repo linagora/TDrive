@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tests in e2e/" type="JavaScriptTestRunnerJest" nameIsGenerated="true">
+  <configuration default="false" name="Run all e2e [ElsticSearch]" type="JavaScriptTestRunnerJest">
     <node-interpreter value="project" />
     <jest-package value="$PROJECT_DIR$/tdrive/backend/node/node_modules/jest" />
     <working-dir value="$PROJECT_DIR$/tdrive/backend/node" />

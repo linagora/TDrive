@@ -12,7 +12,7 @@ describe("The /workspaces API", () => {
   const nonExistentId = uuidv1();
   let companyId = "";
 
-  beforeAll(async ends => {
+  beforeAll(async () => {
     platform = await init({
       services: [
         "database",
@@ -46,25 +46,22 @@ describe("The /workspaces API", () => {
     await testDbService.createUser([ws2pk], { companyRole: "admin" });
     await testDbService.createUser([ws2pk], { companyRole: undefined, workspaceRole: "moderator" });
     await testDbService.createUser([], { companyRole: "guest" });
-    ends();
   });
 
-  afterAll(async ends => {
+  afterAll(async () => {
     await platform.tearDown();
-    ends();
   });
 
   describe("The GET /workspaces/ route", () => {
-    it("should 401 when not authenticated", async done => {
+    it("should 401 when not authenticated", async () => {
       const response = await platform.app.inject({
         method: "GET",
         url: `${url}/companies/${nonExistentId}/workspaces`,
       });
       expect(response.statusCode).toBe(401);
-      done();
     });
 
-    it("should 404 when company not found", async done => {
+    it("should 404 when company not found",  async () => {
       const userId = testDbService.workspaces[0].users[0].id;
 
       const jwtToken = await platform.auth.getJWTToken({ sub: userId });
@@ -75,10 +72,9 @@ describe("The /workspaces API", () => {
         headers: { authorization: `Bearer ${jwtToken}` },
       });
       expect(response.statusCode).toBe(404);
-      done();
     });
 
-    it("should 200 when company belongs to user", async done => {
+    it("should 200 when company belongs to user", async () => {
       const userId = testDbService.workspaces[0].users[0].id;
 
       const jwtToken = await platform.auth.getJWTToken({ sub: userId });
@@ -113,12 +109,12 @@ describe("The /workspaces API", () => {
         }
       }
 
-      done();
+      
     });
   });
 
   describe("The GET /workspaces/:workspace_id route", () => {
-    it("should 401 when not authenticated", async done => {
+    it("should 401 when not authenticated", async () => {
       const workspaceId = testDbService.workspaces[0].workspace.id;
 
       const response = await platform.app.inject({
@@ -126,10 +122,10 @@ describe("The /workspaces API", () => {
         url: `${url}/companies/${nonExistentId}/workspaces/${workspaceId}`,
       });
       expect(response.statusCode).toBe(401);
-      done();
+      
     });
 
-    it("should 404 when workspace not found", async done => {
+    it("should 404 when workspace not found", async () => {
       const userId = testDbService.workspaces[0].users[0].id;
       const jwtToken = await platform.auth.getJWTToken({ sub: userId });
 
@@ -139,10 +135,10 @@ describe("The /workspaces API", () => {
         headers: { authorization: `Bearer ${jwtToken}` },
       });
       expect(response.statusCode).toBe(404);
-      done();
+      
     });
 
-    it("should 403 when user not belong to workspace and not company_admin", async done => {
+    it("should 403 when user not belong to workspace and not company_admin", async () => {
       const workspaceId = testDbService.workspaces[2].workspace.id;
       const userIdFromAnotherWorkspace = testDbService.workspaces[0].users[0].id;
 
@@ -161,10 +157,10 @@ describe("The /workspaces API", () => {
         statusCode: 403,
       });
 
-      done();
+      
     });
 
-    it("should 200 when user is company_admin", async done => {
+    it("should 200 when user is company_admin", async () => {
       const workspaceId = testDbService.workspaces[0].workspace.id;
       const userIdFromAnotherWorkspace = testDbService.workspaces[2].users[0].id;
 
@@ -195,10 +191,10 @@ describe("The /workspaces API", () => {
         });
       }
 
-      done();
+      
     });
 
-    it("should 200 when user is belong to workspace", async done => {
+    it("should 200 when user is belong to workspace", async () => {
       const workspaceId = testDbService.workspaces[0].workspace.id;
       const userIdFromThisWorkspace = testDbService.workspaces[0].users[0].id;
 
@@ -230,14 +226,14 @@ describe("The /workspaces API", () => {
         });
       }
 
-      done();
+      
     });
   });
 
   // create
 
   describe("The POST /workspaces route (creating workspace)", () => {
-    it("should 401 when not authenticated", async done => {
+    it("should 401 when not authenticated", async () => {
       const companyId = testDbService.company.id;
 
       const response = await platform.app.inject({
@@ -245,10 +241,10 @@ describe("The /workspaces API", () => {
         url: `${url}/companies/${companyId}/workspaces/${nonExistentId}`,
       });
       expect(response.statusCode).toBe(401);
-      done();
+      
     });
 
-    it("should 403 when user is not (company member or company admin) ", async done => {
+    it("should 403 when user is not (company member or company admin) ", async () => {
       const companyId = testDbService.company.id;
       const userId = testDbService.users[3].id;
       const jwtToken = await platform.auth.getJWTToken({ sub: userId });
@@ -267,10 +263,10 @@ describe("The /workspaces API", () => {
       });
 
       expect(response.statusCode).toBe(403);
-      done();
+      
     });
 
-    it("should 201 when workspace created well", async done => {
+    it("should 201 when workspace created well", async () => {
       const companyId = testDbService.company.id;
       const userId = testDbService.users[0].id;
       const jwtToken = await platform.auth.getJWTToken({ sub: userId });
@@ -302,14 +298,14 @@ describe("The /workspaces API", () => {
         role: expect.stringMatching(/moderator/),
       });
 
-      done();
+      
     });
   });
 
   // update
 
   describe("The POST /workspaces/:workspace_id route (updating workspace)", () => {
-    it("should 401 when not authenticated", async done => {
+    it("should 401 when not authenticated", async () => {
       const companyId = testDbService.company.id;
 
       const response = await platform.app.inject({
@@ -318,10 +314,10 @@ describe("The /workspaces API", () => {
         payload: { resource: {} },
       });
       expect(response.statusCode).toBe(401);
-      done();
+      
     });
 
-    it("should 403 when not workspace not found", async done => {
+    it("should 403 when not workspace not found", async () => {
       const companyId = testDbService.company.id;
       const userId = testDbService.workspaces[0].users[0].id;
 
@@ -336,10 +332,10 @@ describe("The /workspaces API", () => {
 
       expect(response.statusCode).toBe(403);
 
-      done();
+      
     });
 
-    it("should 403 when not belong to workspace", async done => {
+    it("should 403 when not belong to workspace", async () => {
       const companyId = testDbService.company.id;
       const workspaceId = testDbService.workspaces[1].workspace.id;
       const userId = testDbService.workspaces[0].users[0].id;
@@ -355,10 +351,10 @@ describe("The /workspaces API", () => {
 
       expect(response.statusCode).toBe(403);
 
-      done();
+      
     });
 
-    it("should 403 when not workspace moderator", async done => {
+    it("should 403 when not workspace moderator", async () => {
       const companyId = testDbService.company.id;
       const workspaceId = testDbService.workspaces[1].workspace.id;
       const userId = testDbService.workspaces[0].users[0].id;
@@ -374,10 +370,10 @@ describe("The /workspaces API", () => {
 
       expect(response.statusCode).toBe(403);
 
-      done();
+      
     });
 
-    it("should 200 when admin of company (full update)", async done => {
+    it("should 200 when admin of company (full update)", async () => {
       const companyId = testDbService.company.id;
       const workspaceId = testDbService.workspaces[2].workspace.id;
       const userId = testDbService.workspaces[2].users[0].id; // company owner
@@ -412,10 +408,10 @@ describe("The /workspaces API", () => {
         role: "moderator", //Company admin is a moderator
       });
 
-      done();
+      
     });
 
-    it("should 200 when moderator of workspace (partial update)", async done => {
+    it("should 200 when moderator of workspace (partial update)", async () => {
       const companyId = testDbService.company.id;
       const workspaceId = testDbService.workspaces[2].workspace.id;
       const userId = testDbService.workspaces[2].users[1].id; // workspace admin
@@ -449,14 +445,14 @@ describe("The /workspaces API", () => {
         role: "moderator",
       });
 
-      done();
+      
     });
   });
 
   // delete
 
   describe("The DELETE /workspaces route", () => {
-    it("should 401 when not authenticated", async done => {
+    it("should 401 when not authenticated", async () => {
       const companyId = testDbService.company.id;
 
       const response = await platform.app.inject({
@@ -464,10 +460,10 @@ describe("The /workspaces API", () => {
         url: `${url}/companies/${companyId}/workspaces/${nonExistentId}`,
       });
       expect(response.statusCode).toBe(401);
-      done();
+      
     });
 
-    it("should 403 when user is not (company member or company admin) ", async done => {
+    it("should 403 when user is not (company member or company admin) ", async () => {
       const companyId = testDbService.company.id;
       const userId = testDbService.users[3].id;
       const jwtToken = await platform.auth.getJWTToken({ sub: userId });
@@ -480,10 +476,10 @@ describe("The /workspaces API", () => {
       });
 
       expect(response.statusCode).toBe(403);
-      done();
+      
     });
 
-    it("should 204 when workspace deleted", async done => {
+    it("should 204 when workspace deleted", async () => {
       const companyId = testDbService.company.id;
       const workspaceId = testDbService.workspaces[2].workspace.id;
       const userId = testDbService.workspaces[2].users[0].id;
@@ -507,7 +503,7 @@ describe("The /workspaces API", () => {
 
       expect(checkResponseJson.resources.find((a: any) => a.id === workspaceId)).toBe(undefined);
 
-      done();
+      
     });
   });
 });

@@ -28,6 +28,9 @@ export class DriveFileMockClass {
     last_modified: string;
     access_info: MockAccessInformation;
     creator: string;
+    is_directory: boolean;
+    created_by: Record<string, any>;
+    shared_by: Record<string, any>;
 }
 
 export class DriveItemDetailsMockClass {

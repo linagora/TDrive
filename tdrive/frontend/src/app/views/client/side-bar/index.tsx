@@ -27,7 +27,9 @@ export default () => {
   const location = useLocation();
   const company = useRouterCompany();
   const workspace = useRouterWorkspace();
-  const [parentId, setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
+  const [parentId, setParentId] = useRecoilState(
+    DriveCurrentFolderAtom({ initialFolderId: 'root' }),
+  );
   const { user } = useCurrentUser();
   const active = false;
   const { access: rootAccess } = useDriveItem('root');

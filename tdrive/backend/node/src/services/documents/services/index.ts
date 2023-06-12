@@ -81,7 +81,7 @@ export class DocumentsService {
           DriveTdriveTabEntity,
         );
     } catch (error) {
-      logger.error("Error while initializing Documents Service", error);
+      logger.error({ error: `${error}` }, "Error while initializing Documents Service");
     }
 
     return this;
@@ -94,7 +94,10 @@ export class DocumentsService {
    * @param {DriveExecutionContext} context
    * @returns {Promise<DriveItemDetails>}
    */
-  get = async (id: string, context: DriveExecutionContext): Promise<DriveItemDetails> => {
+  get = async (
+    id: string,
+    context: DriveExecutionContext & { public_token?: string },
+  ): Promise<DriveItemDetails> => {
     if (!context) {
       this.logger.error("invalid context");
       return null;
@@ -123,11 +126,12 @@ export class DocumentsService {
     try {
       const hasAccess = await checkAccess(id, entity, "read", this.repository, context);
       if (!hasAccess) {
-        this.logger.error("user does not have access drive item ", id);
+        this.logger.error("user does not have access drive item " + id);
         throw Error("user does not have access to this item");
       }
     } catch (error) {
-      this.logger.error("Failed to grant access to the drive item", error);
+      console.log(error);
+      this.logger.error({ error: `${error}` }, "Failed to grant access to the drive item");
       throw new CrudException("User does not have access to this item or its children", 401);
     }
 
@@ -309,7 +313,7 @@ export class DocumentsService {
 
       return driveItem;
     } catch (error) {
-      this.logger.error("Failed to create drive item", error);
+      this.logger.error({ error: `${error}` }, "Failed to create drive item");
       CrudException.throwMe(error, new CrudException("Failed to create item", 500));
     }
   };
@@ -370,7 +374,14 @@ export class DocumentsService {
             oldParent = item.parent_id;
           }
 
-          if (key === "name") {
+          if (key === "access_info") {
+            item.access_info = content.access_info;
+            item.access_info.entities.forEach(info => {
+              if (!info.grantor) {
+                info.grantor = context.user.id;
+              }
+            });
+          } else if (key === "name") {
             item.name = await getItemName(
               content.parent_id || item.parent_id,
               item.id,
@@ -416,7 +427,7 @@ export class DocumentsService {
       return item;
     } catch (error) {
       console.error(error);
-      this.logger.error("Failed to update drive item", error);
+      this.logger.error({ error: `${error}` }, "Failed to update drive item");
       throw new CrudException("Failed to update item", 500);
     }
   };
@@ -461,7 +472,7 @@ export class DocumentsService {
           }),
         );
       } catch (error) {
-        this.logger.error("Failed to empty trash", error);
+        this.logger.error({ error: `${error}` }, "Failed to empty trash");
         throw new CrudException("Failed to empty trash", 500);
       }
 
@@ -485,7 +496,7 @@ export class DocumentsService {
           throw Error("user does not have access to this item");
         }
       } catch (error) {
-        this.logger.error("Failed to grant access to the drive item", error);
+        this.logger.error({ error: `${error}` }, "Failed to grant access to the drive item");
         throw new CrudException("User does not have access to this item or its children", 401);
       }
 
@@ -619,7 +630,7 @@ export class DocumentsService {
 
       return driveItemVersion;
     } catch (error) {
-      this.logger.error("Failed to create Drive item version", error);
+      this.logger.error({ error: `${error}` }, "Failed to create Drive item version");
       throw new CrudException("Failed to create Drive item version", 500);
     }
   };
@@ -885,6 +896,7 @@ export class DocumentsService {
               type: "channel",
               id: channelId,
               level: level === "write" ? "write" : "read",
+              grantor: context.user.id,
             },
           ],
         },

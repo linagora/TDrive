@@ -56,7 +56,7 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
     const company = await gr.services.companies.getCompany({ id: argv.id });
 
     if (!company) {
-      return "No such company";
+      return;
     }
 
     console.log(`Start export for company ${company.id}`);
@@ -103,7 +103,7 @@ const command: yargs.CommandModule<unknown, CLIArgs> = {
     }
     writeFileSync(`${output}/users.json`, JSON.stringify(users));
 
-    await platform.stop();
+    await platform.stop().then(() => console.log("Platform stopped"));
   },
 };
 

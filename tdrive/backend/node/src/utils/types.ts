@@ -28,6 +28,8 @@ export interface User {
   application_id?: string;
   // allow_tracking
   allow_tracking?: boolean;
+  // Prevalidated public token access
+  public_token_document_id?: string;
 }
 
 export const webSocketSchema = {

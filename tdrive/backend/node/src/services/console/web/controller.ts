@@ -126,6 +126,7 @@ export class ConsoleController {
         {
           track: request.currentUser?.allow_tracking || false,
           provider_id: request.currentUser.identity_provider_id,
+          public_token_document_id: request.currentUser.public_token_document_id,
         },
       ),
     };

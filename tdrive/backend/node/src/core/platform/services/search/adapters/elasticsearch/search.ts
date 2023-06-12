@@ -3,7 +3,7 @@ import { TransportRequestOptions } from "@elastic/elasticsearch/lib/Transport";
 import { logger } from "../../../../../../core/platform/framework/logger";
 import { EntityTarget, FindFilter, FindOptions, getEntityDefinition } from "../../api";
 import { asciiFold } from "../utils";
-import { comparisonType } from "src/core/platform/services/database/services/orm/repository/repository";
+import { comparisonType } from "../../../../../../core/platform/services/database/services/orm/repository/repository";
 
 export function buildSearchQuery<Entity>(
   entityType: EntityTarget<Entity>,

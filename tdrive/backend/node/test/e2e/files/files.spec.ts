@@ -21,10 +21,10 @@ describe("The Files feature", () => {
     helpers = await TestHelpers.getInstance(platform)
   });
 
-  afterAll(async done => {
+  afterAll(async () => {
     await platform?.tearDown();
     platform = null;
-    done();
+    
   });
 
   describe("On user send files", () => {
@@ -67,8 +67,7 @@ describe("The Files feature", () => {
 
     }, 120000);
 
-
-    it.skip("should save file and generate previews", async done => {
+    it.skip("should save file and generate previews", async () => {
       for (const i in TestHelpers.ALL_FILES) {
         const file = TestHelpers.ALL_FILES[i];
 
@@ -88,7 +87,7 @@ describe("The Files feature", () => {
         }
       }
 
-      done();
+      
     }, 1200000);
   });
 });

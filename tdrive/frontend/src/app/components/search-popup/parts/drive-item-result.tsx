@@ -32,7 +32,7 @@ export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
   const input = useRecoilValue(SearchInputState);
   const currentWorkspaceId = useRouterWorkspace();
   const companyApplications = useCompanyApplications();
-  const [_, setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
+  const [_, setParentId] = useRecoilState(DriveCurrentFolderAtom({ initialFolderId: 'root' }));
   const tdriveDriveApplicationId =
     companyApplications.applications.find(application => {
       return application.identity.code === 'tdrive_drive';

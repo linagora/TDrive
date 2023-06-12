@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="the Drive feature" type="JavaScriptTestRunnerJest" nameIsGenerated="true">
+  <configuration default="false" name="Run all unit" type="JavaScriptTestRunnerJest">
     <node-interpreter value="project" />
     <jest-package value="$PROJECT_DIR$/tdrive/backend/node/node_modules/jest" />
     <working-dir value="$PROJECT_DIR$/tdrive/backend/node" />
@@ -11,11 +11,8 @@
       <env name="SEARCH_DRIVER" value="mongodb" />
       <env name="STORAGE_LOCAL_PATH" value="$USER_HOME$/dev/linagora/TDrive/tdrive/docker-data" />
     </envs>
-    <scope-kind value="SUITE" />
-    <test-file value="$PROJECT_DIR$/tdrive/backend/node/test/e2e/documents/documents.spec.ts" />
-    <test-names>
-      <test-name value="the Drive feature" />
-    </test-names>
+    <scope-kind value="DIRECTORY" />
+    <test-directory value="$PROJECT_DIR$/tdrive/backend/node/test/unit" />
     <method v="2" />
   </configuration>
 </component>

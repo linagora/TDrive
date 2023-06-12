@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from '@heroicons/react/outline';
+import { ChevronDownIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
 import { Button } from '@atoms/button/button';
 import { Base, BaseSmall, Subtitle, Title } from '@atoms/text';
 import Menu from '@components/menus/menu';
@@ -26,7 +26,7 @@ import { CreateModalAtom } from './modals/create';
 import { PropertiesModal } from './modals/properties';
 import { AccessModal } from './modals/update-access';
 import { VersionsModal } from './modals/versions';
-
+import { SharedFilesTable } from './shared-files-table';
 
 export const DriveCurrentFolderAtom = atomFamily<string, string>({
   key: 'DriveCurrentFolderAtom',
@@ -117,124 +117,127 @@ export default memo(
 
     const onBuildContextMenu = useOnBuildContextMenu(children, initialParentId);
     const viewId = useRouterView();
-    console.log("view id is: ", viewId);
     return (
-      <UploadZone
-        overClassName={''}
-        className="h-full overflow-hidden"
-        disableClick
-        parent={''}
-        multiple={true}
-        allowPaste={true}
-        ref={uploadZoneRef}
-        driveCollectionKey={uploadZone}
-        onAddFiles={async (_, event) => {
-          const tree = await getFilesTree(event);
-          setCreationModalState({ parent_id: '', open: false });
-          uploadTree(tree, {
-            companyId,
-            parentId,
-          });
-        }}
-      >
-        <DriveRealtimeObject id={parentId} key={parentId} />
-        <VersionsModal />
-        <AccessModal />
-        <PropertiesModal />
-        <ConfirmDeleteModal />
-        <ConfirmTrashModal />
-        <Suspense fallback={<></>}>
-          <DrivePreview />
-        </Suspense>
-        {(viewId == "shared-with-me") ?? (
-          <span>
-          This is shared with me view
-          </span>
-        )}
+      <>
+        {viewId != 'shared-with-me' ? (
+          <>
+            <SharedFilesTable items={documents} />
+          </>
+        ) : (
+          <UploadZone
+            overClassName={''}
+            className="h-full overflow-hidden"
+            disableClick
+            parent={''}
+            multiple={true}
+            allowPaste={true}
+            ref={uploadZoneRef}
+            driveCollectionKey={uploadZone}
+            onAddFiles={async (_, event) => {
+              const tree = await getFilesTree(event);
+              setCreationModalState({ parent_id: '', open: false });
+              uploadTree(tree, {
+                companyId,
+                parentId,
+              });
+            }}
+          >
+            <DriveRealtimeObject id={parentId} key={parentId} />
+            <VersionsModal />
+            <AccessModal />
+            <PropertiesModal />
+            <ConfirmDeleteModal />
+            <ConfirmTrashModal />
+            <Suspense fallback={<></>}>
+              <DrivePreview />
+            </Suspense>
+            <div
+              className={
+                'flex flex-col grow h-full overflow-hidden ' +
+                (loading && (!children?.length || loadingParentChange) ? 'opacity-50 ' : '')
+              }
+            >
+              <div className="flex flex-row shrink-0 items-center mb-4">
+                <HeaderPath path={path || []} inTrash={inTrash} setParentId={setParentId} />
+                <div className="grow" />
 
-        <div
-          className={
-            'flex flex-col grow h-full overflow-hidden ' +
-            (loading && (!children?.length || loadingParentChange) ? 'opacity-50 ' : '')
-          }
-        >
-          <div className="flex flex-row shrink-0 items-center mb-4">
-            <HeaderPath path={path || []} inTrash={inTrash} setParentId={setParentId} />
-            <div className="grow" />
+                {access !== 'read' && (
+                  <BaseSmall>{formatBytes(item?.size || 0)} used in this folder</BaseSmall>
+                )}
+                <Menu menu={() => onBuildContextMenu(details)}>
+                  {' '}
+                  <Button theme="secondary" className="ml-4 flex flex-row items-center">
+                    <span>{selectedCount > 1 ? `${selectedCount} items` : 'More'} </span>
 
-            {access !== 'read' && (
-              <BaseSmall>{formatBytes(item?.size || 0)} used in this folder</BaseSmall>
-            )}
-            <Menu menu={() => onBuildContextMenu(details)}>
-              {' '}
-              <Button theme="secondary" className="ml-4 flex flex-row items-center">
-                <span>{selectedCount > 1 ? `${selectedCount} items` : 'More'} </span>
+                    <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
+                  </Button>
+                </Menu>
+              </div>
 
-                <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
-              </Button>
-            </Menu>
-          </div>
+              <div className="grow overflow-auto">
+                {folders.length > 0 && (
+                  <>
+                    <Title className="mb-2 block">Folders</Title>
 
-          <div className="grow overflow-auto">
-            {folders.length > 0 && (
-              <>
-                <Title className="mb-2 block">Folders</Title>
+                    {folders.map((child, index) => (
+                      <FolderRow
+                        key={index}
+                        className={
+                          (index === 0 ? 'rounded-t-md ' : '') +
+                          (index === folders.length - 1 ? 'rounded-b-md ' : '')
+                        }
+                        item={child}
+                        onClick={() => {
+                          return setParentId(child.id);
+                        }}
+                        checked={checked[child.id] || false}
+                        onCheck={v =>
+                          setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))
+                        }
+                        onBuildContextMenu={() => onBuildContextMenu(details, child)}
+                      />
+                    ))}
+                    <div className="my-6" />
+                  </>
+                )}
 
-                {folders.map((child, index) => (
-                  <FolderRow
+                <Title className="mb-2 block">Documents</Title>
+
+                {documents.length === 0 && !loading && (
+                  <div className="mt-4 text-center border-2 border-dashed rounded-md p-8">
+                    <Subtitle className="block mb-2">Nothing here.</Subtitle>
+                    {!inTrash && access != 'read' && (
+                      <>
+                        <Base>
+                          Drag and drop files to upload them or click on the 'Add document' button.
+                        </Base>
+                        <br />
+                        <Button onClick={() => openItemModal()} theme="primary" className="mt-4">
+                          Add document or folder
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                )}
+
+                {documents.map((child, index) => (
+                  <DocumentRow
                     key={index}
                     className={
                       (index === 0 ? 'rounded-t-md ' : '') +
-                      (index === folders.length - 1 ? 'rounded-b-md ' : '')
+                      (index === documents.length - 1 ? 'rounded-b-md ' : '')
                     }
                     item={child}
-                    onClick={() => {
-                      return setParentId(child.id);
-                    }}
                     checked={checked[child.id] || false}
                     onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
                     onBuildContextMenu={() => onBuildContextMenu(details, child)}
                   />
                 ))}
-                <div className="my-6" />
-              </>
-            )}
-
-            <Title className="mb-2 block">Documents</Title>
-
-            {documents.length === 0 && !loading && (
-              <div className="mt-4 text-center border-2 border-dashed rounded-md p-8">
-                <Subtitle className="block mb-2">Nothing here.</Subtitle>
-                {!inTrash && access != 'read' && (
-                  <>
-                    <Base>
-                      Drag and drop files to upload them or click on the 'Add document' button.
-                    </Base>
-                    <br />
-                    <Button onClick={() => openItemModal()} theme="primary" className="mt-4">
-                      Add document or folder
-                    </Button>
-                  </>
-                )}
               </div>
-            )}
-
-            {documents.map((child, index) => (
-              <DocumentRow
-                key={index}
-                className={
-                  (index === 0 ? 'rounded-t-md ' : '') +
-                  (index === documents.length - 1 ? 'rounded-b-md ' : '')
-                }
-                item={child}
-                checked={checked[child.id] || false}
-                onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
-                onBuildContextMenu={() => onBuildContextMenu(details, child)}
-              />
-            ))}
-          </div>
-        </div>
-      </UploadZone>
+            </div>
+          </UploadZone>
+        )}
+      </>
     );
   },
 );

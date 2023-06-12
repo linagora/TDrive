@@ -9,6 +9,8 @@ import {
   UserIcon,
   UserGroupIcon,
 } from '@heroicons/react/outline';
+import useRouterCompany from '@features/router/hooks/use-router-company';
+import useRouterWorkspace from '@features/router/hooks/use-router-workspace';
 import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
 import { useRecoilState } from 'recoil';
 import { Title } from '../../../atoms/text';
@@ -22,7 +24,9 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 export default () => {
   const history = useHistory();
-const location = useLocation();
+  const location = useLocation();
+  const company = useRouterCompany();
+  const workspace = useRouterWorkspace();
   const [parentId, setParentId] = useRecoilState(DriveCurrentFolderAtom('root'));
   const { user } = useCurrentUser();
   const active = false;
@@ -68,7 +72,7 @@ const location = useLocation();
           <UserIcon className="w-5 h-5 mr-4" /> My Drive
         </Button>
         <Button
-          onClick={() => history.push(`${location.pathname}/shared-with-me`)}
+          onClick={() =>  history.push(`/client/${company}/v/shared-with-me`)}
           size="lg"
           theme="white"
           className={'w-full mb-1 ' + (folderType === 'personal' ? activeClass : '')}

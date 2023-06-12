@@ -287,3 +287,64 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
     ],
   );
 };
+
+export const onBuildFileTypeContextMenu = () => {
+  const menuItems = [
+    {
+      type: 'menu',
+      text: 'PDF',
+    },
+    {
+      type: 'menu',
+      text: 'DOC',
+    },
+    {
+      type: 'menu',
+      text: 'PNG',
+    },
+  ];
+  return menuItems;
+};
+export const onBuildPeopleContextMenu = () => {
+  const menuItems = [
+    {
+      type: 'menu',
+      text: 'Dwho',
+    },
+  ];
+  return menuItems;
+};
+export const onBuildDateContextMenu = () => {
+  const menuItems = [
+    {
+      type: 'menu',
+      text: 'All',
+    },
+    {
+      type: 'menu',
+      text: 'Today',
+    },
+    {
+      type: 'menu',
+      text: 'Last week',
+    },
+    {
+      type: 'menu',
+      text: 'Last month',
+    },
+    {
+      type: 'menu',
+      text: 'Range',
+    },
+  ];
+  return menuItems;
+};
+export const onBuildFileContextMenu = () => {
+  const menuItems = [
+    {
+      type: 'menu',
+      text: 'Download',
+    },
+  ];
+  return menuItems;
+};

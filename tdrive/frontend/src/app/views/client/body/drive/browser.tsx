@@ -124,7 +124,7 @@ export default memo(
     const viewId = useRouterView();
     return (
       <>
-        {viewId != 'shared-with-me' ? (
+        {viewId == 'shared-with-me' ? (
           <>
             <SharedFilesTable items={documents} />
           </>

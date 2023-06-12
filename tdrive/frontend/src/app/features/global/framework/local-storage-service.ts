@@ -1,6 +1,11 @@
 export default class LocalStorage {
   static prefix = 'tdrive:';
 
+  //For shared views we will use another prefix
+  static setPrefix(prefix: string) {
+    LocalStorage.prefix = prefix;
+  }
+
   static setItem(key: string, value: unknown) {
     window.localStorage.setItem(`${LocalStorage.prefix}${key}`, JSON.stringify(value));
   }

@@ -23,9 +23,16 @@ import {
 import useRouterCompany from '../../../../features/router/hooks/use-router-company';
 import { CreateModalWithUploadZones } from '../../side-bar/actions';
 import { useCompanyApplications } from 'app/features/applications/hooks/use-company-applications';
+import LocalStorage from 'app/features/global/framework/local-storage-service';
 
 export default () => {
   const companyId = useRouterCompany();
+
+  //Create a different local storage for shared view
+  useEffect(() => {
+    LocalStorage.setPrefix('tdrive-shared:');
+    LocalStorage.clear();
+  }, []);
 
   const [state, setState] = useState({ group: { logo: '', name: '' } });
   useEffect(() => {

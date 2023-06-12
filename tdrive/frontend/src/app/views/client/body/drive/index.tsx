@@ -17,9 +17,6 @@ export default ({
   context?: EmbedContext;
   inPublicSharing?: boolean;
 }) => {
-  //Preload applications mainly for shared view
-  useCompanyApplications();
-
   return (
     <>
       <SelectorModal />

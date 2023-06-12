@@ -22,8 +22,7 @@ import {
 } from '../../../../features/drive/api-client/api-client';
 import useRouterCompany from '../../../../features/router/hooks/use-router-company';
 import { CreateModalWithUploadZones } from '../../side-bar/actions';
-import { useRecoilState } from 'recoil';
-import { DriveCurrentFolderAtom } from './browser';
+import { useCompanyApplications } from 'app/features/applications/hooks/use-company-applications';
 
 export default () => {
   const companyId = useRouterCompany();
@@ -97,6 +96,9 @@ const AccessChecker = ({
   const { details, loading, refresh } = useDriveItem(folderId);
   const companyId = useRouterCompany();
   const [password, setPassword] = useState((token || '').split('+')[1] || '');
+  const [accessGranted, setAccessGranted] = useState(false);
+  //Preload applications mainly for shared view
+  const { refresh: refreshApplications } = useCompanyApplications();
 
   const setPublicToken = async (token: string, password?: string) => {
     try {
@@ -114,16 +116,21 @@ const AccessChecker = ({
       }
 
       JWTStorage.updateJWT(access_token);
+
+      //Everything alright, load the drive
+      setAccessGranted(true);
+      refresh(folderId);
+      refreshApplications();
     } catch (e) {
       console.error(e);
       ToasterService.error('Unable to access documents: ' + e);
+      setAccessGranted(false);
     }
   };
 
   useEffect(() => {
     (async () => {
       await setPublicToken(token || '');
-      refresh(folderId);
     })();
   }, []);
 
@@ -131,7 +138,7 @@ const AccessChecker = ({
     return <></>;
   }
 
-  if (!details?.item?.id && !loading) {
+  if ((!details?.item?.id && !loading) || !accessGranted) {
     return (
       <div className="text-center">
         <div style={{ height: '20vh' }} />

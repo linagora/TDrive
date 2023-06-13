@@ -11,7 +11,10 @@ import { hasCompanyAdminLevel } from "../../../utils/company";
 import gr from "../../global-resolver";
 import { DriveFile, TYPE } from "../entities/drive-file";
 import { FileVersion, TYPE as FileVersionType } from "../entities/file-version";
-import { DriveTdriveTab as DriveTdriveTabEntity, TYPE as DriveTdriveTabRepoType } from "../entities/drive-tdrive-tab";
+import {
+  DriveTdriveTab as DriveTdriveTabEntity,
+  TYPE as DriveTdriveTabRepoType,
+} from "../entities/drive-tdrive-tab";
 import {
   CompanyExecutionContext,
   DocumentsMessageQueueRequest,
@@ -36,12 +39,20 @@ import {
   isVirtualFolder,
   updateItemSize,
 } from "../utils";
-import { checkAccess, getAccessLevel, hasAccessLevel, makeStandaloneAccessLevel } from "./access-check";
+import {
+  checkAccess,
+  getAccessLevel,
+  hasAccessLevel,
+  makeStandaloneAccessLevel,
+} from "./access-check";
 import { websocketEventBus } from "../../../core/platform/services/realtime/bus";
 
 import archiver from "archiver";
 import internal from "stream";
-import { RealtimeEntityActionType, ResourcePath } from "../../../core/platform/services/realtime/types";
+import {
+  RealtimeEntityActionType,
+  ResourcePath,
+} from "../../../core/platform/services/realtime/types";
 
 export class DocumentsService {
   version: "1";

@@ -9,28 +9,9 @@ import {
   onBuildDateContextMenu,
   onBuildFileContextMenu,
 } from './context-menu';
-
-export const SharedFilesTable = (documents: any) => {
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
-  const handleSort = (column: string) => {
-    if (sortBy === column) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(column);
-      setSortOrder('asc');
-    }
-  };
-  const renderSortIcon = (column: string) => {
-    if (sortBy === column) {
-      if (sortOrder === 'asc') {
-        return <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />;
-      } else {
-        return <ChevronUpIcon className="h-4 w-4 ml-2 -mr-1" />;
-      }
-    }
-    return null;
-  };
+import { useSharedWithMeDriveItems } from '@features/search/hooks/use-shared-with-me-drive-items';
+export const SharedFilesTable = () => {
+  const { driveItems, loading } = {...useSharedWithMeDriveItems()};
   return (
     <>
       <Title className="mb-4 block">Shared with me</Title>
@@ -69,7 +50,7 @@ export const SharedFilesTable = (documents: any) => {
           <div className="flex-grow">
             <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
               <Base>
-                <span className="flex" onClick={() => handleSort('name')}>Name {renderSortIcon('name')}</span>
+                <span className="flex">Name</span>
               </Base>
             </div>
           </div>
@@ -85,16 +66,7 @@ export const SharedFilesTable = (documents: any) => {
           </div>
           <div className="flex-grow-0 w-8"></div>
         </div>
-        {documents.items
-          .sort((a: any, b: any) => {
-            // Perform sorting based on the selected column and order
-            if (sortBy === 'name') {
-              return sortOrder === 'asc'
-                ? a.name.localeCompare(b.name)
-                : b.name.localeCompare(a.name);
-            }
-            return 0; // No sorting by default
-          })
+        {!loading && driveItems
           .map((file: any, index: any) => (
             <div
               key={index}

@@ -132,11 +132,12 @@ export class DriveApiClient {
     );
   }
 
-  static async search(searchString: string, options?: BaseSearchOptions) {
+  static async search(searchString: string, view?: string,options?: BaseSearchOptions) {
     const companyId = options?.company_id ? options.company_id : Workspace.currentGroupId;
     const query = `/internal/services/documents/v1/companies/${companyId}/search`;
     const searchData = {
       search: searchString,
+      view: view
     };
     const res = await Api.post<SearchDocumentsBody, { entities: DriveItem[] }>(query, searchData);
     this.logger.debug(

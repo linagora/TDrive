@@ -10,20 +10,18 @@ import { SearchDriveItemsResultsState } from '../state/search-drive-items-result
 import { SearchInputState } from '../state/search-input';
 import { useSearchModal } from './use-search';
 
-export const useSearchDriveItemsLoading = () => {
+export const useSharedWithMeDriveItemsLoading = () => {
   return useRecoilValue(LoadingState('useSearchDriveItems'));
 };
 
 let currentQuery = '';
 
-export const useSearchDriveItems = () => {
+export const useSharedWithMeDriveItems = () => {
   const companyId = useRouterCompany();
-  const { open } = useSearchModal();
   const searchInput = useRecoilValue(SearchInputState);
   const [loading, setLoading] = useRecoilState(LoadingState('useSearchDriveItems'));
 
   const [searched, setSearched] = useRecoilState(SearchDriveItemsResultsState(companyId));
-  const [recent, setRecent] = useRecoilState(RecentDriveItemsState(companyId));
 
   const opt = _.omitBy(
     {
@@ -37,17 +35,14 @@ export const useSearchDriveItems = () => {
 
   const refresh = async () => {
     setLoading(true);
-    const isRecent = searchInput.query?.trim()?.length === 0;
 
     const query = searchInput.query;
     currentQuery = query;
 
-    const response = await DriveApiClient.search(searchInput.query, "", opt);
-    let results = response.entities || [];
-    if (isRecent)
-      results = results.sort(
-        (a, b) => (parseInt(b?.last_modified) || 0) - (parseInt(a.last_modified) || 0),
-      );
+    const response = await DriveApiClient.search(searchInput.query, "shared-with-me", opt);
+    console.log("response is: ", response);
+    const results = response.entities || [];
+    console.log("results is: ", results);
 
     const update = {
       results,
@@ -58,9 +53,7 @@ export const useSearchDriveItems = () => {
     if (currentQuery !== query) {
       return;
     }
-
-    if (!isRecent) setSearched(update);
-    if (isRecent) setRecent(update);
+    setSearched(update);
     setLoading(false);
   };
 
@@ -72,7 +65,6 @@ export const useSearchDriveItems = () => {
   useGlobalEffect(
     'useSearchDriveItems',
     () => {
-      if (open)
         (async () => {
           setLoading(true);
           if (searchInput.query) {
@@ -84,7 +76,7 @@ export const useSearchDriveItems = () => {
           }
         })();
     },
-    [searchInput.query, searchInput.channelId, searchInput.workspaceId, open],
+    [searchInput.channelId, searchInput.workspaceId],
   );
 
   return { loading, driveItems: searched.results, loadMore, refresh };

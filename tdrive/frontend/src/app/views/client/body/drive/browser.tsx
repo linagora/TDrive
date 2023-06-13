@@ -27,6 +27,8 @@ import { PropertiesModal } from './modals/properties';
 import { AccessModal } from './modals/update-access';
 import { VersionsModal } from './modals/versions';
 import { SharedFilesTable } from './shared-files-table';
+import RouterServices from '@features/router/services/router-service';
+import useRouteState from 'app/features/router/hooks/use-route-state';
 
 export const DriveCurrentFolderAtom = atomFamily<
   string,
@@ -121,12 +123,13 @@ export default memo(
       .sort((a, b) => a.name.localeCompare(b.name));
 
     const onBuildContextMenu = useOnBuildContextMenu(children, initialParentId);
-    const viewId = useRouterView();
+    const { viewId } = useRouteState();
+
     return (
       <>
         {viewId == 'shared-with-me' ? (
           <>
-            <SharedFilesTable items={documents} />
+            <SharedFilesTable />
           </>
         ) : (
           <UploadZone

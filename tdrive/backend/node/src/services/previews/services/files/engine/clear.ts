@@ -1,4 +1,4 @@
-import { logger, TwakeContext } from "../../../../../core/platform/framework";
+import { logger, TdriveContext } from "../../../../../core/platform/framework";
 import { PreviewClearMessageQueueRequest, PreviewMessageQueueCallback } from "../../../types";
 import gr from "../../../../global-resolver";
 import { MessageQueueHandler } from "../../../../../core/platform/services/message-queue/api";
@@ -22,7 +22,7 @@ export class ClearProcessor
   };
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  init?(context?: TwakeContext): Promise<this> {
+  init?(context?: TdriveContext): Promise<this> {
     throw new Error("Method not implemented.");
   }
 

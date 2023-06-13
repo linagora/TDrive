@@ -10,10 +10,10 @@ import {
 } from "../../../../../utils/mime";
 import { PreviewMessageQueueRequest, ThumbnailResult } from "../../../types";
 import { generateVideoPreview } from "./video";
-import { Initializable, TwakeServiceProvider } from "../../../../../core/platform/framework";
+import { Initializable, TdriveServiceProvider } from "../../../../../core/platform/framework";
 import { cleanFiles } from "../../../../../utils/files";
 
-export class PreviewProcessService implements TwakeServiceProvider, Initializable {
+export class PreviewProcessService implements TdriveServiceProvider, Initializable {
   name: "PreviewProcessService";
   version: "1";
 

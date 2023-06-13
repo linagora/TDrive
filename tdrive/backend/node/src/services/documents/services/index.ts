@@ -2,8 +2,8 @@ import SearchRepository from "../../../core/platform/services/search/repository"
 import { getLogger, logger, TdriveLogger } from "../../../core/platform/framework";
 import { CrudException, ListResult } from "../../../core/platform/framework/api/crud-service";
 import Repository, {
-  inType,
   comparisonType,
+  inType,
 } from "../../../core/platform/services/database/services/orm/repository/repository";
 import { PublicFile } from "../../../services/files/entities/file";
 import globalResolver from "../../../services/global-resolver";
@@ -11,20 +11,17 @@ import { hasCompanyAdminLevel } from "../../../utils/company";
 import gr from "../../global-resolver";
 import { DriveFile, TYPE } from "../entities/drive-file";
 import { FileVersion, TYPE as FileVersionType } from "../entities/file-version";
+import { DriveTdriveTab as DriveTdriveTabEntity, TYPE as DriveTdriveTabRepoType } from "../entities/drive-tdrive-tab";
 import {
-  DriveTdriveTab as DriveTdriveTabEntity,
-  TYPE as DriveTdriveTabRepoType,
-} from "../entities/drive-tdrive-tab";
-import {
-  DriveExecutionContext,
+  CompanyExecutionContext,
   DocumentsMessageQueueRequest,
+  DriveExecutionContext,
+  DriveFileAccessLevel,
   DriveItemDetails,
+  DriveTdriveTab,
   RootType,
   SearchDocumentsOptions,
   TrashType,
-  CompanyExecutionContext,
-  DriveTdriveTab,
-  DriveFileAccessLevel,
 } from "../types";
 import {
   addDriveItemToArchive,
@@ -39,20 +36,12 @@ import {
   isVirtualFolder,
   updateItemSize,
 } from "../utils";
-import {
-  checkAccess,
-  getAccessLevel,
-  hasAccessLevel,
-  makeStandaloneAccessLevel,
-} from "./access-check";
+import { checkAccess, getAccessLevel, hasAccessLevel, makeStandaloneAccessLevel } from "./access-check";
 import { websocketEventBus } from "../../../core/platform/services/realtime/bus";
 
 import archiver from "archiver";
 import internal from "stream";
-import {
-  RealtimeEntityActionType,
-  ResourcePath,
-} from "../../../core/platform/services/realtime/types";
+import { RealtimeEntityActionType, ResourcePath } from "../../../core/platform/services/realtime/types";
 
 export class DocumentsService {
   version: "1";
@@ -783,7 +772,9 @@ export class DocumentsService {
           limitStr: "100",
         },
         $in: [
-          ["access_entities", [context.user.id, context.company.id]],
+          ...(options.onlyDirectlyShared
+            ? [["access_entities", [context.user.id, context.company.id]] as inType]
+            : []),
           ...(options.company_id ? [["company_id", [options.company_id]] as inType] : []),
           ...(options.creator ? [["creator", [options.creator]] as inType] : []),
           ...(options.mime_type
@@ -819,23 +810,30 @@ export class DocumentsService {
       context,
     );
 
-    // Use Promise.all to check access on each item in parallel
-    const filteredResult = await Promise.all(
-      result.getEntities().filter(async item => {
+    // if this flag is on, the access permissions were checked inside the database
+    if (!options.onlyDirectlyShared) {
+      const filteredResult = await this.filter(result.getEntities(), async item => {
         try {
           // Check access for each item
-          const hasAccess = await checkAccess(item.id, null, "read", this.repository, context);
-          // Return true if the user has access
-          return hasAccess;
+          return await checkAccess(item.id, null, "read", this.repository, context);
         } catch (error) {
           this.logger.warn("failed to check item access", error);
           return false;
         }
-      }),
-    );
+      });
 
-    return new ListResult(result.type, filteredResult, result.nextPage);
+      return new ListResult(result.type, filteredResult, result.nextPage);
+    } else {
+      return result;
+    }
   };
+
+  private async filter(arr, callback) {
+    const fail = Symbol();
+    return (
+      await Promise.all(arr.map(async item => ((await callback(item)) ? item : fail)))
+    ).filter(i => i !== fail);
+  }
 
   getTab = async (tabId: string, context: CompanyExecutionContext): Promise<DriveTdriveTab> => {
     const tab = await this.driveTdriveTabRepository.findOne(

@@ -125,10 +125,10 @@ async function getVideoDimensions(videoPath: string): Promise<{ width: number; h
     ffmpeg.ffprobe(videoPath, (err, metadata) => {
       if (err) {
         reject(err);
+      } else {
+        const { width, height } = metadata.streams[0];
+        resolve({ width, height });
       }
-
-      const { width, height } = metadata.streams[0];
-      resolve({ width, height });
     });
   });
 }

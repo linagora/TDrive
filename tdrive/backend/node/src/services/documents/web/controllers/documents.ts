@@ -55,6 +55,7 @@ export class DocumentsController {
           filename: q.resumableFilename || q.filename || file?.filename || undefined,
           type: q.resumableType || q.type || file?.mimetype || undefined,
           waitForThumbnail: !!q.thumbnail_sync,
+          ignoreThumbnails: false,
         };
 
         createdFile = await globalResolver.services.files.save(null, file, options, context);
@@ -138,6 +139,35 @@ export class DocumentsController {
           )
         : [],
     };
+  };
+
+  sharedWithMe = async (
+    request: FastifyRequest<{
+      Params: RequestParams;
+      Body: SearchDocumentsBody;
+      Querystring: { public_token?: string };
+    }>,
+  ): Promise<ListResult<DriveFileDTO>> => {
+    try {
+      const context = getDriveExecutionContext(request);
+
+      const options: SearchDocumentsOptions = {
+        ...request.body,
+        company_id: request.body.company_id || context.company.id,
+        onlyDirectlyShared: true,
+      };
+
+      if (!Object.keys(options).length) {
+        this.throw500Search();
+      }
+
+      const fileList = await globalResolver.services.documents.documents.search(options, context);
+
+      return this.driveFileDTOBuilder.build(fileList, context, options.fields, options.view);
+    } catch (error) {
+      logger.error({ error: `${error}` }, "error while searching for document");
+      this.throw500Search();
+    }
   };
 
   /**
@@ -352,6 +382,7 @@ export class DocumentsController {
       const options: SearchDocumentsOptions = {
         ...request.body,
         company_id: request.body.company_id || context.company.id,
+        onlyDirectlyShared: false,
       };
 
       if (!Object.keys(options).length) {

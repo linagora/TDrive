@@ -47,6 +47,7 @@ export type SearchDocumentsOptions = {
   sort?: SortType;
   view?: string;
   fields?: string[];
+  onlyDirectlyShared?: boolean;
 };
 
 export type SearchDocumentsBody = {

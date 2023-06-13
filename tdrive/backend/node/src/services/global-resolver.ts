@@ -2,36 +2,39 @@ import { FastifyInstance } from "fastify";
 import { IncomingMessage, Server, ServerResponse } from "http";
 
 import { TdrivePlatform } from "../core/platform/platform";
+import AuthServiceAPI from "../core/platform/services/auth/provider";
+import { CounterAPI } from "../core/platform/services/counter/types";
+import { CronAPI } from "../core/platform/services/cron/api";
+import { DatabaseServiceAPI } from "../core/platform/services/database/api";
+import EmailPusherAPI from "../core/platform/services/email-pusher/provider";
+import { MessageQueueServiceAPI } from "../core/platform/services/message-queue/api";
+import { PushServiceAPI } from "../core/platform/services/push/api";
 import { RealtimeServiceAPI } from "../core/platform/services/realtime/api";
-import WebServerAPI from "../core/platform/services/webserver/provider";
 import { SearchServiceAPI } from "../core/platform/services/search/api";
 import StorageAPI from "../core/platform/services/storage/provider";
-import { MessageQueueServiceAPI } from "../core/platform/services/message-queue/api";
-import { CounterAPI } from "../core/platform/services/counter/types";
-import { DatabaseServiceAPI } from "../core/platform/services/database/api";
-import AuthServiceAPI from "../core/platform/services/auth/provider";
-import { PushServiceAPI } from "../core/platform/services/push/api";
-import { CronAPI } from "../core/platform/services/cron/api";
-import WebSocketAPI from "../core/platform/services/websocket/provider";
 import TrackerAPI from "../core/platform/services/tracker/provider";
-import EmailPusherAPI from "../core/platform/services/email-pusher/provider";
+import WebServerAPI from "../core/platform/services/webserver/provider";
+import WebSocketAPI from "../core/platform/services/websocket/provider";
 
-import { logger } from "../core/platform/framework";
 import assert from "assert";
-import { CompanyServiceImpl } from "./user/services/companies";
-import { WorkspaceServiceImpl } from "./workspaces/services/workspace";
-import { UserExternalLinksServiceImpl } from "./user/services/external_links";
-import { UserServiceImpl } from "./user/services/users/service";
-import { CompanyApplicationServiceImpl } from "./applications/services/company-applications";
+import { logger } from "../core/platform/framework";
 import { ApplicationServiceImpl } from "./applications/services/applications";
-import { FileServiceImpl } from "./files/services";
-import { ConsoleServiceImpl } from "./console/service";
-import { StatisticsServiceImpl } from "./statistics/service";
+import { CompanyApplicationServiceImpl } from "./applications/services/company-applications";
 import { ApplicationHooksService } from "./applications/services/hooks";
-import OnlineServiceImpl from "./online/service";
+import { ConsoleServiceImpl } from "./console/service";
 import { DocumentsService } from "./documents/services";
 import { DocumentsEngine } from "./documents/services/engine";
+import { FileServiceImpl } from "./files/services";
+import OnlineServiceImpl from "./online/service";
+import { PreviewProcessService } from "./previews/services/files/processing/service";
+import { StatisticsServiceImpl } from "./statistics/service";
 import { TagsService } from "./tags/services/tags";
+import { CompanyServiceImpl } from "./user/services/companies";
+import { UserExternalLinksServiceImpl } from "./user/services/external_links";
+import { UserServiceImpl } from "./user/services/users/service";
+import { WorkspaceServiceImpl } from "./workspaces/services/workspace";
+
+import { PreviewEngine } from "./previews/services/files/engine";
 
 type PlatformServices = {
   auth: AuthServiceAPI;
@@ -55,6 +58,9 @@ type TdriveServices = {
   console: ConsoleServiceImpl;
   statistics: StatisticsServiceImpl;
   externalUser: UserExternalLinksServiceImpl;
+  preview: {
+    files: PreviewProcessService;
+  };
   applications: {
     marketplaceApps: ApplicationServiceImpl;
     companyApps: CompanyApplicationServiceImpl;
@@ -106,6 +112,8 @@ class GlobalResolver {
       assert(service, `Platform service ${key} was not initialized`);
     });
 
+    await new PreviewEngine().init();
+
     this.services = {
       workspaces: await new WorkspaceServiceImpl().init(),
       companies: await new CompanyServiceImpl().init(),
@@ -113,6 +121,9 @@ class GlobalResolver {
       console: await new ConsoleServiceImpl().init(),
       statistics: await new StatisticsServiceImpl().init(),
       externalUser: await new UserExternalLinksServiceImpl().init(),
+      preview: {
+        files: await new PreviewProcessService().init(),
+      },
       applications: {
         marketplaceApps: await new ApplicationServiceImpl().init(),
         companyApps: await new CompanyApplicationServiceImpl().init(),

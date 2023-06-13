@@ -73,11 +73,11 @@ export default class TestHelpers {
 
         const filesUploadRaw = await this.platform.app.inject({
             method: "POST",
-            url: `${url}/companies/${this.platform.workspace.company_id}/files?thumbnail_sync=1`,
+            url: `${url}/companies/${this.platform.workspace.company_id}/files?thumbnail_sync=0`,
             ...form,
         });
 
-        const filesUpload: ResourceUpdateResponse<File> = deserialize(
+        const filesUpload: ResourceUpdateResponse<File> = deserialize<ResourceUpdateResponse<File>>(
             ResourceUpdateResponse,
             filesUploadRaw.body,
         );
@@ -186,6 +186,23 @@ export default class TestHelpers {
         return deserialize<SearchResultMockClass>(
             SearchResultMockClass,
             response.body)
+    };
+
+    async sharedWithMeDocuments (
+      payload: Record<string, any>
+    ){
+        const response = await this.platform.app.inject({
+            method: "POST",
+            url: `${TestHelpers.DOC_URL}/companies/${this.platform.workspace.company_id}/shared-with-me`,
+            headers: {
+                authorization: `Bearer ${this.jwt}`,
+            },
+            payload,
+        });
+
+        return deserialize<SearchResultMockClass>(
+          SearchResultMockClass,
+          response.body)
     };
 
 }

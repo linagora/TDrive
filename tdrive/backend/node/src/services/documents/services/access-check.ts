@@ -168,12 +168,12 @@ export const getAccessLevel = async (
   const prevalidatedPublicTokenDocumentId = context?.user?.public_token_document_id;
 
   try {
-    item =
-      item ||
-      (await repository.findOne({
+    if (!item) {
+      item = await repository.findOne({
         id,
         company_id: context.company.id,
-      }));
+      });
+    }
 
     if (!item) {
       throw Error("Drive item doesn't exist");

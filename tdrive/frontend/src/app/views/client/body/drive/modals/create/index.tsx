@@ -1,3 +1,9 @@
+import Avatar from '@atoms/avatar';
+import A from '@atoms/link';
+import { Modal, ModalContent } from '@atoms/modal';
+import { Base } from '@atoms/text';
+import { useCompanyApplications } from '@features/applications/hooks/use-company-applications';
+import { Application } from '@features/applications/types/application';
 import { Transition } from '@headlessui/react';
 import {
   ChevronLeftIcon,
@@ -6,12 +12,6 @@ import {
   FolderDownloadIcon,
   LinkIcon,
 } from '@heroicons/react/outline';
-import Avatar from '@atoms/avatar';
-import A from '@atoms/link';
-import { Modal, ModalContent } from '@atoms/modal';
-import { Base } from '@atoms/text';
-import { useCompanyApplications } from '@features/applications/hooks/use-company-applications';
-import { Application } from '@features/applications/types/application';
 import { ReactNode } from 'react';
 import { atom, useRecoilState } from 'recoil';
 import { slideXTransition, slideXTransitionReverted } from 'src/utils/transitions';

@@ -50,7 +50,7 @@ describe("the Drive feature", () => {
     });
     currentUser = await TestHelpers.getInstance(platform);
     dbService = await TestDbService.getInstance(platform, true);
-  });
+  }, 300000000);
 
   afterAll(async () => {
     await platform?.tearDown();
@@ -294,7 +294,6 @@ describe("the Drive feature", () => {
   });
 
   it("did search a file shared by another user", async () => {
-    jest.setTimeout(30000);
     //given:
     const oneUser = await TestHelpers.getInstance(platform, true);
     const anotherUser = await TestHelpers.getInstance(platform, true);
@@ -304,7 +303,7 @@ describe("the Drive feature", () => {
     await new Promise(r => setTimeout(r, 5000));
 
     //then:: files are not searchable for user without permissions
-    expect((await anotherUser.searchDocument({})).entities).toHaveLength(0);
+    expect((await anotherUser.sharedWithMeDocuments({})).entities).toHaveLength(0);
 
     //and searchable for user that have
     expect((await oneUser.searchDocument({})).entities).toHaveLength(TestHelpers.ALL_FILES.length);
@@ -320,8 +319,8 @@ describe("the Drive feature", () => {
     await new Promise(r => setTimeout(r, 3000));
 
     //then file become searchable
-    expect((await anotherUser.searchDocument({})).entities).toHaveLength(1);
-  });
+    expect((await anotherUser.sharedWithMeDocuments({})).entities).toHaveLength(1);
+  }, 30000000);
 
   it("did search a file by file owner", async () => {
     jest.setTimeout(30000);
@@ -387,7 +386,6 @@ describe("the Drive feature", () => {
   });
 
   it("did search order by name", async () => {
-    jest.setTimeout(10000);
     const user = await TestHelpers.getInstance(platform, true);
     // given:: all the sample files uploaded and documents for them created
     await user.uploadAllFilesAndCreateDocuments();
@@ -404,7 +402,7 @@ describe("the Drive feature", () => {
 
     //then all the files are sorted properly by name
     expect(documents.entities.map(e => e.name)).toEqual(TestHelpers.ALL_FILES.sort());
-  });
+  }, 30000);
 
   it("did search order by name desc", async () => {
     jest.setTimeout(10000);

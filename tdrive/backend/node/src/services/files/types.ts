@@ -5,4 +5,5 @@ export type UploadOptions = {
   totalChunks: number;
   chunkNumber: number;
   waitForThumbnail: boolean;
+  ignoreThumbnails: boolean;
 };

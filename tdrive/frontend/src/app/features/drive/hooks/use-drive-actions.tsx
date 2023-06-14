@@ -18,7 +18,6 @@ export const useDriveActions = () => {
     ({ set, snapshot }) =>
       async (parentId: string) => {
         if (parentId) {
-          console.log("parent id is: ", parentId);
           if (parentId == "shared-with-me") {
             const details = {
               path: [
@@ -59,7 +58,6 @@ export const useDriveActions = () => {
           } else {
             try {
               const details = await DriveApiClient.get(companyId, parentId);
-              console.log("details are: ", details);
               set(DriveItemChildrenAtom(parentId), details.children);
               set(DriveItemAtom(parentId), details);
               for (const child of details.children) {

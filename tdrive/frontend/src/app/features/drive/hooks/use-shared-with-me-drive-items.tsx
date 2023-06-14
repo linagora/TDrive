@@ -5,10 +5,8 @@ import { delayRequest } from '@features/global/utils/managedSearchRequest';
 import useRouterCompany from '@features/router/hooks/use-router-company';
 import _ from 'lodash';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { RecentDriveItemsState } from '../state/recent-drive-items';
-import { SearchDriveItemsResultsState } from '../state/search-drive-items-result';
-import { SearchInputState } from '../state/search-input';
-import { useSearchModal } from './use-search';
+import { SharedWithMeDriveItemsResultsState } from '../state/shared-with-me-drive-items-result';
+import { SearchInputState } from '../../search/state/search-input';
 
 export const useSharedWithMeDriveItemsLoading = () => {
   return useRecoilValue(LoadingState('useSearchDriveItems'));
@@ -21,7 +19,7 @@ export const useSharedWithMeDriveItems = () => {
   const searchInput = useRecoilValue(SearchInputState);
   const [loading, setLoading] = useRecoilState(LoadingState('useSearchDriveItems'));
 
-  const [searched, setSearched] = useRecoilState(SearchDriveItemsResultsState(companyId));
+  const [items, setItems] = useRecoilState(SharedWithMeDriveItemsResultsState(companyId));
 
   const opt = _.omitBy(
     {
@@ -39,10 +37,9 @@ export const useSharedWithMeDriveItems = () => {
     const query = searchInput.query;
     currentQuery = query;
 
-    const response = await DriveApiClient.search(searchInput.query, "shared-with-me", opt);
+    const response = await DriveApiClient.sharedWithMe(opt);
     console.log("response is: ", response);
     const results = response.entities || [];
-    console.log("results is: ", results);
 
     const update = {
       results,
@@ -53,7 +50,7 @@ export const useSharedWithMeDriveItems = () => {
     if (currentQuery !== query) {
       return;
     }
-    setSearched(update);
+    setItems(update);
     setLoading(false);
   };
 
@@ -79,5 +76,5 @@ export const useSharedWithMeDriveItems = () => {
     [searchInput.channelId, searchInput.workspaceId],
   );
 
-  return { loading, driveItems: searched.results, loadMore, refresh };
+  return { loading, driveItems: [...items.results], loadMore, refresh };
 };

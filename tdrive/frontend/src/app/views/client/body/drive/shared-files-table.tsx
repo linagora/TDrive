@@ -9,9 +9,32 @@ import {
   onBuildDateContextMenu,
   onBuildFileContextMenu,
 } from './context-menu';
-import { useSharedWithMeDriveItems } from '@features/search/hooks/use-shared-with-me-drive-items';
+import { useSharedWithMeDriveItems } from '@features/drive/hooks/use-shared-with-me-drive-items';
+
 export const SharedFilesTable = () => {
-  const { driveItems, loading } = {...useSharedWithMeDriveItems()};
+  const { driveItems, loading } = useSharedWithMeDriveItems();
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
+
+  const handleSort = (column: string) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('asc');
+    }
+  };
+
+  const renderSortIcon = (column: string) => {
+    if (sortBy === column) {
+      if (sortOrder === 'asc') {
+        return <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />;
+      } else {
+        return <ChevronUpIcon className="h-4 w-4 ml-2 -mr-1" />;
+      }
+    }
+    return null;
+  };
   return (
     <>
       <Title className="mb-4 block">Shared with me</Title>
@@ -44,63 +67,72 @@ export const SharedFilesTable = () => {
           </Menu>
         </div>
       </div>
-      {/* Table */}
-      <div className="flex flex-col w-full space-y-4">
-        <div className="flex items-center space-x-4 -mt-px px-4 py-3 rounded-t-md border border-zinc-200 dark:border-zinc-800">
-          <div className="flex-grow">
-            <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
-              <Base>
-                <span className="flex">Name</span>
-              </Base>
-            </div>
-          </div>
-          <div className="flex-grow">
-            <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
-              <Base>Shared By</Base>
-            </div>
-          </div>
-          <div className="flex-grow">
-            <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
-              <Base>Shared Date</Base>
-            </div>
-          </div>
-          <div className="flex-grow-0 w-8"></div>
-        </div>
-        {!loading && driveItems
-          .map((file: any, index: any) => (
-            <div
-              key={index}
-              className="flex items-center space-x-4 px-4 py-3 rounded-md border border-zinc-200 dark:border-zinc-800"
-            >
-              <div className="flex-grow">
-                <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
-                  <BaseSmall>{file.name}</BaseSmall>
-                </div>
-              </div>
-              <div className="flex-grow">
-                <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
-                  <BaseSmall>Dwho</BaseSmall>
-                </div>
-              </div>
-              <div className="flex-grow">
-                <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
-                  <BaseSmall>2023-06-09</BaseSmall>
-                </div>
-              </div>
-              <div className="flex-grow-0 w-8">
-                <div className="shrink-0 ml-4">
-                  <Menu menu={onBuildFileContextMenu}>
-                    <Button
-                      theme={'secondary'}
-                      size="sm"
-                      className={'!rounded-full '}
-                      icon={DotsHorizontalIcon}
-                    />
-                  </Menu>
-                </div>
-              </div>
-            </div>
-          ))}
+      <Title className="mb-4 block">Documents:</Title>
+      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-blue-500 dark:text-white">
+            <tr>
+              <th scope="col" className="px-6 py-3">
+                <span className="flex" onClick={() => handleSort('name')}>
+                  Name {renderSortIcon('name')}
+                </span>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                <span className="flex" onClick={() => handleSort('name')}>
+                  Shared By {renderSortIcon('name')}
+                </span>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                <span className="flex" onClick={() => handleSort('name')}>
+                  Shared Date {renderSortIcon('name')}
+                </span>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                <span className="sr-only">Edit</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {!loading &&
+              driveItems
+                .sort((a: any, b: any) => {
+                  // Perform sorting based on the selected column and order
+                  console.log("a is: ", a);
+                  console.log("b is: ", b);
+                  if (sortBy === 'name') {
+                    return sortOrder === 'asc'
+                      ? a.name.localeCompare(b.name)
+                      : b.name.localeCompare(a.name);
+                  }
+                  return 0; // No sorting by default
+                })
+                .map((file: any, index: any) => (
+                  <tr
+                    key={index}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <th
+                      scope="row"
+                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {file.name}
+                    </th>
+                    <td className="px-6 py-4">Dwho</td>
+                    <td className="px-6 py-4">2023-05-05</td>
+                    <td className="px-6 py-4 text-right">
+                      <Menu menu={onBuildFileContextMenu(file.id)}>
+                        <Button
+                          theme={'secondary'}
+                          size="sm"
+                          className={'!rounded-full '}
+                          icon={DotsHorizontalIcon}
+                        />
+                      </Menu>
+                    </td>
+                  </tr>
+                ))}
+          </tbody>
+        </table>
       </div>
     </>
   );

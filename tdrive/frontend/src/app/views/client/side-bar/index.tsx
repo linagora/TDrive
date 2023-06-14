@@ -71,7 +71,7 @@ export default () => {
           onClick={() => {history.push(RouterServices.generateRouteFromState({companyId: company, viewId: ""})); setParentId('user_' + user?.id)}}
           size="lg"
           theme="white"
-          className={'w-full mb-1 ' + (folderType === 'personal' && viewId != '' ? activeClass : '')}
+          className={'w-full mb-1 ' + (folderType === 'personal' && viewId == '' ? activeClass : '')}
         >
           <UserIcon className="w-5 h-5 mr-4" /> My Drive
         </Button>
@@ -103,10 +103,10 @@ export default () => {
         )}
         {rootAccess === 'manage' && (
           <Button
-            onClick={() => setParentId('trash')}
+            onClick={() =>{history.push(RouterServices.generateRouteFromState({companyId: company, viewId: ""}));setParentId('trash')}}
             size="lg"
             theme="white"
-            className={'w-full mb-1 ' + (folderType === 'trash' ? activeClass : '')}
+            className={'w-full mb-1 ' + (folderType === 'trash' && viewId == ''? activeClass : '')}
           >
             <TrashIcon className="w-5 h-5 mr-4 text-rose-500" /> Trash
           </Button>

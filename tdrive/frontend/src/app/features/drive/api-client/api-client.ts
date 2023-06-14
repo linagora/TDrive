@@ -148,4 +148,18 @@ export class DriveApiClient {
 
     return res;
   }
+
+  static async sharedWithMe(options?: BaseSearchOptions) {
+    const companyId = options?.company_id ? options.company_id : Workspace.currentGroupId;
+    const query = `/internal/services/documents/v1/companies/${companyId}/shared-with-me`;
+    const filterData = {};
+    const res = await Api.post<SearchDocumentsBody, { entities: DriveItem[] }>(query, filterData);
+    this.logger.debug(
+      `Drive shared with me by filter "${JSON.stringify(filterData)}". Found`,
+      res.entities.length,
+      'drive item(s)',
+    );
+
+    return res;
+  }
 }

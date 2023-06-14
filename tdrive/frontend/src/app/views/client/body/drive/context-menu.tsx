@@ -341,11 +341,11 @@ export const onBuildDateContextMenu = () => {
   ];
   return menuItems;
 };
-export const onBuildFileContextMenu = () => {
+export const onBuildFileContextMenu = (id: string) => {
   const menuItems = [
     {
       type: 'menu',
-      text: 'Download',
+      text: 'Download'
     },
   ];
   return menuItems;

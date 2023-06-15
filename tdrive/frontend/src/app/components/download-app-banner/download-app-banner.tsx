@@ -35,5 +35,6 @@ export default (): React.ReactElement => {
     });
   }, []);
 
-  return showBanner ? <DownloadBanner onBannerClose={removeBanner} download={download} /> : <></>;
+  return <></>;
+  // return showBanner ? <DownloadBanner onBannerClose={removeBanner} download={download} /> : <></>;
 };

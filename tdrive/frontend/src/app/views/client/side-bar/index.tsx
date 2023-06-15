@@ -22,6 +22,7 @@ import DiskUsage from '../common/disk-usage';
 import Actions from './actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import RouterServices from '@features/router/services/router-service';
+import Languages from "features/global/services/languages-service";
 
 export default () => {
   const history = useHistory();
@@ -65,7 +66,7 @@ export default () => {
           theme="white"
           className={'w-full mt-2 mb-1 ' + (folderType === 'home' && viewId == '' ? activeClass : '')}
         >
-          <CloudIcon className="w-5 h-5 mr-4" /> Home
+          <CloudIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.home')}
         </Button>
         <Button
           onClick={() => {history.push(RouterServices.generateRouteFromState({companyId: company, viewId: ""})); setParentId('user_' + user?.id)}}
@@ -73,7 +74,7 @@ export default () => {
           theme="white"
           className={'w-full mb-1 ' + (folderType === 'personal' && viewId == '' ? activeClass : '')}
         >
-          <UserIcon className="w-5 h-5 mr-4" /> My Drive
+          <UserIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.my_drive')}
         </Button>
         <Button
           onClick={() =>  history.push(RouterServices.generateRouteFromState({companyId: company, viewId: "shared-with-me"}))}
@@ -108,7 +109,7 @@ export default () => {
             theme="white"
             className={'w-full mb-1 ' + (folderType === 'trash' && viewId == ''? activeClass : '')}
           >
-            <TrashIcon className="w-5 h-5 mr-4 text-rose-500" /> Trash
+            <TrashIcon className="w-5 h-5 mr-4 text-rose-500" /> {Languages.t('components.side_menu.trash')}
           </Button>
         )}
 

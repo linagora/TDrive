@@ -5,6 +5,7 @@ import { Button } from '@atoms/button/button';
 import { Input } from '@atoms/input/input-text';
 import { Info } from '@atoms/text';
 import { useDriveActions } from '@features/drive/hooks/use-drive-actions';
+import Languages from "features/global/services/languages-service";
 
 export const CreateFolder = () => {
   const [name, setName] = useState<string>('');
@@ -14,11 +15,11 @@ export const CreateFolder = () => {
 
   return (
     <>
-      <Info>Choose a name for the new folder.</Info>
+      <Info>{ Languages.t('components.create_folder_modal.hint')}</Info>
 
       <Input
         disabled={loading}
-        placeholder="Folder name"
+        placeholder={ Languages.t('components.create_folder_modal.placeholder')}
         className="w-full mt-4"
         onChange={(e: any) => setName(e.target.value)}
       />

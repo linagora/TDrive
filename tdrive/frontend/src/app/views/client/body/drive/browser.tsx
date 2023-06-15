@@ -29,6 +29,7 @@ import { VersionsModal } from './modals/versions';
 import { SharedFilesTable } from './shared-files-table';
 import RouterServices from '@features/router/services/router-service';
 import useRouteState from 'app/features/router/hooks/use-route-state';
+import Languages from "features/global/services/languages-service";
 
 export const DriveCurrentFolderAtom = atomFamily<
   string,
@@ -170,12 +171,12 @@ export default memo(
                 <div className="grow" />
 
                 {access !== 'read' && (
-                  <BaseSmall>{formatBytes(item?.size || 0)} used in this folder</BaseSmall>
+                  <BaseSmall>{formatBytes(item?.size || 0)} { Languages.t('scenes.app.drive.used')}</BaseSmall>
                 )}
                 <Menu menu={() => onBuildContextMenu(details)}>
                   {' '}
                   <Button theme="secondary" className="ml-4 flex flex-row items-center">
-                    <span>{selectedCount > 1 ? `${selectedCount} items` : 'More'} </span>
+                    <span>{selectedCount > 1 ? `${selectedCount} items` : Languages.t('scenes.app.drive.context_menu')} </span>
 
                     <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
                   </Button>
@@ -185,7 +186,7 @@ export default memo(
               <div className="grow overflow-auto">
                 {folders.length > 0 && (
                   <>
-                    <Title className="mb-2 block">Folders</Title>
+                    <Title className="mb-2 block">{Languages.t('scenes.app.drive.folders')}</Title>
 
                     {folders.map((child, index) => (
                       <FolderRow
@@ -209,19 +210,19 @@ export default memo(
                   </>
                 )}
 
-                <Title className="mb-2 block">Documents</Title>
+                <Title className="mb-2 block">{Languages.t('scenes.app.drive.documents')}</Title>
 
                 {documents.length === 0 && !loading && (
                   <div className="mt-4 text-center border-2 border-dashed rounded-md p-8">
-                    <Subtitle className="block mb-2">Nothing here.</Subtitle>
+                    <Subtitle className="block mb-2">{Languages.t('scenes.app.drive.nothing')}</Subtitle>
                     {!inTrash && access != 'read' && (
                       <>
                         <Base>
-                          Drag and drop files to upload them or click on the 'Add document' button.
+                          {Languages.t('scenes.app.drive.drag_and_drop')}
                         </Base>
                         <br />
                         <Button onClick={() => openItemModal()} theme="primary" className="mt-4">
-                          Add document or folder
+                          {Languages.t('scenes.app.drive.add_doc')}
                         </Button>
                       </>
                     )}

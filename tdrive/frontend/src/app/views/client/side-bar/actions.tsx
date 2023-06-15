@@ -11,6 +11,7 @@ import { DriveCurrentFolderAtom } from '../body/drive/browser';
 import { ConfirmDeleteModalAtom } from '../body/drive/modals/confirm-delete';
 import { CreateModal, CreateModalAtom } from '../body/drive/modals/create';
 import { Button } from '@atoms/button/button';
+import Languages from "features/global/services/languages-service";
 
 export const CreateModalWithUploadZones = ({ initialParentId }: { initialParentId?: string }) => {
   const companyId = useRouterCompany();
@@ -22,7 +23,7 @@ export const CreateModalWithUploadZones = ({ initialParentId }: { initialParentI
     DriveCurrentFolderAtom({ initialFolderId: initialParentId || 'root' }),
   );
 
-  console.log(parentId);
+  console.log("Upload Zone:: " + parentId);
 
   return (
     <>
@@ -81,6 +82,8 @@ export default () => {
   const { access, item, inTrash } = useDriveItem(parentId);
   const { children: trashChildren } = useDriveItem('trash');
   const uploadZoneRef = useRef<UploadZone | null>(null);
+  const { uploadTree } = useDriveUpload();
+  const companyId = useRouterCompany();
 
   const setConfirmDeleteModalState = useSetRecoilState(ConfirmDeleteModalAtom);
   const setCreationModalState = useSetRecoilState(CreateModalAtom);
@@ -108,20 +111,40 @@ export default () => {
                 theme="danger"
                 className="w-full mb-2 justify-center"
               >
-                <TruckIcon className="w-5 h-5 mr-2" /> Empty trash
+                <TruckIcon className="w-5 h-5 mr-2" /> { Languages.t('components.side_menu.buttons.empty_trash') }
               </Button>
             </>
           )}
           {!(inTrash || access === 'read') && (
             <>
+              <UploadZone
+                overClassName={'!hidden'}
+                className="hidden"
+                disableClick
+                parent={''}
+                multiple={true}
+                ref={uploadZoneRef}
+                driveCollectionKey={'side-menu'}
+                onAddFiles={async (_, event) => {
+                  const tree = await getFilesTree(event);
+                  setCreationModalState({ parent_id: '', open: false });
+                  uploadTree(tree, {
+                    companyId,
+                    parentId,
+                  });
+                }}
+              />
+
               <Button
-                onClick={() => uploadZoneRef.current?.open()}
+                onClick={() => {
+                  uploadZoneRef.current?.open();
+                }}
                 size="lg"
                 theme="primary"
                 className="w-full mb-2 justify-center"
                 style={{ boxShadow: '0 0 10px 0 rgba(0, 122, 255, 0.5)' }}
               >
-                <UploadIcon className="w-5 h-5 mr-2" /> Upload
+                <UploadIcon className="w-5 h-5 mr-2" /> {Languages.t('components.side_menu.buttons.upload')}
               </Button>
               <Button
                 onClick={() => openItemModal()}
@@ -129,7 +152,7 @@ export default () => {
                 theme="secondary"
                 className="w-full mb-2 justify-center"
               >
-                <PlusIcon className="w-5 h-5 mr-2" /> Create
+                <PlusIcon className="w-5 h-5 mr-2" /> {Languages.t('components.side_menu.buttons.create')}
               </Button>
             </>
           )}

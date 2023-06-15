@@ -1,6 +1,7 @@
 import { Base, Title } from '@atoms/text';
 import { useDriveItem } from '@features/drive/hooks/use-drive-item';
 import { formatBytes } from '@features/drive/utils';
+import Languages from "features/global/services/languages-service";
 
 export default () => {
   const { access, item } = useDriveItem('root');
@@ -12,7 +13,7 @@ export default () => {
           <div className="w-full">
             <Title>
               {formatBytes(item?.size || 0)}
-              <Base> used, </Base> <Base>{formatBytes(trash?.size || 0)} in trash</Base>
+              <Base> { Languages.t('components.disk_usage.used')} </Base> <Base>{formatBytes(trash?.size || 0)} {Languages.t('components.disk_usage.in_trash')}</Base>
             </Title>
           </div>
         </div>

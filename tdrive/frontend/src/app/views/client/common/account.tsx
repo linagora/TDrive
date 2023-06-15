@@ -23,7 +23,7 @@ export default ({ sidebar }: { sidebar?: boolean }): JSX.Element => {
           type: 'menu',
           icon: 'user',
           text: Languages.t('scenes.app.channelsbar.currentuser.title'),
-          hide: InitService.server_infos?.configuration?.accounts?.type === 'remote',
+          //hide: InitService.server_infos?.configuration?.accounts?.type === 'remote',
           onClick: () => {
             ModalManagerDepreciated.open(<AccountParameter />, true, 'account_parameters');
           },

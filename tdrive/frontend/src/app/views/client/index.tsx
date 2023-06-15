@@ -40,7 +40,7 @@ export default React.memo((): JSX.Element => {
     page = (
       <DesktopRedirect>
         <div className="fade_in bg-zinc-100 dark:bg-black flex flex-col gap-2 h-full">
-          <DownloadAppBanner />
+          <DownloadAppBanner/>
           <NewVersionComponent />
 
           <FeatureToggles features={activeFeatureNames}>

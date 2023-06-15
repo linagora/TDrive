@@ -17,6 +17,7 @@ import { atom, useRecoilState } from 'recoil';
 import { slideXTransition, slideXTransitionReverted } from 'src/utils/transitions';
 import { CreateFolder } from './create-folder';
 import { CreateLink } from './create-link';
+import Languages from "features/global/services/languages-service";
 
 export type CreateModalAtomType = {
   open: boolean;
@@ -58,7 +59,7 @@ export const CreateModal = ({
                 <ChevronLeftIcon className="w-6 h-6" />
               </A>
             )}
-            <span className="ml-2">Create document or folder</span>
+            <span className="ml-2">{Languages.t('components.create_modal.create_folder_or_doc')}</span>
           </div>
         }
       >
@@ -80,22 +81,22 @@ export const CreateModal = ({
             <div className="-m-2">
               <CreateModalOption
                 icon={<FolderAddIcon className="w-5 h-5" />}
-                text="Create a folder"
+                text={Languages.t('components.create_modal.create_folder')}
                 onClick={() => setState({ ...state, type: 'folder' })}
               />
               <CreateModalOption
                 icon={<DocumentDownloadIcon className="w-5 h-5" />}
-                text="Upload files from device"
+                text={Languages.t('components.create_modal.upload_files')}
                 onClick={() => selectFromDevice()}
               />
               <CreateModalOption
                 icon={<FolderDownloadIcon className="w-5 h-5" />}
-                text="Upload folders from device"
+                text={Languages.t('components.create_modal.upload_folders')}
                 onClick={() => selectFolderFromDevice()}
               />
               <CreateModalOption
                 icon={<LinkIcon className="w-5 h-5" />}
-                text="Create a link file"
+                text={Languages.t('components.create_modal.create_link')}
                 onClick={() => setState({ ...state, type: 'link' })}
               />
 

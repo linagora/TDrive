@@ -40,7 +40,7 @@ export default (): JSX.Element => {
               }
               icon={() => <AdjustmentsIcon className="w-5 h-5 text-zinc-500" />}
               onClick={() => {
-                ToasterService.info('This feature is coming soon 🚀');
+                ToasterService.info(Languages.t('components.searchpopup.soon'));
               }}
             />
           )}

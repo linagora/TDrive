@@ -12,7 +12,7 @@ import {
   writeToTemporaryFile,
 } from "../../utils/files";
 import mimes from "../../utils/mime";
-import globalResolver from "../global-resolver";
+import gr from "../global-resolver";
 import { stopWords } from "./const";
 import { DriveFile } from "./entities/drive-file";
 import { DriveFileMetadata, FileVersion } from "./entities/file-version";
@@ -26,12 +26,19 @@ export const isVirtualFolder = (id: string) => {
   return id === ROOT || id === TRASH || id.startsWith("user_");
 };
 
-export const getVirtualFoldersNames = (id: string) => {
+export const getVirtualFoldersNames = async (id: string, context: DriveExecutionContext) => {
+  const user = await gr.services.users.get({ id: context.user.id });
+  const locale = user?.preferences?.locale || "en";
+
   if (id.startsWith("user_")) {
-    return "My Drive";
+    return gr.services.i18n.translate("virtual-folder.my-drive", locale);
   }
 
-  return id === ROOT ? "Home" : id === TRASH ? "Trash" : "Unknown";
+  return id === ROOT
+    ? gr.services.i18n.translate("virtual-folder.shared-drive", locale)
+    : id === TRASH
+    ? gr.services.i18n.translate("virtual-folder.trash", locale)
+    : "Unknown";
 };
 
 /**
@@ -232,11 +239,10 @@ export const getPath = async (
       ? [
           {
             id,
-            name: getVirtualFoldersNames(id),
+            name: await getVirtualFoldersNames(id, context),
           } as DriveFile,
         ]
       : [];
-
   const item = await repository.findOne({
     id,
     company_id: context.company.id,
@@ -276,7 +282,7 @@ export const addDriveItemToArchive = async (
 
   if (!item.is_directory) {
     const file_id = item.last_version_cache.file_metadata.external_id;
-    const file = await globalResolver.services.files.download(file_id, context);
+    const file = await gr.services.files.download(file_id, context);
 
     if (!file) {
       throw Error("file not found");
@@ -398,7 +404,7 @@ export const getFileMetadata = async (
   fileId: string,
   context: CompanyExecutionContext,
 ): Promise<DriveFileMetadata> => {
-  const file = await globalResolver.services.files.getFile(
+  const file = await gr.services.files.getFile(
     {
       id: fileId,
       company_id: context.company.id,

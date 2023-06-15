@@ -35,6 +35,7 @@ import { UserServiceImpl } from "./user/services/users/service";
 import { WorkspaceServiceImpl } from "./workspaces/services/workspace";
 
 import { PreviewEngine } from "./previews/services/files/engine";
+import { I18nService } from "./i18n";
 
 type PlatformServices = {
   auth: AuthServiceAPI;
@@ -73,6 +74,7 @@ type TdriveServices = {
     engine: DocumentsEngine;
   };
   tags: TagsService;
+  i18n: I18nService;
 };
 
 class GlobalResolver {
@@ -136,6 +138,7 @@ class GlobalResolver {
         engine: await new DocumentsEngine().init(),
       },
       tags: await new TagsService().init(),
+      i18n: await new I18nService().init(),
     };
 
     Object.keys(this.services).forEach((key: keyof TdriveServices) => {

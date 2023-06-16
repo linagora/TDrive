@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { DriveCurrentFolderAtom } from './browser';
 import { ConfirmDeleteModalAtom } from './modals/confirm-delete';
@@ -16,7 +16,9 @@ import { DriveItemSelectedList } from '@features/drive/state/store';
 import { DriveItem, DriveItemDetails } from '@features/drive/types';
 import { ToasterService } from '@features/global/services/toaster-service';
 import { copyToClipboard } from '@features/global/utils/CopyClipboard';
-
+import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
+import { getCurrentUserList, getUser } from '@features/users/hooks/use-user-list';
+import _ from 'lodash';
 /**
  * This will build the context menu in different contexts
  */
@@ -290,32 +292,58 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
   );
 };
 
-export const onBuildFileTypeContextMenu = () => {
-  const menuItems = [
-    {
-      type: 'menu',
-      text: 'PDF',
-    },
-    {
-      type: 'menu',
-      text: 'DOC',
-    },
-    {
-      type: 'menu',
-      text: 'PNG',
-    },
+export const useOnBuildFileTypeContextMenu = () => {
+  const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
+  const mimeTypes = [
+    { key: 'PDF', value: 'application/pdf' },
+    { key: 'DOC', value: 'application/msword' },
+    { key: 'PNG', value: 'image/png' },
   ];
-  return menuItems;
+  return useCallback(() => {
+    const menuItems = mimeTypes.map(item => {
+      return {
+        type: 'menu',
+        text: item.key,
+        onClick: () => {
+          setFilter(prevFilter => {
+            const newFilter = {
+              ...prevFilter,
+              mimeType: item.value,
+            };
+            return newFilter;
+          });
+        },
+      };
+    });
+    return menuItems;
+  }, [setFilter]);
 };
-export const onBuildPeopleContextMenu = () => {
-  const menuItems = [
-    {
-      type: 'menu',
-      text: 'Dwho',
-    },
-  ];
-  return menuItems;
+
+export const useOnBuildPeopleContextMenu = () => {
+  const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
+  const [_userList, setUserList] = useState(getCurrentUserList());
+  let userList = _userList;
+  userList = _.uniqBy(userList, 'id');
+  return useCallback(() => {
+    const menuItems = userList.map(user => {
+      return {
+        type: 'menu',
+        text: user.first_name,
+        onClick: () => {
+          setFilter(prevFilter => {
+            const newFilter = {
+              ...prevFilter,
+              creator: user.id ?? '',
+            };
+            return newFilter;
+          });
+        },
+      };
+    });
+    return menuItems;
+  }, [setFilter]);
 };
+
 export const onBuildDateContextMenu = () => {
   const menuItems = [
     {
@@ -341,12 +369,25 @@ export const onBuildDateContextMenu = () => {
   ];
   return menuItems;
 };
-export const onBuildFileContextMenu = (id: string) => {
-  const menuItems = [
-    {
-      type: 'menu',
-      text: 'Download'
+export const useOnBuildFileContextMenu = () => {
+  const { download } = useDriveActions();
+  const { open: preview } = useDrivePreview();
+  return useCallback(
+    (item: DriveItem) => {
+      const menuItems = [
+        {
+          type: 'menu',
+          text: 'Download',
+          onClick: () => download(item.id),
+        },
+        {
+          type: 'menu',
+          text: 'Preview',
+          onClick: () => preview(item),
+        },
+      ];
+      return menuItems;
     },
-  ];
-  return menuItems;
+    [download, preview],
+  );
 };

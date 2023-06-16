@@ -7,16 +7,16 @@ import _ from 'lodash';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { SharedWithMeDriveItemsResultsState } from '../state/shared-with-me-drive-items-result';
 import { SearchInputState } from '../../search/state/search-input';
+import { SharedWithMeFilterState } from '../state/shared-with-me-filter';
 
 export const useSharedWithMeDriveItemsLoading = () => {
   return useRecoilValue(LoadingState('useSearchDriveItems'));
 };
 
-let currentQuery = '';
-
 export const useSharedWithMeDriveItems = () => {
   const companyId = useRouterCompany();
   const searchInput = useRecoilValue(SearchInputState);
+  const sharedFilter = useRecoilValue(SharedWithMeFilterState);
   const [loading, setLoading] = useRecoilState(LoadingState('useSearchDriveItems'));
 
   const [items, setItems] = useRecoilState(SharedWithMeDriveItemsResultsState(companyId));
@@ -34,11 +34,10 @@ export const useSharedWithMeDriveItems = () => {
   const refresh = async () => {
     setLoading(true);
 
-    const query = searchInput.query;
-    currentQuery = query;
+    const filter = sharedFilter;
 
-    const response = await DriveApiClient.sharedWithMe(opt);
-    console.log("response is: ", response);
+    const response = await DriveApiClient.sharedWithMe(filter, opt);
+    console.log('response is: ', response);
     const results = response.entities || [];
 
     const update = {
@@ -47,9 +46,6 @@ export const useSharedWithMeDriveItems = () => {
       // nextPage: response.next_page_token,
     };
 
-    if (currentQuery !== query) {
-      return;
-    }
     setItems(update);
     setLoading(false);
   };
@@ -62,16 +58,16 @@ export const useSharedWithMeDriveItems = () => {
   useGlobalEffect(
     'useSearchDriveItems',
     () => {
-        (async () => {
-          setLoading(true);
-          if (searchInput.query) {
-            delayRequest('useSearchDriveItems', async () => {
-              await refresh();
-            });
-          } else {
-            refresh();
-          }
-        })();
+      (async () => {
+        setLoading(true);
+        if (searchInput.query) {
+          delayRequest('useSearchDriveItems', async () => {
+            await refresh();
+          });
+        } else {
+          refresh();
+        }
+      })();
     },
     [searchInput.channelId, searchInput.workspaceId],
   );

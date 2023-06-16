@@ -3,18 +3,26 @@ import { ChevronDownIcon, ChevronUpIcon, DotsHorizontalIcon } from '@heroicons/r
 import { Button } from '@atoms/button/button';
 import { Base, BaseSmall, Title } from '@atoms/text';
 import Menu from '@components/menus/menu';
+import { useRecoilState } from 'recoil';
 import {
-  onBuildFileTypeContextMenu,
-  onBuildPeopleContextMenu,
+  useOnBuildFileTypeContextMenu,
+  useOnBuildPeopleContextMenu,
   onBuildDateContextMenu,
-  onBuildFileContextMenu,
+  useOnBuildFileContextMenu,
 } from './context-menu';
 import { useSharedWithMeDriveItems } from '@features/drive/hooks/use-shared-with-me-drive-items';
+import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
 
 export const SharedFilesTable = () => {
   const { driveItems, loading } = useSharedWithMeDriveItems();
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
+
+  // FILTER HOOKS
+  const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
+  const buildFileTypeContextMenu = useOnBuildFileTypeContextMenu();
+  const buildPeopleContextMen = useOnBuildPeopleContextMenu();
+  const onBuildFileContextMenu = useOnBuildFileContextMenu();
 
   const handleSort = (column: string) => {
     if (sortBy === column) {
@@ -41,16 +49,16 @@ export const SharedFilesTable = () => {
       {/* Filters */}
       <div className="flex items-center space-x-4 mb-6">
         <div className="flex items-center space-x-2">
-          <Menu menu={() => onBuildFileTypeContextMenu()}>
+          <Menu menu={() => buildFileTypeContextMenu()}>
             <Button theme="secondary" className="flex items-center">
-              <span>File Type</span>
+              <span>{filter.mimeType ? filter.mimeType : "File Type"}</span>
               <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
             </Button>
           </Menu>
         </div>
 
         <div className="flex items-center space-x-2">
-          <Menu menu={() => onBuildPeopleContextMenu()}>
+          <Menu menu={() => buildPeopleContextMen()}>
             <Button theme="secondary" className="flex items-center">
               <span>People</span>
               <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
@@ -120,7 +128,7 @@ export const SharedFilesTable = () => {
                     <td className="px-6 py-4">Dwho</td>
                     <td className="px-6 py-4">2023-05-05</td>
                     <td className="px-6 py-4 text-right">
-                      <Menu menu={onBuildFileContextMenu(file.id)}>
+                      <Menu menu={onBuildFileContextMenu(file)}>
                         <Button
                           theme={'secondary'}
                           size="sm"

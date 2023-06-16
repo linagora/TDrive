@@ -181,7 +181,7 @@ export class DocumentsService {
         ({
           id,
           parent_id: null,
-          name: getVirtualFoldersNames(id),
+          name: await getVirtualFoldersNames(id, context),
           size: await calculateItemSize(
             { id, is_directory: true, size: 0 },
             this.repository,

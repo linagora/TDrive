@@ -5,6 +5,9 @@ module.exports = function (app) {
     '/internal',
     createProxyMiddleware({
       target: 'http://localhost:4000',
+      onError: (err, req, resp) => {
+        console.log(err);
+      },
     }),
   );
   app.use(

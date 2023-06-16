@@ -71,6 +71,23 @@ class CurrentUser extends Observable {
     Api.post('/ajax/users/account/set_tutorial_status', data, () => {});
   }
 
+  async updateLanguage(lng: string) {
+    await Languages.setLanguage(lng)
+      .then(() => console.log("Language set to " + lng));
+
+    const preferences = {
+      ... this.get().preferences,
+      language: lng,
+      locale: lng,
+    }
+    await UserAPIClient
+      .setUserPreferences(preferences)
+      .then(() => console.log("User preferences set to:  " + preferences))
+      .then(() => console.log(preferences))
+      .then(() => window.location.reload())
+      .catch(e => "Error setting user preferences " + e);
+  }
+
   updateUserName(username: string) {
     const that = this;
     const update = {

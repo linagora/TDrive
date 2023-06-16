@@ -87,7 +87,7 @@ describe("the Drive feature", () => {
     const result = deserialize<DriveItemDetailsMockClass>(DriveItemDetailsMockClass, response.body);
 
     expect(result.item.id).toEqual("root");
-    expect(result.item.name).toEqual("Home");
+    expect(result.item.name).toEqual("Shared Drive");
   });
 
   it("did fetch the trash", async () => {

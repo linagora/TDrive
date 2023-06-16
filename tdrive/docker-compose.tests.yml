@@ -33,6 +33,7 @@ services:
     volumes:
        - ./coverage/:/usr/src/app/coverage/
     environment:
+      - LOG_LEVEL=error
       - NODE_ENV=test
       - DB_DRIVER
       - PUBSUB_URLS=amqp://guest:guest@rabbitmq:5672

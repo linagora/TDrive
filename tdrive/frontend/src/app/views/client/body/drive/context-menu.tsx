@@ -19,6 +19,8 @@ import { copyToClipboard } from '@features/global/utils/CopyClipboard';
 import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
 import { getCurrentUserList, getUser } from '@features/users/hooks/use-user-list';
 import _ from 'lodash';
+import Languages from "features/global/services/languages-service";
+
 /**
  * This will build the context menu in different contexts
  */
@@ -57,53 +59,59 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
           const newMenuActions = [
             {
               type: 'menu',
-              text: 'Preview',
+              text: Languages.t('components.item_context_menu.preview'),
               hide: item.is_directory,
               onClick: () => preview(item),
             },
             {
               type: 'menu',
-              text: 'Download',
+              text: Languages.t('components.item_context_menu.download'),
               onClick: () => download(item.id),
             },
             { type: 'separator' },
             {
               type: 'menu',
-              text: 'Rename',
+              text: Languages.t('components.item_context_menu.rename'),
               hide: access === 'read',
               onClick: () => setPropertiesModalState({ open: true, id: item.id }),
             },
             {
               type: 'menu',
-              text: 'Manage access and sharing',
+              text: Languages.t('components.item_context_menu.manage_access'),
               hide: access === 'read' || getPublicLinkToken(),
               onClick: () => setAccessModalState({ open: true, id: item.id }),
             },
             {
               type: 'menu',
-              text: 'Copy public link',
+              text: Languages.t('components.item_context_menu.share'),
+              hide: access === 'read' || getPublicLinkToken(),
+              onClick: () => setAccessModalState({ open: true, id: item.id }),
+            },
+            {
+              type: 'menu',
+              text: Languages.t('components.item_context_menu.copy_link'),
               hide: !item.access_info.public?.level || item.access_info.public?.level === 'none',
               onClick: () => {
                 copyToClipboard(getPublicLink(item || parent?.item));
-                ToasterService.success('Public link copied to clipboard');
+                ToasterService.success(Languages.t('components.item_context_menu.copy_link.success'));
               },
             },
             {
               type: 'menu',
-              text: 'Versions',
+              text: Languages.t('components.item_context_menu.versions'),
               hide: item.is_directory,
               onClick: () => setVersionModal({ open: true, id: item.id }),
             },
             {
               type: 'menu',
-              text: 'Move',
+              text: Languages.t('components.item_context_menu.move'),
               hide: access === 'read',
               onClick: () =>
                 setSelectorModalState({
                   open: true,
                   parent_id: inTrash ? 'root' : item.parent_id,
                   mode: 'move',
-                  title: `Move '${item.name}'`,
+                  title: Languages.t('components.item_context_menu.move.modal_header') + ` '${item.name}'`,
                   onSelected: async ids => {
                     await update(
                       {
@@ -118,14 +126,14 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             { type: 'separator', hide: access !== 'manage' },
             {
               type: 'menu',
-              text: 'Move to trash',
+              text: Languages.t('components.item_context_menu.move_to_trash'),
               className: 'error',
               hide: inTrash || access !== 'manage',
               onClick: () => setConfirmTrashModalState({ open: true, items: [item] }),
             },
             {
               type: 'menu',
-              text: 'Delete',
+              text: Languages.t('components.item_context_menu.delete'),
               className: 'error',
               hide: !inTrash || access !== 'manage',
               onClick: () => setConfirmDeleteModalState({ open: true, items: [item] }),
@@ -141,13 +149,13 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
           const newMenuActions: any[] = [
             {
               type: 'menu',
-              text: 'Move ' + selectedCount + ' items',
+              text: Languages.t('components.item_context_menu.move_multiple'),
               hide: parent.access === 'read',
               onClick: () =>
                 setSelectorModalState({
                   open: true,
                   parent_id: inTrash ? 'root' : parent.item!.id,
-                  title: 'Move ' + selectedCount + ' items',
+                  title: Languages.t('components.item_context_menu.move_multiple.modal_header'),
                   mode: 'move',
                   onSelected: async ids => {
                     for (const item of checked) {
@@ -165,19 +173,19 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             },
             {
               type: 'menu',
-              text: 'Download ' + selectedCount + ' items',
+              text: Languages.t('components.item_context_menu.download_multiple'),
               onClick: () =>
                 selectedCount === 1 ? download(checked[0].id) : downloadZip(checked.map(c => c.id)),
             },
             {
               type: 'menu',
-              text: 'Clear selection',
+              text: Languages.t('components.item_context_menu.clear_selection'),
               onClick: () => setChecked({}),
             },
             { type: 'separator', hide: parent.access === 'read' },
             {
               type: 'menu',
-              text: 'Delete ' + selectedCount + ' items',
+              text: Languages.t('components.item_context_menu.delete_multiple'),
               hide: !inTrash || parent.access !== 'manage',
               className: 'error',
               onClick: () => {
@@ -189,7 +197,7 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             },
             {
               type: 'menu',
-              text: 'Move ' + selectedCount + ' items to trash',
+              text: Languages.t('components.item_context_menu.to_trash_multiple'),
               hide: inTrash || parent.access !== 'manage',
               className: 'error',
               onClick: async () =>
@@ -209,13 +217,13 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             ? [
                 {
                   type: 'menu',
-                  text: 'Exit trash',
+                  text: Languages.t('components.item_context_menu.trash.exit'),
                   onClick: () => setParentId('root'),
                 },
                 { type: 'separator' },
                 {
                   type: 'menu',
-                  text: 'Empty trash',
+                  text: Languages.t('components.item_context_menu.trash.empty'),
                   className: 'error',
                   hide: parent.item!.id != 'trash' || parent.access !== 'manage',
                   onClick: () => {
@@ -229,7 +237,7 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             : [
                 {
                   type: 'menu',
-                  text: 'Add document or folder',
+                  text: Languages.t('components.item_context_menu.add_documents'),
                   hide: inTrash || parent.access === 'read',
                   onClick: () =>
                     parent?.item?.id &&
@@ -237,25 +245,25 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                 },
                 {
                   type: 'menu',
-                  text: 'Download folder',
+                  text: Languages.t('components.item_context_menu.download_folder'),
                   hide: inTrash,
                   onClick: () => downloadZip([parent.item!.id]),
                 },
                 {
                   type: 'menu',
-                  text: 'Copy public link',
+                  text: Languages.t('components.item_context_menu.copy_link'),
                   hide:
                     !parent?.item?.access_info?.public?.level ||
                     parent?.item?.access_info?.public?.level === 'none',
                   onClick: () => {
                     copyToClipboard(getPublicLink(item || parent?.item));
-                    ToasterService.success('Public link copied to clipboard');
+                    ToasterService.success(Languages.t('components.item_context_menu.copy_link.success'));
                   },
                 },
                 { type: 'separator', hide: inTrash || parent.access === 'read' },
                 {
                   type: 'menu',
-                  text: 'Go to trash',
+                  text: Languages.t('components.item_context_menu.go_to_trash'),
                   hide: inTrash || parent.access === 'read',
                   onClick: () => setParentId('trash'),
                 },

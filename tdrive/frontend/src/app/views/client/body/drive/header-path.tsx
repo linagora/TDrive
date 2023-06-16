@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { PublicIcon } from './components/public-icon';
 import MenusManager from '@components/menus/menus-manager.jsx';
 import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
+import Languages from "features/global/services/languages-service";
 
 export default ({
   path: livePath,
@@ -98,8 +99,8 @@ const PathItem = ({
         if (first && user?.id) {
             MenusManager.openMenu(
               [
-                { type: 'menu', text: 'Home', onClick: () => onClick('root') },
-                { type: 'menu', text: 'My Drive', onClick: () => onClick('user_' + user?.id) },
+                { type: 'menu', text: Languages.t('components.side_menu.home'), onClick: () => onClick('root') },
+                { type: 'menu', text: Languages.t('components.side_menu.my_drive'), onClick: () => onClick('user_' + user?.id) },
               ],
               { x: evt.clientX, y: evt.clientY },
               'center',

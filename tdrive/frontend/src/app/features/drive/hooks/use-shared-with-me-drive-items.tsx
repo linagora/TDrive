@@ -34,7 +34,22 @@ export const useSharedWithMeDriveItems = () => {
   const refresh = async () => {
     setLoading(true);
 
-    const filter = sharedFilter;
+    let filter:any = {...sharedFilter};
+    if (filter.date) {
+      if (filter.date === "today") {
+        filter = { ...filter, added_lt: '', added_gt: '' };
+      }
+      if (filter.date === "last_week") {
+        const today = new Date();
+        const lastWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+        filter = { ...filter, added_lt: lastWeek.toISOString(), added_gt: '' };
+      }
+      if (filter.date === "last_month") {
+        const today = new Date();
+        const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+        filter = { ...filter, added_lt: lastMonth.toISOString(), added_gt: '' };
+      }
+    }
 
     const response = await DriveApiClient.sharedWithMe(filter, opt);
     const results = response.entities || [];

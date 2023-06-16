@@ -7,7 +7,7 @@ import { useRecoilState } from 'recoil';
 import {
   useOnBuildFileTypeContextMenu,
   useOnBuildPeopleContextMenu,
-  onBuildDateContextMenu,
+  useOnBuildDateContextMenu,
   useOnBuildFileContextMenu,
 } from './context-menu';
 import { useSharedWithMeDriveItems } from '@features/drive/hooks/use-shared-with-me-drive-items';
@@ -20,7 +20,13 @@ export const SharedFilesTable = () => {
   // FILTER HOOKS
   const buildFileTypeContextMenu = useOnBuildFileTypeContextMenu();
   const buildPeopleContextMen = useOnBuildPeopleContextMenu();
-  const onBuildFileContextMenu = useOnBuildFileContextMenu();
+  const buildFileContextMenu = useOnBuildFileContextMenu();
+  const buildDateContextMenu = useOnBuildDateContextMenu();
+
+  const fileAddedDate = (timestamp: number) => {
+    const [formattedDate, formattedTime] = new Date(timestamp).toLocaleString().split(', ');
+    return formattedDate;
+  }
   return (
     <div>
       <Title className="mb-4 block">Shared with me</Title>
@@ -44,7 +50,7 @@ export const SharedFilesTable = () => {
         </div>
 
         <div className="flex items-center space-x-2">
-          <Menu menu={() => onBuildDateContextMenu()}>
+          <Menu menu={() => buildDateContextMenu()}>
             <Button theme="secondary" className="flex items-center">
               <span>Last Modified</span>
               <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
@@ -91,10 +97,10 @@ export const SharedFilesTable = () => {
                     >
                       {file.name}
                     </th>
-                    <td className="px-6 py-4">Dwho</td>
-                    <td className="px-6 py-4">2023-05-05</td>
+                    <td className="px-6 py-4">{ file.creator?.id }</td>
+                    <td className="px-6 py-4">{ fileAddedDate(file.added) }</td>
                     <td className="px-6 py-4 text-right">
-                      <Menu menu={onBuildFileContextMenu(file)}>
+                      <Menu menu={buildFileContextMenu(file)}>
                         <Button
                           theme={'secondary'}
                           size="sm"

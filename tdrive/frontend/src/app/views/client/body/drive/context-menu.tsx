@@ -19,7 +19,7 @@ import { copyToClipboard } from '@features/global/utils/CopyClipboard';
 import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
 import { getCurrentUserList, getUser } from '@features/users/hooks/use-user-list';
 import _ from 'lodash';
-import Languages from "features/global/services/languages-service";
+import Languages from 'features/global/services/languages-service';
 
 /**
  * This will build the context menu in different contexts
@@ -93,7 +93,9 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
               hide: !item.access_info.public?.level || item.access_info.public?.level === 'none',
               onClick: () => {
                 copyToClipboard(getPublicLink(item || parent?.item));
-                ToasterService.success(Languages.t('components.item_context_menu.copy_link.success'));
+                ToasterService.success(
+                  Languages.t('components.item_context_menu.copy_link.success'),
+                );
               },
             },
             {
@@ -111,7 +113,9 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                   open: true,
                   parent_id: inTrash ? 'root' : item.parent_id,
                   mode: 'move',
-                  title: Languages.t('components.item_context_menu.move.modal_header') + ` '${item.name}'`,
+                  title:
+                    Languages.t('components.item_context_menu.move.modal_header') +
+                    ` '${item.name}'`,
                   onSelected: async ids => {
                     await update(
                       {
@@ -257,7 +261,9 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                     parent?.item?.access_info?.public?.level === 'none',
                   onClick: () => {
                     copyToClipboard(getPublicLink(item || parent?.item));
-                    ToasterService.success(Languages.t('components.item_context_menu.copy_link.success'));
+                    ToasterService.success(
+                      Languages.t('components.item_context_menu.copy_link.success'),
+                    );
                   },
                 },
                 { type: 'separator', hide: inTrash || parent.access === 'read' },
@@ -353,30 +359,65 @@ export const useOnBuildPeopleContextMenu = () => {
   }, [setFilter]);
 };
 
-export const onBuildDateContextMenu = () => {
-  const menuItems = [
-    {
-      type: 'menu',
-      text: 'All',
-    },
-    {
-      type: 'menu',
-      text: 'Today',
-    },
-    {
-      type: 'menu',
-      text: 'Last week',
-    },
-    {
-      type: 'menu',
-      text: 'Last month',
-    },
-    {
-      type: 'menu',
-      text: 'Range',
-    },
-  ];
-  return menuItems;
+export const useOnBuildDateContextMenu = () => {
+  const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
+  return useCallback(() => {
+    const menuItems = [
+      {
+        type: 'menu',
+        text: 'All',
+        onClick: () => {
+          setFilter(prevFilter => {
+            const newFilter = {
+              ...prevFilter,
+              date: '',
+            };
+            return newFilter;
+          });
+        },
+      },
+      {
+        type: 'menu',
+        text: 'Today',
+        onClick: () => {
+          setFilter(prevFilter => {
+            const newFilter = {
+              ...prevFilter,
+              date: 'today',
+            };
+            return newFilter;
+          });
+        },
+      },
+      {
+        type: 'menu',
+        text: 'Last week',
+        onClick: () => {
+          setFilter(prevFilter => {
+            const newFilter = {
+              ...prevFilter,
+              date: 'last_week',
+            };
+            return newFilter;
+          });
+        },
+      },
+      {
+        type: 'menu',
+        text: 'Last month',
+        onClick: () => {
+          setFilter(prevFilter => {
+            const newFilter = {
+              ...prevFilter,
+              date: 'last_month',
+            };
+            return newFilter;
+          });
+        },
+      },
+    ];
+    return menuItems;
+  }, [setFilter]);
 };
 export const useOnBuildFileContextMenu = () => {
   const { download } = useDriveActions();

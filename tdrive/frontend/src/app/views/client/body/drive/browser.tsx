@@ -76,6 +76,7 @@ export default memo(
     const uploadZoneRef = useRef<UploadZone | null>(null);
 
     const setCreationModalState = useSetRecoilState(CreateModalAtom);
+
     const [checked, setChecked] = useRecoilState(DriveItemSelectedList);
 
     const setParentId = useCallback(

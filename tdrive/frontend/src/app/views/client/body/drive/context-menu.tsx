@@ -295,6 +295,7 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
 export const useOnBuildFileTypeContextMenu = () => {
   const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
   const mimeTypes = [
+    { key: 'All', value: '' },
     { key: 'PDF', value: 'application/pdf' },
     { key: 'DOC', value: 'application/msword' },
     { key: 'PNG', value: 'image/png' },

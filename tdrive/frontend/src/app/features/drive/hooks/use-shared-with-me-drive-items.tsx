@@ -37,7 +37,6 @@ export const useSharedWithMeDriveItems = () => {
     const filter = sharedFilter;
 
     const response = await DriveApiClient.sharedWithMe(filter, opt);
-    console.log('response is: ', response);
     const results = response.entities || [];
 
     const update = {
@@ -60,7 +59,7 @@ export const useSharedWithMeDriveItems = () => {
     () => {
       (async () => {
         setLoading(true);
-        if (searchInput.query) {
+        if (sharedFilter.mimeType) {
           delayRequest('useSearchDriveItems', async () => {
             await refresh();
           });
@@ -69,7 +68,7 @@ export const useSharedWithMeDriveItems = () => {
         }
       })();
     },
-    [searchInput.channelId, searchInput.workspaceId],
+    [sharedFilter, searchInput.channelId, searchInput.workspaceId],
   );
 
   return { loading, driveItems: [...items.results], loadMore, refresh };

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ChevronDownIcon, ChevronUpIcon, DotsHorizontalIcon } from '@heroicons/react/outline';
 import { Button } from '@atoms/button/button';
 import { Base, BaseSmall, Title } from '@atoms/text';
@@ -15,48 +15,25 @@ import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-fi
 
 export const SharedFilesTable = () => {
   const { driveItems, loading } = useSharedWithMeDriveItems();
-  const [sortBy, setSortBy] = useState('name');
-  const [sortOrder, setSortOrder] = useState('asc');
+  const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
 
   // FILTER HOOKS
-  const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
   const buildFileTypeContextMenu = useOnBuildFileTypeContextMenu();
   const buildPeopleContextMen = useOnBuildPeopleContextMenu();
   const onBuildFileContextMenu = useOnBuildFileContextMenu();
-
-  const handleSort = (column: string) => {
-    if (sortBy === column) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortBy(column);
-      setSortOrder('asc');
-    }
-  };
-
-  const renderSortIcon = (column: string) => {
-    if (sortBy === column) {
-      if (sortOrder === 'asc') {
-        return <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />;
-      } else {
-        return <ChevronUpIcon className="h-4 w-4 ml-2 -mr-1" />;
-      }
-    }
-    return null;
-  };
   return (
-    <>
+    <div>
       <Title className="mb-4 block">Shared with me</Title>
       {/* Filters */}
       <div className="flex items-center space-x-4 mb-6">
-        <div className="flex items-center space-x-2">
-          <Menu menu={() => buildFileTypeContextMenu()}>
+        <div className="">
+          <Menu menu={() => buildFileTypeContextMenu()} >
             <Button theme="secondary" className="flex items-center">
-              <span>{filter.mimeType ? filter.mimeType : "File Type"}</span>
+              <span>File Type</span>
               <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
             </Button>
           </Menu>
         </div>
-
         <div className="flex items-center space-x-2">
           <Menu menu={() => buildPeopleContextMen()}>
             <Button theme="secondary" className="flex items-center">
@@ -81,18 +58,18 @@ export const SharedFilesTable = () => {
           <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-blue-500 dark:text-white">
             <tr>
               <th scope="col" className="px-6 py-3">
-                <span className="flex" onClick={() => handleSort('name')}>
-                  Name {renderSortIcon('name')}
+                <span className="flex">
+                  Name
                 </span>
               </th>
               <th scope="col" className="px-6 py-3">
-                <span className="flex" onClick={() => handleSort('name')}>
-                  Shared By {renderSortIcon('name')}
+                <span className="flex">
+                  Shared By
                 </span>
               </th>
               <th scope="col" className="px-6 py-3">
-                <span className="flex" onClick={() => handleSort('name')}>
-                  Shared Date {renderSortIcon('name')}
+                <span className="flex">
+                  Shared Date
                 </span>
               </th>
               <th scope="col" className="px-6 py-3">
@@ -103,17 +80,6 @@ export const SharedFilesTable = () => {
           <tbody>
             {!loading &&
               driveItems
-                .sort((a: any, b: any) => {
-                  // Perform sorting based on the selected column and order
-                  console.log("a is: ", a);
-                  console.log("b is: ", b);
-                  if (sortBy === 'name') {
-                    return sortOrder === 'asc'
-                      ? a.name.localeCompare(b.name)
-                      : b.name.localeCompare(a.name);
-                  }
-                  return 0; // No sorting by default
-                })
                 .map((file: any, index: any) => (
                   <tr
                     key={index}
@@ -142,6 +108,6 @@ export const SharedFilesTable = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };

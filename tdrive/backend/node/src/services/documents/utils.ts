@@ -27,7 +27,7 @@ export const isVirtualFolder = (id: string) => {
 };
 
 export const getVirtualFoldersNames = async (id: string, context: DriveExecutionContext) => {
-  const user = await gr.services.users.get({ id: context.user.id });
+  const user = await gr.services.users.get({ id: context.user?.id });
   const locale = user?.preferences?.locale || "en";
 
   if (id.startsWith("user_")) {

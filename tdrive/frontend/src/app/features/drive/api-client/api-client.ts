@@ -156,7 +156,7 @@ export class DriveApiClient {
   static async sharedWithMe(filter?: any, options?: BaseSearchOptions) {
     const companyId = options?.company_id ? options.company_id : Workspace.currentGroupId;
     const query = `/internal/services/documents/v1/companies/${companyId}/shared-with-me`;
-    const filterData = { mime_type: filter.mimeType, creator: filter.creator };
+    const filterData = { mime_type: filter.mimeType, creator: filter.creator, view: "shared_with_me" };
     const res = await Api.post<sharedWithMeFilterBody, { entities: DriveItem[] }>(
       query,
       filterData,

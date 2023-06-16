@@ -85,7 +85,7 @@ export type AccessInformation = {
   entities: AuthEntity[];
 };
 
-type AuthEntity = {
+export type AuthEntity = {
   type: "user" | "channel" | "company" | "folder";
   id: string | "parent";
   level: publicAccessLevel | DriveFileAccessLevel;

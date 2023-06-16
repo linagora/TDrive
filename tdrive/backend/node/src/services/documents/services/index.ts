@@ -784,7 +784,7 @@ export class DocumentsService {
         },
         $in: [
           ...(options.onlyDirectlyShared
-            ? [["access_entities", [context.user.id, context.company.id]] as inType]
+            ? [["access_entities", [context.user.id]] as inType]
             : []),
           ...(options.company_id ? [["company_id", [options.company_id]] as inType] : []),
           ...(options.creator ? [["creator", [options.creator]] as inType] : []),

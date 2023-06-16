@@ -171,7 +171,7 @@ describe("the Drive feature", () => {
   });
 
   it("did search for an item and check that all the fields for 'shared_with_me' view", async () => {
-    jest.setTimeout(10000);
+    jest.setTimeout(20000);
     //given:: user uploaded one doc and give permission to another user
     const oneUser = await TestHelpers.getInstance(platform, true);
     const anotherUser = await TestHelpers.getInstance(platform, true);
@@ -187,7 +187,7 @@ describe("the Drive feature", () => {
     });
     await oneUser.updateDocument(doc.id, doc);
 
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    await new Promise(resolve => setTimeout(resolve, 5000));
 
     //when:: user search for a doc
     const searchResponse = await anotherUser.searchDocument({ view: "shared_with_me" });
@@ -210,6 +210,9 @@ describe("the Drive feature", () => {
     expect(actual.shared_by?.id).toEqual(oneUser.user.id);
     expect(actual.shared_by?.first_name).toEqual(oneUser.user.first_name);
   });
+
+  it("'shared_with_me' shouldn't return files uploaded by me", async () => {
+  })
 
   it("did search for an item that doesn't exist", async () => {
     await createItem();

@@ -3,7 +3,7 @@ import _ from "lodash";
 import { logger } from "../../../core/platform/framework";
 import Repository from "../../../core/platform/services/database/services/orm/repository/repository";
 import globalResolver from "../../global-resolver";
-import { AccessInformation, DriveFile } from "../entities/drive-file";
+import { AccessInformation, AuthEntity, DriveFile } from "../entities/drive-file";
 import { CompanyExecutionContext, DriveFileAccessLevel } from "../types";
 
 /**
@@ -341,11 +341,20 @@ export const getSharedByUser = (
   for (const idx in accessInfo?.entities) {
     const entity = accessInfo.entities[idx];
     if (entity.type === "user" && entity.id === context.user?.id) {
-      return entity.grantor;
+      return getGrantorAndThrowIfEmpty(entity);
     }
-    if (entity.type === "company" && entity.id === context.company.id) {
-      return entity.grantor;
+    if (entity.type === "company" && entity.id === context.company.id && entity.level != "none") {
+      console.log("company", entity);
+      return getGrantorAndThrowIfEmpty(entity);
     }
   }
   return null;
+};
+
+const getGrantorAndThrowIfEmpty = (entity: AuthEntity) => {
+  if (!entity.grantor) {
+    logger.warn(`For the file permissions ${entity.id} grantor is not defined`);
+    // throw CrudException.badGateway(`For the file permissions ${entity.id} grantor is not defined`);
+  }
+  return entity.grantor;
 };

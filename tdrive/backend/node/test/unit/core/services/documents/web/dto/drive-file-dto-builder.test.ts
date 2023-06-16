@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { describe } from "@jest/globals";
 import { mock } from 'jest-mock-extended';
-import { DriveFileDTOBuilder } from "../../../../../../../src/services/documents/web/dto/drive-file-dto-builder";
+import { DriveFileDTOBuilder } from "../../../../../../../src/services/documents/services/drive-file-dto-builder";
 import { ListResult } from "../../../../../../../src/core/platform/framework/api/crud-service";
 import { DriveFile } from "../../../../../../../src/services/documents/entities/drive-file";
 import { CompanyExecutionContext } from "../../../../../../../src/services/applications/web/types";
@@ -9,13 +9,11 @@ import { UserServiceImpl } from "../../../../../../../src/services/user/services
 
 describe("Drive File DTO Builder Test", () => {
 
-  const subj = new DriveFileDTOBuilder();
-
-
   it("The dto object will contain selected fields with the data ", async () => {
     //given
     const fields = ["id", "name"];
     const file = newFile("file_id", "file_name");
+    const subj = new DriveFileDTOBuilder();
 
     //when
 
@@ -37,9 +35,9 @@ describe("Drive File DTO Builder Test", () => {
     //given
     const fields = ["id", "name"];
     const file = newFile("file_id", "file_name", "file_parent_id");
+    const subj = new DriveFileDTOBuilder();
 
     //when
-
     let transformedFiles = await subj.build(
       new ListResult<DriveFile>("drive_files", [file]),
       context,
@@ -56,9 +54,10 @@ describe("Drive File DTO Builder Test", () => {
   it("When there is no fields set then whole object should be copied", async () => {
     //given
     const file = newFile("file_id", "file_name", "file_parent_id");
+    const subj = new DriveFileDTOBuilder();
+
 
     //when
-
     let transformedFiles = await subj.build(
       new ListResult<DriveFile>("drive_files", [file]),
       context
@@ -77,6 +76,8 @@ describe("Drive File DTO Builder Test", () => {
     //given
     const file = newFile("file_id", "file_name");
     let fields = ["id", "name", "unknown_property"];
+    const subj = new DriveFileDTOBuilder();
+
 
     //when
     let transformedFiles = await subj.build(
@@ -98,8 +99,9 @@ describe("Drive File DTO Builder Test", () => {
     let file_creator = newUser();
     const file = newFile("file_id", "file_name", "parent_id", file_creator.id);
     let fields = ["id", "name", "created_by"];
-    subj.usersService = mock<UserServiceImpl>();
-    subj.usersService.list = jest.fn().mockReturnValue(new ListResult("users", [file_creator]));
+    const usersService = mock<UserServiceImpl>() as UserServiceImpl;
+    const subj = new DriveFileDTOBuilder()
+    subj.fetchUsers = jest.fn().mockReturnValue([file_creator]);
 
     //when
     let transformedFiles = await subj.build(
@@ -122,8 +124,8 @@ describe("Drive File DTO Builder Test", () => {
     let file_shared_by = newUser();
     const file = newFile("file_id", "file_name", "parent_id", null, file_shared_by.id);
     let fields = ["id", "name", "shared_by"];
-    subj.usersService = mock<UserServiceImpl>();
-    subj.usersService.list = jest.fn().mockReturnValue(new ListResult("users", [file_shared_by]));
+    const subj = new DriveFileDTOBuilder();
+    subj.fetchUsers = jest.fn().mockReturnValue([file_shared_by]);
 
     //when
     let transformedFiles = await subj.build(

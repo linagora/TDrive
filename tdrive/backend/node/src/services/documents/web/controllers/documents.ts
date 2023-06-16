@@ -20,7 +20,7 @@ import {
   SearchDocumentsOptions,
 } from "../../types";
 import { DriveFileDTO } from "../dto/drive-file-dto";
-import { DriveFileDTOBuilder } from "../dto/drive-file-dto-builder";
+import { DriveFileDTOBuilder } from "../../services/drive-file-dto-builder";
 
 export class DocumentsController {
   private driveFileDTOBuilder = new DriveFileDTOBuilder();

@@ -129,6 +129,9 @@ export default memo(
       <>
         {viewId == 'shared-with-me' ? (
           <>
+            <Suspense fallback={<></>}>
+              <DrivePreview />
+            </Suspense>
             <SharedFilesTable />
           </>
         ) : (

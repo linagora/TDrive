@@ -377,13 +377,13 @@ export const useOnBuildFileContextMenu = () => {
       const menuItems = [
         {
           type: 'menu',
-          text: 'Download',
-          onClick: () => download(item.id),
+          text: 'Preview',
+          onClick: () => preview(item),
         },
         {
           type: 'menu',
-          text: 'Preview',
-          onClick: () => preview(item),
+          text: 'Download',
+          onClick: () => download(item.id),
         },
       ];
       return menuItems;

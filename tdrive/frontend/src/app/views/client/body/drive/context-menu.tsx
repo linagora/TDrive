@@ -309,7 +309,7 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
 export const useOnBuildFileTypeContextMenu = () => {
   const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
   const mimeTypes = [
-    { key: 'All', value: '' },
+    { key: Languages.t('components.item_context_menu.all'), value: '' },
     { key: 'PDF', value: 'application/pdf' },
     { key: 'DOC', value: 'application/msword' },
     { key: 'PNG', value: 'image/png' },
@@ -365,7 +365,7 @@ export const useOnBuildDateContextMenu = () => {
     const menuItems = [
       {
         type: 'menu',
-        text: 'All',
+        text: Languages.t('components.item_context_menu.all'),
         onClick: () => {
           setFilter(prevFilter => {
             const newFilter = {
@@ -378,7 +378,7 @@ export const useOnBuildDateContextMenu = () => {
       },
       {
         type: 'menu',
-        text: 'Today',
+        text: Languages.t('components.item_context_menu.today'),
         onClick: () => {
           setFilter(prevFilter => {
             const newFilter = {
@@ -391,7 +391,7 @@ export const useOnBuildDateContextMenu = () => {
       },
       {
         type: 'menu',
-        text: 'Last week',
+        text: Languages.t('components.item_context_menu.last_week'),
         onClick: () => {
           setFilter(prevFilter => {
             const newFilter = {
@@ -404,7 +404,7 @@ export const useOnBuildDateContextMenu = () => {
       },
       {
         type: 'menu',
-        text: 'Last month',
+        text: Languages.t('components.item_context_menu.last_month'),
         onClick: () => {
           setFilter(prevFilter => {
             const newFilter = {
@@ -427,12 +427,12 @@ export const useOnBuildFileContextMenu = () => {
       const menuItems = [
         {
           type: 'menu',
-          text: 'Preview',
+          text: Languages.t('components.item_context_menu.preview'),
           onClick: () => preview(item),
         },
         {
           type: 'menu',
-          text: 'Download',
+          text: Languages.t('components.item_context_menu.download'),
           onClick: () => download(item.id),
         },
       ];

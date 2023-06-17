@@ -48,6 +48,7 @@ export type SearchDocumentsOptions = {
   view?: string;
   fields?: string[];
   onlyDirectlyShared?: boolean;
+  onlyUploadedNotByMe?: boolean;
 };
 
 export type SearchDocumentsBody = {

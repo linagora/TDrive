@@ -12,6 +12,8 @@ import { getSharedByUser } from "./access-check";
 import globalResolver from "../../../services/global-resolver";
 
 export class DriveFileDTOBuilder {
+  static VIEW_SHARED_WITH_ME = "shared_with_me";
+
   private views: Map<string, string[]> = new Map([
     [
       "default",
@@ -35,7 +37,7 @@ export class DriveFileDTOBuilder {
       ],
     ],
     [
-      "shared_with_me",
+      DriveFileDTOBuilder.VIEW_SHARED_WITH_ME,
       [
         "id",
         "name",

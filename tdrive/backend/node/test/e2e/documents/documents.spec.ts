@@ -212,6 +212,31 @@ describe("the Drive feature", () => {
   });
 
   it("'shared_with_me' shouldn't return files uploaded by me", async () => {
+    jest.setTimeout(20000);
+    //given:: user uploaded one doc and give permission to another user
+    const oneUser = await TestHelpers.getInstance(platform, true);
+    const anotherUser = await TestHelpers.getInstance(platform, true);
+    const doc = await oneUser.uploadRandomFileAndCreateDocument();
+    await new Promise(r => setTimeout(r, 3000));
+    //give permissions to the file
+    doc.access_info.entities.push({
+      type: "user",
+      id: anotherUser.user.id,
+      level: "read",
+      grantor: null,
+    });
+    await oneUser.updateDocument(doc.id, doc);
+    //another user also uploaded several files
+    await anotherUser.uploadRandomFileAndCreateDocument();
+
+    await new Promise(resolve => setTimeout(resolve, 5000));
+
+    //when:: user search for a doc
+    const searchResponse = await anotherUser.sharedWithMeDocuments({});
+
+    //then::
+    expect(searchResponse.entities?.length).toEqual(1);
+    const actual = searchResponse.entities[0];
   })
 
   it("did search for an item that doesn't exist", async () => {

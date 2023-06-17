@@ -154,7 +154,9 @@ export class DocumentsController {
       const options: SearchDocumentsOptions = {
         ...request.body,
         company_id: request.body.company_id || context.company.id,
+        view: DriveFileDTOBuilder.VIEW_SHARED_WITH_ME,
         onlyDirectlyShared: true,
+        onlyUploadedNotByMe: true,
       };
 
       if (!Object.keys(options).length) {

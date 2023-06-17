@@ -783,9 +783,7 @@ export class DocumentsService {
           limitStr: "100",
         },
         $in: [
-          ...(options.onlyDirectlyShared
-            ? [["access_entities", [context.user.id]] as inType]
-            : []),
+          ...(options.onlyDirectlyShared ? [["access_entities", [context.user.id]] as inType] : []),
           ...(options.company_id ? [["company_id", [options.company_id]] as inType] : []),
           ...(options.creator ? [["creator", [options.creator]] as inType] : []),
           ...(options.mime_type
@@ -834,9 +832,17 @@ export class DocumentsService {
       });
 
       return new ListResult(result.type, filteredResult, result.nextPage);
-    } else {
-      return result;
     }
+
+    if (options.onlyUploadedNotByMe) {
+      const filteredResult = await this.filter(result.getEntities(), async item => {
+        return item.creator != context.user.id;
+      });
+
+      return new ListResult(result.type, filteredResult, result.nextPage);
+    }
+
+    return result;
   };
 
   private async filter(arr, callback) {

@@ -17,7 +17,13 @@ import { stopWords } from "./const";
 import { DriveFile } from "./entities/drive-file";
 import { DriveFileMetadata, FileVersion } from "./entities/file-version";
 import { checkAccess, generateAccessToken } from "./services/access-check";
-import { CompanyExecutionContext, DriveExecutionContext, RootType, SharedWithMeType, TrashType } from "./types";
+import {
+  CompanyExecutionContext,
+  DriveExecutionContext,
+  RootType,
+  SharedWithMeType,
+  TrashType,
+} from "./types";
 
 const ROOT: RootType = "root";
 const TRASH: TrashType = "trash";

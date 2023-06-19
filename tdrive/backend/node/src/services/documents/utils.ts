@@ -17,13 +17,18 @@ import { stopWords } from "./const";
 import { DriveFile } from "./entities/drive-file";
 import { DriveFileMetadata, FileVersion } from "./entities/file-version";
 import { checkAccess, generateAccessToken } from "./services/access-check";
-import { CompanyExecutionContext, DriveExecutionContext, RootType, TrashType } from "./types";
+import { CompanyExecutionContext, DriveExecutionContext, RootType, SharedWithMeType, TrashType } from "./types";
 
 const ROOT: RootType = "root";
 const TRASH: TrashType = "trash";
+const SHARED_WITH_ME: SharedWithMeType = "shared_with_me";
 
 export const isVirtualFolder = (id: string) => {
-  return id === ROOT || id === TRASH || id.startsWith("user_");
+  return id === ROOT || id === TRASH || id.startsWith("user_") || id == SHARED_WITH_ME;
+};
+
+export const isSharedWithMeFolder = (id: string) => {
+  return id === SHARED_WITH_ME;
 };
 
 export const getVirtualFoldersNames = async (id: string, context: DriveExecutionContext) => {

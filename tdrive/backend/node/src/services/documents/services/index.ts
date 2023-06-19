@@ -16,6 +16,7 @@ import {
   TYPE as DriveTdriveTabRepoType,
 } from "../entities/drive-tdrive-tab";
 import {
+  BrowseDetails,
   CompanyExecutionContext,
   DocumentsMessageQueueRequest,
   DriveExecutionContext,
@@ -35,7 +36,7 @@ import {
   getFileMetadata,
   getItemName,
   getPath,
-  getVirtualFoldersNames,
+  getVirtualFoldersNames, isSharedWithMeFolder,
   isVirtualFolder,
   updateItemSize,
 } from "../utils";
@@ -86,6 +87,25 @@ export class DocumentsService {
 
     return this;
   }
+
+  browse = async (
+    id: string,
+    options: SearchDocumentsOptions,
+    context: DriveExecutionContext & { public_token?: string },
+  ): Promise<BrowseDetails> => {
+    if (isSharedWithMeFolder(id)) {
+      const children = await this.search(options, context);
+      return null;
+      // return {
+      //   children: children.getEntities();
+      // }
+    } else {
+      return null;
+      // return {
+      //   ... (await this.get(id, context)),
+      // };
+    }
+  };
 
   /**
    * Fetches a drive element

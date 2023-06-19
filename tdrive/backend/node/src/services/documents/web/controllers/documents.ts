@@ -141,6 +141,34 @@ export class DocumentsController {
     };
   };
 
+  /**
+   * Browse file, special endpoint for TDrive application widget.
+   * Returns the current folder with the filtered content
+   *
+   * @param {FastifyRequest} request
+   * @returns {Promise<DriveItemDetails>}
+   */
+  browse = async (
+    request: FastifyRequest<{
+      Params: ItemRequestParams;
+      Body: SearchDocumentsBody;
+      Querystring: PaginationQueryParameters & { public_token?: string };
+    }>,
+  ): Promise<DriveItemDetails & { websockets: ResourceWebsocket[] }> => {
+    const context = getDriveExecutionContext(request);
+    const { id } = request.params;
+
+    return {
+      ...(await globalResolver.services.documents.documents.get(id, context)),
+      websockets: request.currentUser?.id
+        ? globalResolver.platformServices.realtime.sign(
+            [{ room: `/companies/${context.company.id}/documents/item/${id}` }],
+            request.currentUser?.id,
+          )
+        : [],
+    };
+  };
+
   sharedWithMe = async (
     request: FastifyRequest<{
       Params: RequestParams;

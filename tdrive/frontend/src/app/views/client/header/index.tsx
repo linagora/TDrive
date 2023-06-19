@@ -30,7 +30,7 @@ export default ({ openSideMenu }: { openSideMenu: () => void }) => {
       </div>
 
       <div className="sm:block hidden grow"></div>
-      <div className="sm:block hidden">
+      <div className="sm:block">
         <AppGrid className="mr-4" />
       </div>
       <Account />

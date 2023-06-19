@@ -133,7 +133,33 @@
     "sender": "noreply@twake.app"
   },
   "applications": {
-    "grid": [],
+    "grid": [
+      {
+      "name": "Tmail",
+      "logo": "/public/img/grid/tmail.png",
+      "url": "https://tmail.linagora.com/"
+      },
+      {
+        "name": "Twake",
+        "logo": "/public/img/grid/twake.png",
+        "url": "https://web.twake.app/"
+      },
+      {
+        "name": "Calendar",
+        "logo": "/public/img/grid/ic_calendar_app.svg",
+        "url": "https://openpaas.linagora.com/calendar/"
+      },
+      {
+        "name": "Contacts",
+        "logo": "/public/img/grid/ic_contacts_app.svg",
+        "url": "https://openpaas.linagora.com/contacts"
+      },
+      {
+        "name": "Jitsi",
+        "logo": "/public/img/grid/jitsi.png",
+        "url": "https://jitsi.linagora.com/"
+      }
+    ],
     "plugins": []
   },
   "services": [

@@ -158,8 +158,16 @@ export class DocumentsController {
     const context = getDriveExecutionContext(request);
     const { id } = request.params;
 
+    const options: SearchDocumentsOptions = {
+      ...request.body,
+      company_id: request.body.company_id || context.company.id,
+      view: DriveFileDTOBuilder.VIEW_SHARED_WITH_ME,
+      onlyDirectlyShared: true,
+      onlyUploadedNotByMe: true,
+    };
+
     return {
-      ...(await globalResolver.services.documents.documents.get(id, context)),
+      ...(await globalResolver.services.documents.documents.browse(id, options, context)),
       websockets: request.currentUser?.id
         ? globalResolver.platformServices.realtime.sign(
             [{ room: `/companies/${context.company.id}/documents/item/${id}` }],

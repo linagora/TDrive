@@ -9,7 +9,7 @@ import {v1 as uuidv1} from "uuid";
 import {TestDbService} from "../utils.prepare.db";
 import {DriveFile} from "../../../src/services/documents/entities/drive-file";
 import {FileVersion} from "../../../src/services/documents/entities/file-version";
-import {SearchResultMockClass} from "./entities/mock_entities";
+import { DriveItemDetailsMockClass, SearchResultMockClass } from "./entities/mock_entities";
 import {logger} from "../../../src/core/platform/framework";
 
 export default class TestHelpers {
@@ -56,7 +56,7 @@ export default class TestHelpers {
         return helpers;
     }
 
-    async uploadFiles()  {
+    async uploadFiles(parent_id = "root")  {
         return Promise.all(TestHelpers.ALL_FILES.map(f => this.uploadFile(f)));
     }
 
@@ -93,24 +93,25 @@ export default class TestHelpers {
     }
 
     async uploadFileAndCreateDocument(
-        filename: string
+        filename: string,
+        parent_id = "root"
     ) {
-        return this.uploadFile(filename).then(f => this.createDocumentFromFile(f));
+        return this.uploadFile(filename).then(f => this.createDocumentFromFile(f, parent_id));
     };
 
-    async uploadRandomFileAndCreateDocument() {
-        return this.uploadRandomFile().then(f => this.createDocumentFromFile(f));
+    async uploadRandomFileAndCreateDocument(parent_id = "root") {
+        return this.uploadRandomFile().then(f => this.createDocumentFromFile(f, parent_id));
     };
 
-    async uploadAllFilesAndCreateDocuments() {
-        return await Promise.all(TestHelpers.ALL_FILES.map(f => this.uploadFileAndCreateDocument(f)))
+    async uploadAllFilesAndCreateDocuments(parent_id = "root") {
+        return await Promise.all(TestHelpers.ALL_FILES.map(f => this.uploadFileAndCreateDocument(f, parent_id)))
     };
 
-    async uploadAllFilesOneByOne() {
+    async uploadAllFilesOneByOne(parent_id = "root") {
         const files: Array<DriveFile> = [];
         for (const idx in TestHelpers.ALL_FILES) {
             const f = await this.uploadFile(TestHelpers.ALL_FILES[idx]);
-            const doc = await this.createDocumentFromFile(f);
+            const doc = await this.createDocumentFromFile(f, parent_id);
             files.push(doc);
         }
         return files;
@@ -136,11 +137,12 @@ export default class TestHelpers {
     };
 
     async createDocumentFromFile(
-        file: File
+        file: File,
+        parent_id = "root",
     ) {
         const item = {
             name: file.metadata.name,
-            parent_id: "root",
+            parent_id: parent_id,
             company_id: file.company_id,
         };
 
@@ -158,7 +160,7 @@ export default class TestHelpers {
     };
 
     async updateDocument(
-        id: string | "root" | "trash",
+        id: string | "root" | "trash" | "shared_with_me",
         item: Partial<DriveFile>
     ) {
         return await this.platform.app.inject({
@@ -186,6 +188,34 @@ export default class TestHelpers {
         return deserialize<SearchResultMockClass>(
             SearchResultMockClass,
             response.body)
+    };
+
+    async browseDocuments (
+      id: string,
+      payload: Record<string, any>
+    ){
+        const response = await this.platform.app.inject({
+            method: "POST",
+            url: `${TestHelpers.DOC_URL}/companies/${this.platform.workspace.company_id}/browse/${id}`,
+            headers: {
+                authorization: `Bearer ${this.jwt}`,
+            },
+            payload,
+        });
+
+        return deserialize<DriveItemDetailsMockClass>(
+          DriveItemDetailsMockClass,
+          response.body)
+    };
+
+    async getDocument(platform: TestPlatform, id: string | "root" | "trash" | "shared_with_me") {
+        return await platform.app.inject({
+            method: "GET",
+            url: `${TestHelpers.DOC_URL}/companies/${platform.workspace.company_id}/item/${id}`,
+            headers: {
+                authorization: `Bearer ${this.jwt}`,
+            },
+        });
     };
 
     async sharedWithMeDocuments (

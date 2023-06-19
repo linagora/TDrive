@@ -95,6 +95,13 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, _options, next)
   });
 
   fastify.route({
+    method: "POST",
+    url: `${baseUrl}/browse/:id`,
+    preValidation: [fastify.authenticate],
+    handler: documentsController.browse.bind(documentsController),
+  });
+
+  fastify.route({
     method: "GET",
     url: `${baseUrl}/tabs/:tab_id`,
     preValidation: [fastify.authenticate],

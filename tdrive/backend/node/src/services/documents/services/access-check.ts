@@ -157,6 +157,7 @@ export const getAccessLevel = async (
       : (await isCompanyAdmin(context))
       ? "manage"
       : "write";
+  if (id === "shared_with_me") return "read";
 
   //If it is my personal folder, I have full access
   if (context?.user?.id && id.startsWith("user_")) {

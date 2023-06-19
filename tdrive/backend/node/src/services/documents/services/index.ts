@@ -36,7 +36,8 @@ import {
   getFileMetadata,
   getItemName,
   getPath,
-  getVirtualFoldersNames, isSharedWithMeFolder,
+  getVirtualFoldersNames,
+  isSharedWithMeFolder,
   isVirtualFolder,
   updateItemSize,
 } from "../utils";
@@ -95,15 +96,17 @@ export class DocumentsService {
   ): Promise<BrowseDetails> => {
     if (isSharedWithMeFolder(id)) {
       const children = await this.search(options, context);
-      return null;
-      // return {
-      //   children: children.getEntities();
-      // }
+      return {
+        access: "read",
+        children: children.getEntities(),
+        nextPage: children.nextPage,
+        path: [] as Array<DriveFile>,
+      };
     } else {
-      return null;
-      // return {
-      //   ... (await this.get(id, context)),
-      // };
+      return {
+        nextPage: null,
+        ...(await this.get(id, context)),
+      };
     }
   };
 

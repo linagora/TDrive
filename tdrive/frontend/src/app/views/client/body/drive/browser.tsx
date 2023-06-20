@@ -11,7 +11,6 @@ import { useDriveUpload } from '@features/drive/hooks/use-drive-upload';
 import { DriveItemSelectedList } from '@features/drive/state/store';
 import { formatBytes } from '@features/drive/utils';
 import useRouterCompany from '@features/router/hooks/use-router-company';
-import useRouterView from '@features/router/hooks/use-router-view';
 import _ from 'lodash';
 import { memo, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { atomFamily, useRecoilState, useSetRecoilState } from 'recoil';
@@ -32,7 +31,6 @@ import { PropertiesModal } from './modals/properties';
 import { AccessModal } from './modals/update-access';
 import { VersionsModal } from './modals/versions';
 import { SharedFilesTable } from './shared-files-table';
-import RouterServices from '@features/router/services/router-service';
 import useRouteState from 'app/features/router/hooks/use-route-state';
 import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
 import MenusManager from '@components/menus/menus-manager.jsx';
@@ -204,7 +202,7 @@ export default memo(
                           }}
                         >
                           <span>
-                            {filter.mimeType.key && filter.mimeType.key != "All"
+                            {filter.mimeType.key && filter.mimeType.key != 'All'
                               ? filter.mimeType.key
                               : Languages.t('scenes.app.shared_with_me.file_type')}
                           </span>
@@ -241,7 +239,7 @@ export default memo(
                           }}
                         >
                           <span>
-                          {filter.date.key && filter.date.key != "All"
+                            {filter.date.key && filter.date.key != 'All'
                               ? filter.date.key
                               : Languages.t('scenes.app.shared_with_me.last_modified')}
                           </span>

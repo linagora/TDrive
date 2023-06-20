@@ -40,7 +40,7 @@ export const useDriveActions = () => {
           }
         }
       },
-    [companyId, sharedFilter],
+    [companyId],
   );
 
   const create = useCallback(

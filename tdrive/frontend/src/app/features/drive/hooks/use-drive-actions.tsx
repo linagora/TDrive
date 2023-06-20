@@ -1,11 +1,11 @@
 import { ToasterService } from '@features/global/services/toaster-service';
 import useRouterCompany from '@features/router/hooks/use-router-company';
 import { useCallback } from 'react';
-import { useRecoilCallback } from 'recoil';
+import { useRecoilValue, useRecoilCallback } from 'recoil';
 import { DriveApiClient } from '../api-client/api-client';
 import { DriveItemAtom, DriveItemChildrenAtom } from '../state/store';
-import { DriveItem, DriveItemVersion } from '../types';
-
+import { BrowseFilter, DriveItem, DriveItemVersion } from '../types';
+import { SharedWithMeFilterState } from '../state/shared-with-me-filter';
 /**
  * Returns the children of a drive item
  * @param id
@@ -13,13 +13,18 @@ import { DriveItem, DriveItemVersion } from '../types';
  */
 export const useDriveActions = () => {
   const companyId = useRouterCompany();
+  const sharedFilter = useRecoilValue(SharedWithMeFilterState);
 
   const refresh = useRecoilCallback(
     ({ set, snapshot }) =>
       async (parentId: string) => {
         if (parentId) {
+          const filter:BrowseFilter = {
+            company_id: companyId,
+            mime_type: sharedFilter.mimeType.value,
+          };
           try {
-            const details = await DriveApiClient.get(companyId, parentId);
+            const details = await DriveApiClient.browse(companyId, parentId, filter);
             set(DriveItemChildrenAtom(parentId), details.children);
             set(DriveItemAtom(parentId), details);
             for (const child of details.children) {
@@ -35,7 +40,7 @@ export const useDriveActions = () => {
           }
         }
       },
-    [companyId],
+    [companyId, sharedFilter],
   );
 
   const create = useCallback(

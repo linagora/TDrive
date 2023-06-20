@@ -1,5 +1,5 @@
 import Api from '../../global/framework/api-service';
-import { DriveItem, DriveItemDetails, DriveItemVersion } from '../types';
+import { BrowseFilter, DriveItem, DriveItemDetails, DriveItemVersion } from '../types';
 import Workspace from '@deprecated/workspaces/workspaces';
 import Logger from 'features/global/framework/logger-service';
 import { JWTDataType } from 'app/features/auth/jwt-storage-service';
@@ -68,6 +68,25 @@ export class DriveApiClient {
     return await Api.get<DriveItemDetails>(
       `/internal/services/documents/v1/companies/${companyId}/item/${id}${appendTdriveToken()}`,
     );
+  }
+
+  static async browse(companyId: string, id: string | 'trash' | '', filter: BrowseFilter) {
+    try {
+      const data = await Api.post<BrowseFilter, DriveItemDetails>(
+        `/internal/services/documents/v1/companies/${companyId}/browse/${id}${appendTdriveToken()}`,
+        filter
+      );
+      return data;
+    } catch (error) {
+      console.log("error parsing data: ", error)
+      return await Api.post<BrowseFilter, DriveItemDetails>(
+        `/internal/services/documents/v1/companies/${companyId}/browse/${id}${appendTdriveToken()}`,
+        {
+          "company_id": companyId
+        }
+      );
+    }
+
   }
 
   static async remove(companyId: string, id: string | 'trash' | '') {

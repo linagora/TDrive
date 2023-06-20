@@ -71,8 +71,10 @@ export const useDriveItem = (id: string) => {
   );
 
   const inTrash = id === 'trash' || item?.path?.some(i => i.parent_id === 'trash');
+  const sharedWithMe = id =="shared_with_me";
 
   return {
+    sharedWithMe,
     inTrash,
     loading: loading,
     children: children || [],

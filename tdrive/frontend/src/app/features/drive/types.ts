@@ -1,3 +1,8 @@
+export type BrowseFilter = {
+  company_id: string;
+  mime_type?: string;
+}
+
 export type DriveItemDetails = {
   item: DriveItem;
   versions: DriveItemVersion[];

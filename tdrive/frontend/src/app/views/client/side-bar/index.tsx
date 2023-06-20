@@ -23,6 +23,7 @@ import Actions from './actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import RouterServices from '@features/router/services/router-service';
 import Languages from "features/global/services/languages-service";
+import shared from '../body/drive/shared';
 
 export default () => {
   const history = useHistory();
@@ -35,11 +36,12 @@ export default () => {
   const { user } = useCurrentUser();
   const active = false;
   const { access: rootAccess } = useDriveItem('root');
-  const { inTrash, path } = useDriveItem(parentId);
+  const { sharedWithMe, inTrash, path } = useDriveItem(parentId);
   const activeClass = 'bg-zinc-50 dark:bg-zinc-800 !text-blue-500';
   let folderType = 'home';
   if ((path || [])[0]?.id === 'user_' + user?.id) folderType = 'personal';
   if (inTrash) folderType = 'trash';
+  if (sharedWithMe) folderType = 'shared';
   const { viewId } = RouterServices.getStateFromRoute();
   return (
     <div className="grow flex flex-col overflow-auto -m-4 p-4 relative">
@@ -77,10 +79,10 @@ export default () => {
           <UserIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.my_drive')}
         </Button>
         <Button
-          onClick={() =>  history.push(RouterServices.generateRouteFromState({companyId: company, viewId: "shared-with-me"}))}
+          onClick={() => {setParentId('shared_with_me')}}
           size="lg"
           theme="white"
-          className={'w-full mb-1 ' + (viewId === 'shared-with-me' ? activeClass : '')}
+          className={'w-full mb-1 ' + (folderType === 'shared' && viewId == ''? activeClass : '')}
         >
           <UserGroupIcon className="w-5 h-5 mr-4" /> Shared with me
         </Button>

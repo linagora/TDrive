@@ -16,7 +16,12 @@ import _ from 'lodash';
 import { memo, Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { atomFamily, useRecoilState, useSetRecoilState } from 'recoil';
 import { DrivePreview } from '../../viewer/drive-preview';
-import { useOnBuildContextMenu } from './context-menu';
+import {
+  useOnBuildContextMenu,
+  useOnBuildFileTypeContextMenu,
+  useOnBuildPeopleContextMenu,
+  useOnBuildDateContextMenu,
+} from './context-menu';
 import { DocumentRow } from './documents/document-row';
 import { FolderRow } from './documents/folder-row';
 import HeaderPath from './header-path';
@@ -29,7 +34,9 @@ import { VersionsModal } from './modals/versions';
 import { SharedFilesTable } from './shared-files-table';
 import RouterServices from '@features/router/services/router-service';
 import useRouteState from 'app/features/router/hooks/use-route-state';
-import Languages from "features/global/services/languages-service";
+import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
+import MenusManager from '@components/menus/menus-manager.jsx';
+import Languages from 'features/global/services/languages-service';
 
 export const DriveCurrentFolderAtom = atomFamily<
   string,
@@ -53,6 +60,7 @@ export default memo(
   }) => {
     const companyId = useRouterCompany();
     setTdriveTabToken(tdriveTabContextToken || null);
+    const [filter, setFilter] = useRecoilState(SharedWithMeFilterState);
 
     const [parentId, _setParentId] = useRecoilState(
       DriveCurrentFolderAtom({ context: context, initialFolderId: initialParentId || 'root' }),
@@ -60,6 +68,7 @@ export default memo(
 
     const [loadingParentChange, setLoadingParentChange] = useState(false);
     const {
+      sharedWithMe,
       details,
       access,
       item,
@@ -96,14 +105,14 @@ export default memo(
 
     //In case we are kicked out of the current folder, we need to reset the parent id
     useEffect(() => {
-      if (!loading && !path?.length && !inPublicSharing) setParentId('root');
+      if (!loading && !path?.length && !inPublicSharing && !sharedWithMe) setParentId('root');
     }, [path, loading, setParentId]);
 
     useEffect(() => {
       setChecked({});
       refresh(parentId);
       if (!inPublicSharing) refresh('trash');
-    }, [parentId, refresh]);
+    }, [parentId, refresh, filter]);
 
     const openItemModal = useCallback(() => {
       if (item?.id) setCreationModalState({ open: true, parent_id: item.id });
@@ -126,6 +135,10 @@ export default memo(
 
     const onBuildContextMenu = useOnBuildContextMenu(children, initialParentId);
     const { viewId } = useRouteState();
+
+    const buildFileTypeContextMenu = useOnBuildFileTypeContextMenu();
+    const buildPeopleContextMen = useOnBuildPeopleContextMenu();
+    const buildDateContextMenu = useOnBuildDateContextMenu();
 
     return (
       <>
@@ -171,16 +184,90 @@ export default memo(
               }
             >
               <div className="flex flex-row shrink-0 items-center mb-4">
-                <HeaderPath path={path || []} inTrash={inTrash} setParentId={setParentId} />
+                {sharedWithMe ? (
+                  <div>
+                    <Title className="mb-4 block">
+                      {Languages.t('scenes.app.shared_with_me.shared_with_me')}
+                    </Title>
+                    {/* Filters */}
+                    <div className="flex items-center space-x-4 mb-6">
+                      <div className="">
+                        <Button
+                          theme="secondary"
+                          className="flex items-center"
+                          onClick={evt => {
+                            MenusManager.openMenu(
+                              buildFileTypeContextMenu(),
+                              { x: evt.clientX, y: evt.clientY },
+                              'center',
+                            );
+                          }}
+                        >
+                          <span>
+                            {filter.mimeType.key && filter.mimeType.key != "All"
+                              ? filter.mimeType.key
+                              : Languages.t('scenes.app.shared_with_me.file_type')}
+                          </span>
+                          <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
+                        </Button>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          theme="secondary"
+                          className="flex items-center"
+                          onClick={evt => {
+                            MenusManager.openMenu(
+                              buildPeopleContextMen(),
+                              { x: evt.clientX, y: evt.clientY },
+                              'center',
+                            );
+                          }}
+                        >
+                          <span>{Languages.t('scenes.app.shared_with_me.people')}</span>
+                          <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
+                        </Button>
+                      </div>
+
+                      <div className="flex items-center space-x-2">
+                        <Button
+                          theme="secondary"
+                          className="flex items-center"
+                          onClick={evt => {
+                            MenusManager.openMenu(
+                              buildDateContextMenu(),
+                              { x: evt.clientX, y: evt.clientY },
+                              'center',
+                            );
+                          }}
+                        >
+                          <span>
+                          {filter.date.key && filter.date.key != "All"
+                              ? filter.date.key
+                              : Languages.t('scenes.app.shared_with_me.last_modified')}
+                          </span>
+                          <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <HeaderPath path={path || []} inTrash={inTrash} setParentId={setParentId} />
+                )}
                 <div className="grow" />
 
                 {access !== 'read' && (
-                  <BaseSmall>{formatBytes(item?.size || 0)} { Languages.t('scenes.app.drive.used')}</BaseSmall>
+                  <BaseSmall>
+                    {formatBytes(item?.size || 0)} {Languages.t('scenes.app.drive.used')}
+                  </BaseSmall>
                 )}
                 <Menu menu={() => onBuildContextMenu(details)}>
                   {' '}
                   <Button theme="secondary" className="ml-4 flex flex-row items-center">
-                    <span>{selectedCount > 1 ? `${selectedCount} items` : Languages.t('scenes.app.drive.context_menu')} </span>
+                    <span>
+                      {selectedCount > 1
+                        ? `${selectedCount} items`
+                        : Languages.t('scenes.app.drive.context_menu')}{' '}
+                    </span>
 
                     <ChevronDownIcon className="h-4 w-4 ml-2 -mr-1" />
                   </Button>
@@ -218,12 +305,12 @@ export default memo(
 
                 {documents.length === 0 && !loading && (
                   <div className="mt-4 text-center border-2 border-dashed rounded-md p-8">
-                    <Subtitle className="block mb-2">{Languages.t('scenes.app.drive.nothing')}</Subtitle>
+                    <Subtitle className="block mb-2">
+                      {Languages.t('scenes.app.drive.nothing')}
+                    </Subtitle>
                     {!inTrash && access != 'read' && (
                       <>
-                        <Base>
-                          {Languages.t('scenes.app.drive.drag_and_drop')}
-                        </Base>
+                        <Base>{Languages.t('scenes.app.drive.drag_and_drop')}</Base>
                         <br />
                         <Button onClick={() => openItemModal()} theme="primary" className="mt-4">
                           {Languages.t('scenes.app.drive.add_doc')}

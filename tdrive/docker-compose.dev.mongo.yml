@@ -27,6 +27,8 @@ services:
       - DB_DRIVER=mongodb
       - PUBSUB_TYPE=local
       - ./docker-data/documents/:/storage/
+    volumes:
+      - ./docker-data/documents/:/storage/
     depends_on:
       - mongo
     links:
@@ -56,6 +58,22 @@ services:
       - ./docker-data/ssl:/etc/nginx/ssl
     networks:
       - tdrive_network
+    
+  onlyoffice-connector:
+    image: onlyoffice-connector
+    hostname: onlyoffice_connector
+    environment:
+      - CREDENTIALS_ENDPOINT=http://tdrive_node:4000
+      - ONLY_OFFICE_SERVER=http://localhost:8090/
+      - SERVER_ORIGIN=
+      - SERVER_PORT=5000
+      - SERVER_PREFIX=/plugins/onlyoffice
+      - CREDENTIALS_ID=tdrive_onlyoffice
+      - CREDENTIALS_SECRET=c1cc66db78e1d3bb4713c55d5ab2
+    ports:
+      - 5000:5000
+    networks:
+    - tdrive_network
 
 networks:
   tdrive_network:

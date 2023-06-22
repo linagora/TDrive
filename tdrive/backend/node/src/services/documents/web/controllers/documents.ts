@@ -500,7 +500,7 @@ export class DocumentsController {
     if (!document || !document.access || document.access === "none")
       throw new CrudException("You don't have access to this document", 401);
 
-    const email = document.item.company_id + "-anonymous@tdrive.com";
+    const email = `anonymous@${document.item.company_id}.tdrive.com`;
     let user = await globalResolver.services.users.getByEmail(email);
     if (!user) {
       user = (

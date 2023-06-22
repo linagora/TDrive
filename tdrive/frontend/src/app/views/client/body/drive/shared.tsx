@@ -141,9 +141,6 @@ const AccessChecker = ({
     })();
   }, []);
 
-  if (!details?.item?.id && loading) {
-    return <></>;
-  }
 
   if ((!details?.item?.id && !loading) || !accessGranted) {
     return (
@@ -170,7 +167,7 @@ const AccessChecker = ({
               theme="primary"
               onClick={async () => {
                 await setPublicToken(token || '', password);
-                refresh(folderId);
+                await refresh(folderId);
               }}
             >
               Submit

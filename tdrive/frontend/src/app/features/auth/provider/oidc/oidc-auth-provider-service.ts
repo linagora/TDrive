@@ -8,8 +8,6 @@ import { getAsFrontUrl } from '@features/global/utils/URLUtils';
 import { TdriveService } from '../../../global/framework/registry-decorator-service';
 import EnvironmentService from '../../../global/framework/environment-service';
 import { AuthProvider, InitParameters } from '../auth-provider';
-import ConsoleService from '@features/console/services/console-service';
-import jwtStorageService, { JWTDataType } from '@features/auth/jwt-storage-service';
 import LocalStorage from '@features/global/framework/local-storage-service';
 
 const OIDC_CALLBACK_URL = '/oidccallback';
@@ -55,11 +53,11 @@ export default class OIDCAuthProviderService
         scope: 'openid profile email address phone offline_access',
         post_logout_redirect_uri: getAsFrontUrl(OIDC_SIGNOUT_URL),
         silent_redirect_uri: getAsFrontUrl(OIDC_SILENT_URL),
-        automaticSilentRenew: true,
+        automaticSilentRenew: false,
         loadUserInfo: true,
         accessTokenExpiringNotificationTime: 10,
         filterProtocolClaims: true,
-        monitorSession: false,
+        monitorSession: true,
       });
 
       // For logout if signout or logout endpoint called
@@ -68,6 +66,14 @@ export default class OIDCAuthProviderService
         this.logger.debug('Redirect signout');
         this.signOut();
       }
+
+      this.userManager.events.addUserSignedIn(() => {
+        this.logger.debug('User Signed In：');
+      });
+
+      this.userManager.events.addUserSignedOut(() => {
+        this.logger.debug('User Signed Out：');
+      });
 
       this.userManager.events.addUserLoaded((user: any, ...args) => {
         this.logger.debug('New User Loaded：', user, args);
@@ -94,7 +100,7 @@ export default class OIDCAuthProviderService
     this.logger.info('Signin');
 
     try {
-      await this.userManager!.signinRedirectCallback();
+      await this.userManager?.signinRedirectCallback();
     } catch (e) {
       console.log('Not connected, connect through SSO');
     }
@@ -102,22 +108,10 @@ export default class OIDCAuthProviderService
     const user = await this.userManager?.getUser();
 
     if (user) {
-      this.getJWTFromOidcToken(user, (err, jwt) => {
-        if (err) {
-          this.logger.error(
-            'OIDC user loaded listener, error while getting the JWT from OIDC token',
-            err,
-          );
-          this.signinRedirect();
-        }
-
         if (!this.initialized) {
           this.onInitialized();
           this.initialized = true;
-        } else {
-          jwt && this.params!.onNewToken(jwt);
         }
-      });
     } else {
       this.userManager?.signinRedirect();
     }
@@ -146,45 +140,6 @@ export default class OIDCAuthProviderService
     } catch (err) {
       this.logger.error('Signout redirect error', err);
     }
-  }
-
-  /**
-   * Try to get a new JWT token from the OIDC one:
-   * Call the backend with the OIDC token, it will use it to get a new token from console
-   */
-  private async getJWTFromOidcToken(
-    user: Oidc.User,
-    callback: (err?: Error, accessToken?: JWTDataType) => void,
-  ): Promise<void> {
-    if (!user) {
-      this.logger.info('getJWTFromOidcToken, Cannot getJWTFromOidcToken with a null user');
-      callback(new Error('Cannot getJWTFromOidcToken with a null user'));
-      return;
-    }
-
-    if (user.expired) {
-      // TODO: try to get a new token from refresh one before asking for a JWT token
-      this.logger.info('getJWTFromOidcToken, user expired');
-    }
-
-    ConsoleService.getNewAccessToken(
-      { id_token: user.id_token, access_token: user.access_token },
-      callback,
-    );
-  }
-
-  signinRedirect() {
-    if (document.location.href.indexOf('/login') === -1) {
-      //Save requested URL for after redirect / sign-in
-      LocalStorage.setItem('requested_url', {
-        url: document.location.href,
-        time: new Date().getTime(),
-      });
-    }
-
-    jwtStorageService.clear();
-
-    if (this.userManager) this.userManager.signinRedirect();
   }
 
   onInitialized() {

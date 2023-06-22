@@ -48,11 +48,16 @@ class AuthService {
       return this.provider;
     }
 
+    this.logger.debug(`Configured '${accountType}' auth provider`)
     const config = InitService.server_infos?.configuration?.accounts[accountType];
+
+    this.logger.debug("Using configuration ...");
+    this.logger.debug(config);
 
     if (Globals.environment.env_dev_auth) accountType = Globals.environment.env_dev_auth;
 
     if (accountType === 'remote') {
+      this.logger.debug('Using remote OIDC auth provider');
       this.provider = new OIDCAuthProviderService(config as ConsoleConfiguration);
     } else if (accountType === 'internal') {
       this.provider = new InternalAuthProviderService(config as InternalConfiguration);

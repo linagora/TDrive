@@ -120,17 +120,12 @@ export class DriveApiClient {
   }
 
   static async getDownloadUrl(companyId: string, id: string, versionId?: string) {
-    const { token } = await DriveApiClient.getDownloadToken(companyId, [id], versionId);
     if (versionId)
       return Api.route(
-        `/internal/services/documents/v1/companies/${companyId}/item/${id}/download?version_id=${versionId}&token=${token}${appendTdriveToken(
-          true,
-        )}`,
+        `/internal/services/files/v1/companies/${companyId}/files/${id}/download?version_id=${versionId}`,
       );
     return Api.route(
-      `/internal/services/documents/v1/companies/${companyId}/item/${id}/download?token=${token}${appendTdriveToken(
-        true,
-      )}`,
+      `/internal/services/files/v1/companies/${companyId}/files/${id}/download`,
     );
   }
 

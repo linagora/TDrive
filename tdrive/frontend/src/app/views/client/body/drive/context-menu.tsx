@@ -72,7 +72,7 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             {
               type: 'menu',
               text: Languages.t('components.item_context_menu.download'),
-              onClick: () => download(item.id),
+              onClick: () => download(item.last_version_cache.file_metadata.external_id),
             },
             { type: 'separator' },
             {
@@ -444,6 +444,7 @@ export const useOnBuildFileContextMenu = () => {
   const { open: preview } = useDrivePreview();
   return useCallback(
     (item: DriveItem) => {
+      console.log(item);
       const menuItems = [
         {
           type: 'menu',

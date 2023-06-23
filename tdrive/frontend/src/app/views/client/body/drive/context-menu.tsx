@@ -65,44 +65,21 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
             },
             {
               type: 'menu',
-              text: Languages.t('components.item_context_menu.download'),
-              onClick: () => download(item.id),
-            },
-            { type: 'separator' },
-            {
-              type: 'menu',
-              text: Languages.t('components.item_context_menu.rename'),
-              hide: access === 'read',
-              onClick: () => setPropertiesModalState({ open: true, id: item.id }),
-            },
-            {
-              type: 'menu',
-              text: Languages.t('components.item_context_menu.manage_access'),
-              hide: access === 'read' || getPublicLinkToken(),
-              onClick: () => setAccessModalState({ open: true, id: item.id }),
-            },
-            {
-              type: 'menu',
               text: Languages.t('components.item_context_menu.share'),
               hide: access === 'read' || getPublicLinkToken(),
               onClick: () => setAccessModalState({ open: true, id: item.id }),
             },
             {
               type: 'menu',
-              text: Languages.t('components.item_context_menu.copy_link'),
-              hide: !item.access_info.public?.level || item.access_info.public?.level === 'none',
-              onClick: () => {
-                copyToClipboard(getPublicLink(item || parent?.item));
-                ToasterService.success(
-                  Languages.t('components.item_context_menu.copy_link.success'),
-                );
-              },
+              text: Languages.t('components.item_context_menu.download'),
+              onClick: () => download(item.id),
             },
+            { type: 'separator' },
             {
               type: 'menu',
-              text: Languages.t('components.item_context_menu.versions'),
-              hide: item.is_directory,
-              onClick: () => setVersionModal({ open: true, id: item.id }),
+              text: Languages.t('components.item_context_menu.manage_access'),
+              hide: access === 'read' || getPublicLinkToken(),
+              onClick: () => setAccessModalState({ open: true, id: item.id }),
             },
             {
               type: 'menu',
@@ -126,6 +103,29 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                     );
                   },
                 }),
+            },
+            {
+              type: 'menu',
+              text: Languages.t('components.item_context_menu.rename'),
+              hide: access === 'read',
+              onClick: () => setPropertiesModalState({ open: true, id: item.id }),
+            },
+            {
+              type: 'menu',
+              text: Languages.t('components.item_context_menu.copy_link'),
+              hide: !item.access_info.public?.level || item.access_info.public?.level === 'none',
+              onClick: () => {
+                copyToClipboard(getPublicLink(item || parent?.item));
+                ToasterService.success(
+                  Languages.t('components.item_context_menu.copy_link.success'),
+                );
+              },
+            },
+            {
+              type: 'menu',
+              text: Languages.t('components.item_context_menu.versions'),
+              hide: item.is_directory,
+              onClick: () => setVersionModal({ open: true, id: item.id }),
             },
             { type: 'separator', hide: access !== 'manage' },
             {

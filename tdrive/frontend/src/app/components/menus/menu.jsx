@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-
+import React from 'react';
 import MenusManager from '@components/menus/menus-manager.jsx';
 
 /*
@@ -24,71 +23,91 @@ export default class Menu extends React.Component {
   */
 
   static closeAll() {
-    MenusManager.closeMenu();
+    MenusManager.closeAllMenus(); // Corrected method name to closeAllMenus()
   }
 
   constructor(props) {
-    super();
+    super(props);
     this.state = {
-      menus_manager: MenusManager,
+      isMenuOpen: false,
     };
+    this.open = false; // Added initialization for open state
+    this.container = React.createRef(); // Ref for container div
+    this.previousMenusId = null; // Added initialization for previousMenusId
+  }
+
+  componentDidMount() {
     MenusManager.addListener(this);
   }
+
   componentWillUnmount() {
     if (this.props.onClose && this.open) {
       this.props.onClose();
     }
     MenusManager.removeListener(this);
   }
+
   openMenuFromParent(menu, rect, position) {
     MenusManager.openMenu(menu, rect, position);
   }
+
   openMenu(evt) {
-    this.open = true;
-    evt.preventDefault();
-    evt.stopPropagation();
-    var elementRect = window.getBoundingClientRect(this.container);
-    elementRect.x = elementRect.x || elementRect.left;
-    elementRect.y = elementRect.y || elementRect.top;
-    this.previous_menus_id = MenusManager.openMenu(
-      this.props.menu,
-      elementRect,
-      this.props.position,
-    );
-    if (this.props.onOpen) this.props.onOpen();
+    if (this.open) {
+      this.closeAll();
+    } else {
+      this.open = true;
+      evt.preventDefault();
+      evt.stopPropagation();
+      var elementRect = this.container.current.getBoundingClientRect(); // Fixed getBoundingClientRect()
+      elementRect.x = elementRect.x || elementRect.left;
+      elementRect.y = elementRect.y || elementRect.top;
+      this.previousMenusId = MenusManager.openMenu( // Updated variable name
+        this.props.menu,
+        elementRect,
+        this.props.position,
+      );
+      if (this.props.onOpen) this.props.onOpen();
+    }
   }
+
   shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.menu != this.props.menu && this.open) {
+    if (nextProps.menu !== this.props.menu && this.open) { // Fixed comparison operator
       this.setState({});
     }
 
     if (
-      (this.state.menus_manager.menus.length == 0 && this.previous_menus_number > 0) ||
-      this.state.menus_manager.last_opened_id != this.previous_menus_id
+      (MenusManager.menus.length === 0 && this.previousMenusNumber > 0) ||
+      MenusManager.lastOpenedId !== this.previousMenusId // Updated variable name
     ) {
       if (this.open && this.props.onClose) {
         this.props.onClose();
       }
       this.open = false;
     }
-    if (this.previous_menus_number != this.state.menus_manager.menus.length) {
-      this.previous_menus_number = this.state.menus_manager.menus.length;
+    if (this.previousMenusNumber !== MenusManager.menus.length) {
+      this.previousMenusNumber = MenusManager.menus.length;
     }
 
-    if (this.props.style !== nextProps.style || this.props.className !== nextProps.className) {
+    if (
+      this.props.style !== nextProps.style ||
+      this.props.className !== nextProps.className
+    ) {
       return true;
     }
 
     return false;
   }
+
   render() {
     return (
       <div
-        ref={node => (this.container = node)}
+        ref={this.container}
         style={this.props.style}
-        onClick={evt => {
+        onClick={(evt) => {
+          console.log('if this open: ', this.state.isMenuOpen);
           if (this.props.toggle) {
             if (!this.open) {
+              this.setState({ ...this.state, isMenuOpen: true });
               this.openMenu(evt);
             } else {
               MenusManager.closeMenu();

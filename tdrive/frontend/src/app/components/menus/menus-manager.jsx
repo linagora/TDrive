@@ -16,6 +16,7 @@ class MenusManager extends Observable {
     this.lastOpen = 0;
     this.willClose = false;
     this.max_level = 0;
+    this.isOpen = 0;
 
     var that = this;
     Globals.window.addEventListener('keydown', function (evt) {
@@ -57,7 +58,7 @@ class MenusManager extends Observable {
     this.notify();
   }
   async openMenu(menu, domRect, positionType, options) {
-
+    this.isOpen = 1;
     if(typeof menu === 'function') {
       menu = await menu();
     }

@@ -245,7 +245,7 @@
     "components.item_context_menu.versions": "Versions",
     "components.item_context_menu.move": "Move",
     "components.item_context_menu.move.modal_header": "Move",
-    "components.item_context_menu.move_to_trash": "Move to trash",
+    "components.item_context_menu.move_to_trash": "Delete",
     "components.item_context_menu.delete": "Delete",
     "components.item_context_menu.move_multiple": "Move selected items",
     "components.item_context_menu.move_multiple.modal_header": "Move selected items",

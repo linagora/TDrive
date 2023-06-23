@@ -40,7 +40,7 @@ export default () => {
       centered
       closable={false}
       title={null}
-      open={open}
+      visible={open}
       footer={null}
       destroyOnClose={true}
       width={ModalManager.getPosition()?.size?.width || '700px'}

@@ -140,3 +140,8 @@ docker-compose.yml
 /web/detached/*
 /drive/*
 /configuration
+
+### Only Office ###
+/onlyoffice_data/
+/onlyoffice_postgres_data/
+/.docker-conf/

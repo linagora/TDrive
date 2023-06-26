@@ -169,7 +169,7 @@ export default memo(
           <UploadZone
             overClassName={''}
             className="h-full overflow-hidden"
-            //disableClick
+            disableClick
             parent={''}
             multiple={true}
             allowPaste={true}

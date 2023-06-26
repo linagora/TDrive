@@ -78,8 +78,10 @@ export default class OIDCAuthProviderService
         this.logger.debug('AccessToken Expiring：', args);
       });
 
-      this.userManager.events.addAccessTokenExpired((...args) => {
+      this.userManager.events.addAccessTokenExpired(async (...args) => {
         this.logger.debug('AccessToken Expired：', args);
+        await this.userManager?.removeUser();
+        await this.signIn();
       });
 
       this.userManager.events.addSilentRenewError((...args) => {
@@ -102,7 +104,7 @@ export default class OIDCAuthProviderService
     const user = await this.userManager?.getUser();
 
     if (user) {
-      this.getJWTFromOidcToken(user, (err, jwt) => {
+      await this.getJWTFromOidcToken(user, (err, jwt) => {
         if (err) {
           this.logger.error(
             'OIDC user loaded listener, error while getting the JWT from OIDC token',

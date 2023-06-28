@@ -14,7 +14,7 @@ type SearchParamsType = {
 };
 
 export default function MobileRedirect(props: { children: ReactNode }) {
-  const os = getDevice();
+  const os = "other";
   const searchParams: SearchParamsType = Object.fromEntries(
     new URLSearchParams(window.location.search),
   );
@@ -22,7 +22,7 @@ export default function MobileRedirect(props: { children: ReactNode }) {
   const parameters = InitService.server_infos?.configuration.mobile;
 
   const getapp = searchParams.getapp;
-  let forceUseWeb: string | boolean = searchParams.useweb;
+  let forceUseWeb: string | boolean = true;
   const originInUrl = searchParams.origin;
 
   delete searchParams.useweb;
@@ -39,11 +39,11 @@ export default function MobileRedirect(props: { children: ReactNode }) {
 
   //If requested in url: redirect to stores
   if (getapp && parameters?.mobile_appstore && parameters?.mobile_googleplay) {
-    if (os === 'android') {
-      document.location.replace(parameters?.mobile_googleplay);
-    } else if (os === 'ios') {
-      document.location.replace(parameters?.mobile_appstore);
-    }
+    // if (os === 'android') {
+    //   document.location.replace(parameters?.mobile_googleplay);
+    // } else if (os === 'ios') {
+    //   document.location.replace(parameters?.mobile_appstore);
+    // }
     return <></>;
   }
 

@@ -91,36 +91,6 @@ const SelectorModalContent = () => {
             </div>
           </div>
         ))}
-        {files.map(file => (
-          <div
-            key={file.id}
-            className={
-              'flex flex-row items-center border-t -mt-px px-4 py-2 cursor-pointer ' +
-              'hover:bg-zinc-500 hover:bg-opacity-10 '
-            }
-            onClick={() => {
-              if (state.mode === 'select-files') {
-                if (!selected.some(i => i.id === file.id)) {
-                  setSelected([...selected, file]);
-                } else {
-                  setSelected(selected.filter(i => i.id !== file.id));
-                }
-              } else if (state.mode === 'select-file') {
-                setSelected([file]);
-              }
-            }}
-          >
-            <div className="grow flex flex-row items-center">
-              <DocumentIcon className="h-5 w-5 shrink-0 text-gray-400 mr-2" />
-              {file.name}
-            </div>
-            {(state.mode === 'select-file' || state.mode === 'select-files') && (
-              <div className="shrink-0" onClick={e => e.stopPropagation()}>
-                <Checkbox value={selected.some(i => i.id === file.id)} />
-              </div>
-            )}
-          </div>
-        ))}
       </div>
 
       <Button

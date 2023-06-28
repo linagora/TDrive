@@ -19,6 +19,7 @@ import { useState } from 'react';
 import Avatar from '../../../../../atoms/avatar';
 import { PublicIcon } from '../components/public-icon';
 import { CheckableIcon, DriveItemProps } from './common';
+import { getDevice } from '../../../../../features/global/utils/device';
 
 export const DocumentRow = ({
   item,
@@ -39,7 +40,11 @@ export const DocumentRow = ({
   const hasThumbnails = !!metadata.thumbnails?.length || false;
 
   const preview = () => {
-    open(item);
+    const device = getDevice();
+    console.log("DEVICE:: " + device);
+    if (device != "ios" && device != "android") {
+      open(item);
+    }
   };
 
   return (

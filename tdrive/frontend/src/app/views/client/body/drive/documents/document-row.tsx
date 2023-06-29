@@ -104,10 +104,10 @@ export const DocumentRow = ({
           }
         />
       </div>
-      <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
+      <div className="grow text-ellipsis whitespace-nowrap overflow-hidden" style={{ width: '100px'}}>
         <Base>{item.name}</Base>
       </div>
-      <div className="shrink-0 ml-4">
+      <div className="shrink-0 ml-4" style={{ width: '20px' }}>
         {item?.access_info?.public?.level !== 'none' && (
           <PublicIcon className="h-5 w-5 text-blue-500" />
         )}

@@ -5,6 +5,7 @@ export const DriveViewerState = atom<{
   item: null | DriveItem;
   details?: DriveItemDetails;
   loading: boolean;
+  previewWindow?: Window | null;
 }>({
   key: "DriveViewerState",
   default: {

@@ -138,6 +138,17 @@ export class DriveApiClient {
     );
   }
 
+  static async getFileUrl(companyId: string, id: string) {
+    try {
+      const url = await Api.route(`/internal/services/documents/v1/companies/${companyId}/item/${id}`);
+      return url;
+    } catch (error) {
+      // Handle any errors that occur during the API call
+      console.error('Error fetching file URL:', error);
+      throw error;
+    }
+  }
+
   static async search(searchString: string, view?: string, options?: BaseSearchOptions) {
     const companyId = options?.company_id ? options.company_id : Workspace.currentGroupId;
     const query = `/internal/services/documents/v1/companies/${companyId}/search`;

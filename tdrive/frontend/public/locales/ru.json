@@ -283,6 +283,7 @@
     "components.pending_file_list.estimation.end": "Закончится через",
     "components.pending_file_list.estimation.approximations": "Примерное время ожидания...",
     "components.item_context_menu.preview": "Просмотр",
+    "components.item_context_menu.new_window": "Open in new window",
     "components.item_context_menu.download": "Скачать",
     "components.item_context_menu.rename": "Переименовать",
     "components.item_context_menu.manage_access": "Управлять доступом",

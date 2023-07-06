@@ -44,10 +44,10 @@ export const FolderRow = ({
           fallback={<FolderIcon className="h-5 w-5 shrink-0 text-blue-500" />}
         />
       </div>
-      <div className="grow text-ellipsis whitespace-nowrap overflow-hidden" style={{ width: '100px'}}>
-        <Base className="!font-semibold">{item.name}</Base>
+      <div className="grow text-ellipsis whitespace-nowrap overflow-hidden">
+        <Base className="!font-semibold flex" style={{ maxWidth:"100px"}}>{item.name}</Base>
       </div>
-      <div className="shrink-0 ml-4" style={{ width: '20px' }}>
+      <div className="shrink-0 ml-4">
         {item?.access_info?.public?.level !== 'none' && (
           <PublicIcon className="h-5 w-5 text-blue-500" />
         )}

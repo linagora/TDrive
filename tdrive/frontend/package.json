@@ -69,6 +69,7 @@
     "@babel/preset-env": "^7.8.7",
     "@babel/preset-es2017": "^7.0.0-beta.53",
     "@craco/craco": "^6.4.3",
+    "@dnd-kit/core": "^6.0.8",
     "@fortawesome/fontawesome-svg-core": "^6.1.2",
     "@fortawesome/free-solid-svg-icons": "^6.1.2",
     "@fortawesome/react-fontawesome": "^0.2.0",

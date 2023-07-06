@@ -38,6 +38,7 @@ import Languages from 'features/global/services/languages-service';
 import {DndContext, DragOverlay} from '@dnd-kit/core';
 import { Droppable } from 'app/features/dragndrop/hook/droppable';
 import { Draggable } from 'app/features/dragndrop/hook/draggable';
+import React from 'react';
 
 
 export const DriveCurrentFolderAtom = atomFamily<
@@ -163,21 +164,6 @@ export default memo(
 
     const [isDropped, setIsDropped] = useState(false);
     const [activeId, setActiveId] = useState(null);
-    const draggableMarkup = (index:any,child:any) => (
-      <Draggable index={index}>
-        <DocumentRow
-                      key={index}
-                      className={
-                        (index === 0 ? 'rounded-t-md ' : '') +
-                        (index === documents.length - 1 ? 'rounded-b-md ' : '')
-                      }
-                      item={child}
-                      checked={checked[child.id] || false}
-                      onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
-                      onBuildContextMenu={() => onBuildContextMenu(details, child)}
-                      />
-      </Draggable>
-    );
 
     return (
       <>
@@ -325,8 +311,7 @@ export default memo(
                       <Title className="mb-2 block">{Languages.t('scenes.app.drive.folders')}</Title>
 
                       {folders.map((child, index) => (
-                        <DndContext key={index}>
-                         {isDropped ? draggableMarkup(index,child) : "test"}
+                        <Droppable key={index} id={index}>
                           <FolderRow
                             key={index}
                             className={
@@ -343,7 +328,7 @@ export default memo(
                             }
                             onBuildContextMenu={() => onBuildContextMenu(details, child)}
                           />
-                        </DndContext>
+                        </Droppable> 
                       ))}
                       <div className="my-6" />
                     </>
@@ -369,29 +354,25 @@ export default memo(
                   )}
 
                   {documents.map((child, index) => (
-                    <DndContext key={index}>
-                      {!isDropped ? draggableMarkup(index,child) : null}
-                      <Droppable key={index} id={index}>
-                      </Droppable>
-                      <DragOverlay>
-                        {activeId ? (
-                          <DocumentRow
-                          key={activeId}
-                          className={
-                            (index === 0 ? 'rounded-t-md ' : '') +
-                            (index === documents.length - 1 ? 'rounded-b-md ' : '')
-                          }
-                          item={child}
-                          checked={checked[child.id] || false}
-                          onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
-                          onBuildContextMenu={() => onBuildContextMenu(details, child)}
-                          />
-                        ): null}
-                      </DragOverlay>
-                    </DndContext>
+                    <React.Fragment key={index}>
+                      <Draggable index={index}>
+                        <DocumentRow
+                            key={index}
+                            className={
+                              (index === 0 ? 'rounded-t-md ' : '') +
+                              (index === documents.length - 1 ? 'rounded-b-md ' : '')
+                            }
+                            item={child}
+                            checked={checked[child.id] || false}
+                            onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
+                            onBuildContextMenu={() => onBuildContextMenu(details, child)}
+                            />
+                      </Draggable>
+                    </React.Fragment>
                   ))}
+
                 </div>
-                </DndContext>
+              </DndContext>
               </div>    
           </UploadZone>
         )}

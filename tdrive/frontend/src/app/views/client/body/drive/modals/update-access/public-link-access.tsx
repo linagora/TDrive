@@ -120,7 +120,7 @@ const PublicLinkOptions = (props: {
   }, [useExpiration, expiration]);
 
   function expirationDate(exp: moment.MomentInput) {
-    moment.locale(Languages.t('language'));
+    moment.locale(Languages.getLanguage());
     return moment(exp).fromNow(true).toLocaleString();
   }
 
@@ -177,19 +177,12 @@ const PublicLinkOptions = (props: {
           value={!!useExpiration}
           label={Languages.t('components.public-link-security_expired')}
         />
-
-
-
-
         {useExpiration && (expiration || 0) < Date.now() && (
           <Info className="ml-2 text-red-500">({Languages.t('components.public-link-security_expired')})</Info>
         )}
         {useExpiration && (expiration || 0) > Date.now() && (
           <Info className="ml-2">({expirationDate(expiration)})</Info>
         )}{' '}
-
-
-
         <div className="grow mr-2" />
         {!!useExpiration && (
           <Input

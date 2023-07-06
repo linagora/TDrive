@@ -283,6 +283,7 @@
     "components.pending_file_list.estimation.end": "Will end",
     "components.pending_file_list.estimation.approximations": "Waiting for time approximations...",
     "components.item_context_menu.preview": "Preview",
+    "components.item_context_menu.new_window": "Open in new window",
     "components.item_context_menu.download": "Download",
     "components.item_context_menu.rename": "Rename",
     "components.item_context_menu.manage_access": "Manage access",

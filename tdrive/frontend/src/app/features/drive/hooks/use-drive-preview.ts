@@ -16,7 +16,7 @@ export const useDrivePreviewModal = () => {
     }
   };
 
-  const close = () => setStatus({ item: null, loading: true });
+  const close = () => setStatus({ item: null, loading: true});
 
   return { open, close, isOpen: !!status.item };
 };
@@ -29,21 +29,21 @@ export const useDrivePreview = () => {
     'useDrivePreview',
     async () => {
       if (modal.isOpen && status.item) {
-        setStatus({
-          ...status,
+        setStatus((prevStatus) => ({
+          ...prevStatus,
           loading: true,
-        });
+        }));
 
         const details = await DriveApiClient.get(status.item.company_id, status.item.id);
 
-        setStatus({
-          ...status,
+        setStatus((prevStatus) => ({
+          ...prevStatus,
           details,
           loading: false,
-        });
+        }));
       }
     },
-    [status.item?.id],
+    [modal.isOpen, status.item?.id],
   );
 
   return {

@@ -32,6 +32,8 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
     DriveCurrentFolderAtom({ initialFolderId: initialParentId || 'root' }),
   );
 
+
+
   const { download, downloadZip, update } = useDriveActions();
   const setCreationModalState = useSetRecoilState(CreateModalAtom);
   const setSelectorModalState = useSetRecoilState(SelectorModalAtom);
@@ -247,11 +249,36 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                     parent?.item?.id &&
                     setCreationModalState({ open: true, parent_id: parent?.item?.id }),
                 },
+                { type: 'separator' },
+                {
+                  type: 'menu',
+                  text: Languages.t('components.item_context_menu.share'),
+                  hide: parent.access === 'read' || getPublicLinkToken(),
+                  onClick: () => setAccessModalState({ open: true, id: parent.item!.id }),
+                },
                 {
                   type: 'menu',
                   text: Languages.t('components.item_context_menu.download_folder'),
                   hide: inTrash,
-                  onClick: () => downloadZip([parent.item!.id]),
+                  onClick: async () => {
+                    try {
+                      const info = await DriveApiClient.get(parent.item!.company_id, parent.item!.id);
+                      console.log(info);
+                      children=info.children;
+                      console.log(children);
+                      downloadZip(children.map(child => child.id));
+                    } catch (error) {
+                      console.error('Error retrieving folder children:', error);
+                      ToasterService.error('Unable to download the contents of the folder.');
+                    }
+                  },
+                },
+                { type: 'separator' },
+                {
+                  type: 'menu',
+                  text: Languages.t('components.item_context_menu.manage_access'),
+                  hide: parent.access === 'read' || getPublicLinkToken(),
+                  onClick: () => setAccessModalState({ open: true, id: parent.item!.id }),
                 },
                 {
                   type: 'menu',
@@ -266,7 +293,51 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                     );
                   },
                 },
+                {
+                  type: 'menu',
+                  text: Languages.t('components.item_context_menu.move'),
+                  hide: parent.access === 'read',
+                  onClick: () =>
+                    setSelectorModalState({
+                      open: true,
+                      parent_id: inTrash ? 'root' : parent.item!.parent_id,
+                      mode: 'move',
+                      title:
+                        Languages.t('components.item_context_menu.move.modal_header') +
+                        ` '${parent.item!.name}'`,
+                      onSelected: async ids => {
+                        await update(
+                          {
+                            parent_id: ids[0],
+                          },
+                          parent.item!.id,
+                          parent.item!.parent_id,
+                        );
+                      },
+                    }),
+                },
+                {
+                  type: 'menu',
+                  text: Languages.t('components.item_context_menu.rename'),
+                  hide: parent.access === 'read',
+                  onClick: () => setPropertiesModalState({ open: true, id: parent.item!.id }),
+                },
+                
                 { type: 'separator', hide: inTrash || parent.access === 'read' },
+                {
+                  type: 'menu',
+                  text: Languages.t('components.item_context_menu.move_to_trash'),
+                  className: 'error',
+                  hide: inTrash || parent.access !== 'manage',
+                  onClick: () => setConfirmTrashModalState({ open: true, items: [parent.item!] }),
+                },
+                {
+                  type: 'menu',
+                  text: Languages.t('components.item_context_menu.delete'),
+                  className: 'error',
+                  hide: !inTrash || parent.access !== 'manage',
+                  onClick: () => setConfirmDeleteModalState({ open: true, items: [parent.item!] }),
+                },
                 {
                   type: 'menu',
                   text: Languages.t('components.item_context_menu.go_to_trash'),

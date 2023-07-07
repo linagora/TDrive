@@ -22,7 +22,7 @@ import DiskUsage from '../common/disk-usage';
 import Actions from './actions';
 import { useHistory, useLocation } from 'react-router-dom';
 import RouterServices from '@features/router/services/router-service';
-import Languages from "features/global/services/languages-service";
+import Languages from 'features/global/services/languages-service';
 import shared from '../body/drive/shared';
 
 export default () => {
@@ -63,28 +63,43 @@ export default () => {
         <div className="mt-4" />
         <Title>Drive</Title>
         <Button
-          onClick={() => {history.push(RouterServices.generateRouteFromState({companyId: company, viewId: ""})); setParentId('user_' + user?.id)}}
+          onClick={() => {
+            history.push(RouterServices.generateRouteFromState({ companyId: company, viewId: '' }));
+            setParentId('user_' + user?.id);
+          }}
           size="lg"
           theme="white"
-          className={'w-full mb-1 ' + (folderType === 'personal' && viewId == '' ? activeClass : '')}
+          className={
+            'w-full mb-1 ' + (folderType === 'personal' && viewId == '' ? activeClass : '')
+          }
         >
           <UserIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.my_drive')}
         </Button>
+        {rootAccess == 'manage' ? (
+          <Button
+            onClick={() => {
+              history.push(
+                RouterServices.generateRouteFromState({ companyId: company, viewId: '' }),
+              );
+              setParentId('root');
+            }}
+            size="lg"
+            theme="white"
+            className={'w-full mb-1 ' + (folderType === 'home' && viewId == '' ? activeClass : '')}
+          >
+            <CloudIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.home')}
+          </Button>
+        ) : null}
         <Button
-          onClick={() => {history.push(RouterServices.generateRouteFromState({companyId: company, viewId: ""})); setParentId('root')}}
+          onClick={() => {
+            setParentId('shared_with_me');
+          }}
           size="lg"
           theme="white"
-          className={'w-full mt-2 mb-1 ' + (folderType === 'home' && viewId == '' ? activeClass : '')}
+          className={'w-full mb-1 ' + (folderType === 'shared' && viewId == '' ? activeClass : '')}
         >
-          <CloudIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.home')}
-        </Button>
-        <Button
-          onClick={() => {setParentId('shared_with_me')}}
-          size="lg"
-          theme="white"
-          className={'w-full mb-1 ' + (folderType === 'shared' && viewId == ''? activeClass : '')}
-        >
-          <UserGroupIcon className="w-5 h-5 mr-4" /> {Languages.t('components.side_menu.shared_with_me')}
+          <UserGroupIcon className="w-5 h-5 mr-4" />{' '}
+          {Languages.t('components.side_menu.shared_with_me')}
         </Button>
         {false && (
           <>
@@ -104,16 +119,20 @@ export default () => {
             </Button>
           </>
         )}
-        {rootAccess === 'manage' && (
-          <Button
-            onClick={() =>{history.push(RouterServices.generateRouteFromState({companyId: company, viewId: ""}));setParentId('trash')}}
-            size="lg"
-            theme="white"
-            className={'w-full mb-1 ' + (folderType === 'trash' && viewId == ''? activeClass : '')}
-          >
-            <TrashIcon className="w-5 h-5 mr-4 text-rose-500" /> {Languages.t('components.side_menu.trash')}
-          </Button>
-        )}
+        <Button
+          onClick={() => {
+            history.push(
+              RouterServices.generateRouteFromState({ companyId: company, viewId: '' }),
+            );
+            setParentId('trash');
+          }}
+          size="lg"
+          theme="white"
+          className={'w-full mb-1 ' + (folderType === 'trash' && viewId == '' ? activeClass : '')}
+        >
+          <TrashIcon className="w-5 h-5 mr-4 text-rose-500" />{' '}
+          {Languages.t('components.side_menu.trash')}
+        </Button>
 
         {false && (
           <>

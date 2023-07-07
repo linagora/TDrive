@@ -164,6 +164,34 @@ export default memo(
 
     const [isDropped, setIsDropped] = useState(false);
     const [activeId, setActiveId] = useState(null);
+    function handleDragStart(event:any) {
+      setActiveId(event.active.id);
+    }
+    function handleDragEnd(event:any) {
+      if (event.over && event.over.id === "droppable") {
+        setIsDropped(true);
+      }
+    }
+    const [parent, setParent] = useState(null);
+    function draggableMarkup(index: number, child:any) {
+      return( 
+        <>
+        <Draggable index={index}>
+        <DocumentRow
+            key={index}
+            className={
+              (index === 0 ? 'rounded-t-md ' : '') +
+              (index === documents.length - 1 ? 'rounded-b-md ' : '')
+            }
+            item={child}
+            checked={checked[child.id] || false}
+            onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
+            onBuildContextMenu={() => onBuildContextMenu(details, child)}
+            />
+          </Draggable>
+        </>
+      )
+    }
 
     return (
       <>
@@ -311,8 +339,8 @@ export default memo(
                       <Title className="mb-2 block">{Languages.t('scenes.app.drive.folders')}</Title>
 
                       {folders.map((child, index) => (
-                        <Droppable key={index} id={index}>
-                          <FolderRow
+                        <Droppable id={index} key={index}>
+                        <FolderRow
                             key={index}
                             className={
                               (index === 0 ? 'rounded-t-md ' : '') +
@@ -328,7 +356,7 @@ export default memo(
                             }
                             onBuildContextMenu={() => onBuildContextMenu(details, child)}
                           />
-                        </Droppable> 
+                        </Droppable>
                       ))}
                       <div className="my-6" />
                     </>
@@ -354,21 +382,7 @@ export default memo(
                   )}
 
                   {documents.map((child, index) => (
-                    <React.Fragment key={index}>
-                      <Draggable index={index}>
-                        <DocumentRow
-                            key={index}
-                            className={
-                              (index === 0 ? 'rounded-t-md ' : '') +
-                              (index === documents.length - 1 ? 'rounded-b-md ' : '')
-                            }
-                            item={child}
-                            checked={checked[child.id] || false}
-                            onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
-                            onBuildContextMenu={() => onBuildContextMenu(details, child)}
-                            />
-                      </Draggable>
-                    </React.Fragment>
+                    !isDropped ? draggableMarkup(index, child) : null
                   ))}
 
                 </div>
@@ -379,13 +393,6 @@ export default memo(
 
       </>
     );
-    function handleDragStart(event:any) {
-      setActiveId(event.active.id);
-    }
-    function handleDragEnd(event:any) {
-      if (event.over && event.over.id === 'droppable') {
-        setIsDropped(true);
-      }
-    }
+    
   },
 );

@@ -8,7 +8,7 @@ type DroppableProps={
 
 export function Droppable(props:DroppableProps) {
   const {setNodeRef} = useDroppable({
-    id: props.id|| "droppable",
+    id: "droppable",
   });
   
   return (

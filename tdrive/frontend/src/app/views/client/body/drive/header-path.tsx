@@ -25,7 +25,7 @@ export default ({
   return <PathRender inTrash={inTrash || false} path={path} onClick={id => setParentId(id)} />;
 };
 
-function CutFileName (name: any){
+function cutFileName (name: any){
   if (typeof name !== "undefined" ){
     if (name.length >= 30){
       return name.substring(0,30)+" ...";
@@ -123,7 +123,7 @@ const PathItem = ({
           }
         }}
       >
-        <Title>{CutFileName(item?.name) || ''}</Title>
+        <Title>{cutFileName(item?.name) || ''}</Title>
       </a>
       {item?.access_info?.public?.level && item?.access_info?.public?.level !== 'none' && (
         <PublicIcon className="h-5 w-5 ml-2" />

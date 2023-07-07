@@ -269,6 +269,11 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
                 { type: 'separator', hide: inTrash || parent.access === 'read' },
                 {
                   type: 'menu',
+                  text: Languages.t('components.item_context_menu.manage_users'),
+                },
+                { type: 'separator', hide: inTrash || parent.access === 'read' },
+                {
+                  type: 'menu',
                   text: Languages.t('components.item_context_menu.go_to_trash'),
                   hide: inTrash || parent.access === 'read',
                   onClick: () => setParentId('trash'),

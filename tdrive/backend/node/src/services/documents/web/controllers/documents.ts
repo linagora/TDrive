@@ -21,9 +21,18 @@ import {
 } from "../../types";
 import { DriveFileDTO } from "../dto/drive-file-dto";
 import { DriveFileDTOBuilder } from "../../services/drive-file-dto-builder";
-
+import {
+  ExecutionContext,
+} from "../../../../core/platform/framework/api/crud-service";
+import gr from "../../../global-resolver";
 export class DocumentsController {
   private driveFileDTOBuilder = new DriveFileDTOBuilder();
+  
+  private getCompanyUserRole(companyId: string, userId: string, context?: ExecutionContext) {
+    return gr.services.companies
+      .getCompanyUser({ id: companyId }, { id: userId }, context)
+      .then(a => (a ? a.level : null));
+  }
 
   /**
    * Creates a DriveFile item
@@ -158,6 +167,8 @@ export class DocumentsController {
     const context = getDriveExecutionContext(request);
     const { id } = request.params;
 
+    const companyUserRole = await this.getCompanyUserRole(request.body.company_id || context.company.id, context.user.id);
+
     const options: SearchDocumentsOptions = {
       ...request.body,
       company_id: request.body.company_id || context.company.id,
@@ -166,7 +177,7 @@ export class DocumentsController {
       onlyUploadedNotByMe: true,
     };
 
-    return {
+    let data =  {
       ...(await globalResolver.services.documents.documents.browse(id, options, context)),
       websockets: request.currentUser?.id
         ? globalResolver.platformServices.realtime.sign(
@@ -175,6 +186,13 @@ export class DocumentsController {
           )
         : [],
     };
+
+    if(id == "root" && companyUserRole < 1) {
+      data.children = [];
+      data.access = "read";
+    }
+
+    return data;
   };
 
   sharedWithMe = async (

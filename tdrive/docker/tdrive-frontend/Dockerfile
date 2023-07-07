@@ -20,6 +20,7 @@ COPY docker/tdrive-frontend/nginx.conf /etc/nginx/nginx.conf
 COPY docker/tdrive-frontend/site.conf /etc/nginx/sites-available/site.template
 COPY docker/tdrive-frontend/redirect.conf /etc/nginx/sites-available/redirect
 COPY docker/tdrive-frontend/entrypoint.sh /
+COPY docker/tdrive-frontend/self-signed.sh /
 COPY docker/tdrive-frontend/self-signed.sh /usr/local/bin/
 COPY --from=build /tdrive-react /tdrive-react
 

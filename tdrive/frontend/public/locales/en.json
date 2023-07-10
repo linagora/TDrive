@@ -213,6 +213,7 @@
     "common.access-level_read":"Read",
     "common.access-level_write":"Write",
     "common.access-level_no_access":"No access",
+    "components.dragndrop_info_move_to":"move to",
     "components.SelectorModalContent_move_to":"Move to",
     "components.SelectorModalContent_no_items":"No item selected",
     "components.SelectorModalContent_select":"Selected",

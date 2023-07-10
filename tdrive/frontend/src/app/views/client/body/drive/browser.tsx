@@ -188,7 +188,10 @@ export default memo(
           event.active.data.current.child.props.item.id,
           event.active.data.current.child.props.item.parent_id,
         );
-        ToasterService.success(event.active.data.current.child.props.item.name+" "+Languages.t('components.dragndrop_info_move_to')+" "+event.over.data.current.child.props.item.name);
+        console.log("sucess")
+      
+      }else{
+        console.log(event.active.data.current.child.props.item)
       }
       
     }

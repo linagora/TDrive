@@ -40,9 +40,6 @@ import { Droppable } from 'app/features/dragndrop/hook/droppable';
 import { Draggable } from 'app/features/dragndrop/hook/draggable';
 import { useDriveActions } from '@features/drive/hooks/use-drive-actions';
 
-
-//const {update} = useDriveActions();
-
 export const DriveCurrentFolderAtom = atomFamily<
   string,
   { context?: string; initialFolderId: string }
@@ -164,6 +161,7 @@ export default memo(
     const buildPeopleContextMen = useOnBuildPeopleContextMenu();
     const buildDateContextMenu = useOnBuildDateContextMenu();
     const [activeId, setActiveId] = useState();
+    const {update} = useDriveActions();
 
     function handleDragStart(event:any) {
       const { active } = event;
@@ -173,18 +171,22 @@ export default memo(
     }
 
     function handleDragEnd(event:any) {
-      console.log(event.over.data.current.child.props.item)
-      console.log(event.active.data.current.child.props.item)
-      /*
-      if (event.over && event.over.id === "droppable-1") {
+      if (event.over){
+        console.log(event.over.data.current.child.props.item)
+        console.log(event.active.data.current.child.props.item)
         update(
           {
-            parent_id: parentId,
+            parent_id: event.over.data.current.child.props.item.id,
           },
-          event.active.data.item,
-          parentId,
+          event.active.data.current.child.props.item.id,
+          event.active.data.current.child.props.item.parent_id,
         );
-      }*/
+        console.log("sucess")
+      
+      }else{
+        console.log(event.active.data.current.child.props.item)
+      }
+      
     }
 
     function draggableMarkup(index: number, child:any) {

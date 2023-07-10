@@ -38,8 +38,10 @@ import Languages from 'features/global/services/languages-service';
 import {DndContext, DragOverlay} from '@dnd-kit/core';
 import { Droppable } from 'app/features/dragndrop/hook/droppable';
 import { Draggable } from 'app/features/dragndrop/hook/draggable';
-import React from 'react';
+import { useDriveActions } from '@features/drive/hooks/use-drive-actions';
 
+
+//const {update} = useDriveActions();
 
 export const DriveCurrentFolderAtom = atomFamily<
   string,
@@ -161,18 +163,30 @@ export default memo(
     const buildFileTypeContextMenu = useOnBuildFileTypeContextMenu();
     const buildPeopleContextMen = useOnBuildPeopleContextMenu();
     const buildDateContextMenu = useOnBuildDateContextMenu();
+    const [activeId, setActiveId] = useState();
 
-    const [isDropped, setIsDropped] = useState(false);
-    const [activeId, setActiveId] = useState(null);
     function handleDragStart(event:any) {
-      setActiveId(event.active.id);
+      const { active } = event;
+      const { id } = active;
+  
+      setActiveId(id);
     }
+
     function handleDragEnd(event:any) {
-      if (event.over && event.over.id === "droppable") {
-        setIsDropped(true);
-      }
+      console.log(event.over.data.current.child.props.item)
+      console.log(event.active.data.current.child.props.item)
+      /*
+      if (event.over && event.over.id === "droppable-1") {
+        update(
+          {
+            parent_id: parentId,
+          },
+          event.active.data.item,
+          parentId,
+        );
+      }*/
     }
-    const [parent, setParent] = useState(null);
+
     function draggableMarkup(index: number, child:any) {
       return( 
         <>
@@ -331,7 +345,7 @@ export default memo(
               </div>
 
 
-              <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+              <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <div className="grow overflow-auto">
                 
                   {folders.length > 0 && (
@@ -382,7 +396,7 @@ export default memo(
                   )}
 
                   {documents.map((child, index) => (
-                    !isDropped ? draggableMarkup(index, child) : null
+                    draggableMarkup(index, child)
                   ))}
 
                 </div>

@@ -181,8 +181,6 @@ export default memo(
 
     function handleDragEnd(event:any) {
       if (event.over){
-        console.log(event.over.data.current.child.props.item)
-        console.log(event.active.data.current.child.props.item)
         update(
           {
             parent_id: event.over.data.current.child.props.item.id,
@@ -191,9 +189,6 @@ export default memo(
           event.active.data.current.child.props.item.parent_id,
         );
         ToasterService.success(event.active.data.current.child.props.item.name+" "+Languages.t('components.dragndrop_info_move_to')+" "+event.over.data.current.child.props.item.name);
-      
-      }else{
-        console.log(event.active.data.current.child.props.item)
       }
       
     }

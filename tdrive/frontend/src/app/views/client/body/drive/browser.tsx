@@ -35,10 +35,12 @@ import useRouteState from 'app/features/router/hooks/use-route-state';
 import { SharedWithMeFilterState } from '@features/drive/state/shared-with-me-filter';
 import MenusManager from '@components/menus/menus-manager.jsx';
 import Languages from 'features/global/services/languages-service';
-import {DndContext, DragOverlay} from '@dnd-kit/core';
+import {DndContext, useSensors, useSensor, PointerSensor} from '@dnd-kit/core';
 import { Droppable } from 'app/features/dragndrop/hook/droppable';
 import { Draggable } from 'app/features/dragndrop/hook/draggable';
 import { useDriveActions } from '@features/drive/hooks/use-drive-actions';
+import { ToasterService } from '@features/global/services/toaster-service';
+
 
 export const DriveCurrentFolderAtom = atomFamily<
   string,
@@ -162,6 +164,13 @@ export default memo(
     const buildDateContextMenu = useOnBuildDateContextMenu();
     const [activeId, setActiveId] = useState();
     const {update} = useDriveActions();
+    const sensors = useSensors(
+      useSensor(PointerSensor, {
+        activationConstraint: {
+          distance: 8,
+        },
+      })
+    )
 
     function handleDragStart(event:any) {
       const { active } = event;
@@ -172,8 +181,6 @@ export default memo(
 
     function handleDragEnd(event:any) {
       if (event.over){
-        console.log(event.over.data.current.child.props.item)
-        console.log(event.active.data.current.child.props.item)
         update(
           {
             parent_id: event.over.data.current.child.props.item.id,
@@ -181,10 +188,7 @@ export default memo(
           event.active.data.current.child.props.item.id,
           event.active.data.current.child.props.item.parent_id,
         );
-        console.log("sucess")
-      
-      }else{
-        console.log(event.active.data.current.child.props.item)
+        ToasterService.success(event.active.data.current.child.props.item.name+" "+Languages.t('components.dragndrop_info_move_to')+" "+event.over.data.current.child.props.item.name);
       }
       
     }
@@ -347,7 +351,7 @@ export default memo(
               </div>
 
 
-              <DndContext onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
+              <DndContext sensors={sensors} onDragEnd={handleDragEnd} onDragStart={handleDragStart}>
                 <div className="grow overflow-auto">
                 
                   {folders.length > 0 && (

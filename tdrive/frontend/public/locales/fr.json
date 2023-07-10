@@ -197,6 +197,7 @@
     "common.access-level_read":"Lecture",
     "common.access-level_write":"Ecriture",
     "common.access-level_no_access":"Pas d'accès",
+    "components.dragndrop_info_move_to":"déplacé vers",
     "components.SelectorModalContent_move_to":"Déplacer vers",
     "components.SelectorModalContent_no_items":"Pas de fichier sélectionné",
     "components.SelectorModalContent_select":"sélectionné(s)",

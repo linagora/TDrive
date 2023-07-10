@@ -19,9 +19,8 @@ export function Draggable(props:DraggableProps) {
 
   
   return (
-    <div ref={setNodeRef} style={style}>
+    <div ref={setNodeRef} {...listeners} {...attributes} style={style}>
       {props.children}
-      <button {...listeners} {...attributes}>Drag handle</button>
     </div>
   );
 }

@@ -34,12 +34,13 @@ export const SelectorModal = () => {
 
   return (
     <Modal open={state.open} onClose={() => setState({ ...state, open: false })}>
-      <SelectorModalContent key={state.parent_id} />
+      <SelectorModalContent key={state.parent_id} showfiles={true}/>
     </Modal>
   );
 };
 
-const SelectorModalContent = () => {
+const SelectorModalContent = (key:any,showfiles:boolean) => {
+  console.log(key);
   const [state, setState] = useRecoilState(SelectorModalAtom);
   const [selected, setSelected] = useState<DriveItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -91,7 +92,7 @@ const SelectorModalContent = () => {
             </div>
           </div>
         ))}
-        {false && ( //if false files wont display in the tree-view
+        {showfiles && ( 
         <>
         {files.map(file => (
           <div

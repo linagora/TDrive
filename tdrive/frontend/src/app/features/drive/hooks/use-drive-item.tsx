@@ -3,7 +3,7 @@ import { LoadingStateInitTrue } from '@features/global/state/atoms/Loading';
 import useRouterCompany from '@features/router/hooks/use-router-company';
 import { useCallback } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { DriveItemAtom, DriveItemChildrenAtom } from '../state/store';
+import { DriveItemAtom, DriveItemChildrenAtom, DriveQuotaStorage } from '../state/store';
 import { DriveItem } from '../types';
 import { useDriveActions } from './use-drive-actions';
 import { useDriveUpload } from './use-drive-upload';
@@ -84,6 +84,7 @@ export const useDriveItem = (id: string) => {
     access: item?.access,
     websockets: item?.websockets,
     versions: item?.versions,
+    quota: DriveQuotaStorage(id),
     uploadVersion,
     create,
     update,

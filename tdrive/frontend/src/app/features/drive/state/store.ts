@@ -15,3 +15,9 @@ export const DriveItemSelectedList = atom<{[key: string]: boolean }>({
   key: 'DriveItemSelectedList',
   default: {}
 });
+
+export function DriveQuotaStorage(id: string) {
+  if (id==='main') return 1073741824; 
+  else if (id ==='trash') return 1048576;
+  else return 1;
+}

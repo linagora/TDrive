@@ -3,10 +3,11 @@ import useRouterCompany from '@features/router/hooks/use-router-company';
 import { useCallback } from 'react';
 import { useRecoilValue, useRecoilCallback } from 'recoil';
 import { DriveApiClient } from '../api-client/api-client';
-import { DriveItemAtom, DriveItemChildrenAtom } from '../state/store';
+import { DriveItemAtom, DriveItemChildrenAtom, DriveQuotaStorage } from '../state/store';
 import { BrowseFilter, DriveItem, DriveItemVersion } from '../types';
 import { SharedWithMeFilterState } from '../state/shared-with-me-filter';
 import Languages from "features/global/services/languages-service";
+import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
 
 /**
  * Returns the children of a drive item
@@ -14,6 +15,9 @@ import Languages from "features/global/services/languages-service";
  * @returns
  */
 export const useDriveActions = () => {
+  const mainQuota = DriveQuotaStorage('main');
+  const trashQuota = DriveQuotaStorage('trash');
+  const { user } = useCurrentUser();
   const companyId = useRouterCompany();
   const sharedFilter = useRecoilValue(SharedWithMeFilterState);
 
@@ -47,15 +51,21 @@ export const useDriveActions = () => {
 
   const create = useCallback(
     async (item: Partial<DriveItem>, version: Partial<DriveItemVersion>) => {
-      let driveFile = null;
-      if (!item.company_id) item.company_id = companyId;
-      try {
-        driveFile = await DriveApiClient.create(companyId, { item, version });
-        await refresh(item.parent_id!);
-      } catch (e) {
+      const rootItem = await DriveApiClient.get(companyId, 'root');
+      const myDriveItem = await DriveApiClient.get(companyId, 'user_' + user?.id);
+      if (typeof item.size != 'undefined' && rootItem.item.size + item.size + myDriveItem.item.size <= mainQuota) {
+        let driveFile = null;
+        if (!item.company_id) item.company_id = companyId;
+        try {
+          driveFile = await DriveApiClient.create(companyId, { item, version });
+          await refresh(item.parent_id!); 
+        } catch (e) {
+          ToasterService.error(Languages.t('hooks.use-drive-actions.unable_create_file'));
+        }
+        return driveFile;
+      } else {
         ToasterService.error(Languages.t('hooks.use-drive-actions.unable_create_file'));
       }
-      return driveFile;
     },
     [refresh],
   );
@@ -86,9 +96,16 @@ export const useDriveActions = () => {
 
   const remove = useCallback(
     async (id: string, parentId: string) => {
+      const driveItem = await DriveApiClient.get(companyId, 'trash');
       try {
-        await DriveApiClient.remove(companyId, id);
-        await refresh(parentId || '');
+        const itemSize = (await DriveApiClient.get(companyId, id)).item.size
+        if (typeof itemSize != 'undefined' && driveItem.item.size + itemSize <= trashQuota) {
+          //ToasterService.error(Languages.t('Vous utilisez : ' + tstorageSize + ' octets de stockage'));
+          await DriveApiClient.remove(companyId, id);
+          await refresh(parentId || '');
+        } else {
+          ToasterService.error(Languages.t('hooks.use-drive-actions.unable_remove_file'));
+        }
       } catch (e) {
         ToasterService.error(Languages.t('hooks.use-drive-actions.unable_remove_file'));
       }

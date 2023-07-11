@@ -75,6 +75,7 @@ class RouterServices extends Observable {
 
   UUIDsToTranslate: Readonly<string[]> = [
     'companyId',
+    'itemId',
     'workspaceId',
     'channelId',
     'messageId',

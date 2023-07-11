@@ -27,12 +27,14 @@ import { useFileViewerModal } from '@features/viewer/hooks/use-viewer';
 import { useDrivePreview } from '@features/drive/hooks/use-drive-preview';
 import Media from '@molecules/media';
 import { DriveCurrentFolderAtom } from '@views/client/body/drive/browser';
+import { useCurrentUser } from 'app/features/users/hooks/use-current-user';
 
 export default (props: { driveItem: DriveItem & { user?: UserType } }) => {
   const input = useRecoilValue(SearchInputState);
   const currentWorkspaceId = useRouterWorkspace();
   const companyApplications = useCompanyApplications();
-  const [_, setParentId] = useRecoilState(DriveCurrentFolderAtom({ initialFolderId: 'root' }));
+  const { user } = useCurrentUser();
+  const [_, setParentId] = useRecoilState(DriveCurrentFolderAtom({ initialFolderId: 'user_'+user?.id }));
   const tdriveDriveApplicationId =
     companyApplications.applications.find(application => {
       return application.identity.code === 'tdrive_drive';

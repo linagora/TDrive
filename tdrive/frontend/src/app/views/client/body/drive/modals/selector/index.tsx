@@ -34,7 +34,7 @@ export const SelectorModal = () => {
 
   return (
     <Modal open={state.open} onClose={() => setState({ ...state, open: false })}>
-      <SelectorModalContent key={state.parent_id} showfiles={true}/>
+      <SelectorModalContent key={state.parent_id} showfiles={false}/>
     </Modal>
   );
 };

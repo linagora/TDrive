@@ -6,13 +6,19 @@ import { useRecoilState } from 'recoil';
 import { DriveApiClient } from '../api-client/api-client';
 import { DriveViewerState } from '../state/viewer';
 import { DriveItem } from '../types';
+import { DriveCurrentFolderAtom } from 'app/views/client/body/drive/browser';
 
 export const useDrivePreviewModal = () => {
   const [status, setStatus] = useRecoilState(DriveViewerState);
+  const [ parentId, setParentId ] = useRecoilState(
+    DriveCurrentFolderAtom({ initialFolderId: 'root' }),
+  );
 
   const open: (item: DriveItem) => void = (item: DriveItem) => {
     if (item.last_version_cache?.file_metadata?.source === 'internal') {
       setStatus({ item, loading: true });
+    } else if (item.is_directory){
+      setParentId(item.id);
     }
   };
 
@@ -81,3 +87,4 @@ export const useDrivePreviewDisplayData = () => {
 
   return { download, id, name, type, extension, size: status.details?.item.size };
 };
+

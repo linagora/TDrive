@@ -170,7 +170,9 @@ export default memo(
           distance: 8,
         },
       })
-    )
+    );
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
 
     function handleDragStart(event:any) {
       const { active } = event;
@@ -193,25 +195,42 @@ export default memo(
       
     }
 
-    function draggableMarkup(index: number, child:any) {
-      return( 
-        <>
-        <Draggable index={index}>
-        <DocumentRow
-            key={index}
-            className={
-              (index === 0 ? 'rounded-t-md ' : '') +
-              (index === documents.length - 1 ? 'rounded-b-md ' : '')
-            }
-            item={child}
-            checked={checked[child.id] || false}
-            onCheck={v => setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))}
-            onBuildContextMenu={() => onBuildContextMenu(details, child)}
+    function draggableMarkup(index: number, child: any) {
+      return (
+          isMobile ? (
+            <DocumentRow
+              key={index}
+              className={
+                (index === 0 ? 'rounded-t-md ' : '') +
+                (index === documents.length - 1 ? 'rounded-b-md ' : '')
+              }
+              item={child}
+              checked={checked[child.id] || false}
+              onCheck={v =>
+                setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))
+              }
+              onBuildContextMenu={() => onBuildContextMenu(details, child)}
             />
-          </Draggable>
-        </>
-      )
+          ) : (
+            <Draggable index={index}>
+              <DocumentRow
+                key={index}
+                className={
+                  (index === 0 ? 'rounded-t-md ' : '') +
+                  (index === documents.length - 1 ? 'rounded-b-md ' : '')
+                }
+                item={child}
+                checked={checked[child.id] || false}
+                onCheck={v =>
+                  setChecked(_.pickBy({ ...checked, [child.id]: v }, _.identity))
+                }
+                onBuildContextMenu={() => onBuildContextMenu(details, child)}
+              />
+            </Draggable>
+          )
+      );
     }
+    
 
     return (
       <>

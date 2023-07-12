@@ -82,6 +82,13 @@ const routes: FastifyPluginCallback = (fastify: FastifyInstance, _options, next)
 
   fastify.route({
     method: "POST",
+    url: `${serviceUrl}/copy`,
+    preValidation: [fastify.authenticateOptional],
+    handler: documentsController.copy.bind(documentsController),
+  });
+
+  fastify.route({
+    method: "POST",
     url: `${baseUrl}/search`,
     preValidation: [fastify.authenticate],
     handler: documentsController.search.bind(documentsController),

@@ -104,6 +104,25 @@ export class DriveApiClient {
     );
   }
 
+  static async createCopy(
+    companyId: string,
+    data: { item: Partial<DriveItem>,
+    targetParentID: string,
+    version?: Partial<DriveItemVersion> },
+  ) {
+    return await Api.post<
+      { item: Partial<DriveItem>; targetParentID: string, version: Partial<DriveItemVersion> },
+      DriveItem
+    >(
+      `/internal/services/documents/v1/companies/${companyId}/item/copy`,
+      data as {
+        item: Partial<DriveItem>,
+        targetParentID: string,
+        version: Partial<DriveItemVersion>,
+      },
+    );
+  } 
+
   static async createVersion(companyId: string, id: string, version: Partial<DriveItemVersion>) {
     return await Api.post<Partial<DriveItemVersion>, DriveItemVersion>(
       `/internal/services/documents/v1/companies/${companyId}/item/${id}/version${appendTdriveToken()}`,

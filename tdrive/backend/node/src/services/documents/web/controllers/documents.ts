@@ -76,6 +76,81 @@ export class DocumentsController {
   };
 
   /**
+   * Copies a DriveFile item
+   *
+   */
+  copy = async (
+    request: FastifyRequest<{
+      Params: RequestParams;
+      Querystring: Record<string, string>;
+      Body: {
+        item: Partial<DriveFile>;
+        targetParentID: string;
+        version: Partial<FileVersion>;
+      };
+    }>,
+  ): Promise<DriveFile> => {
+    try {
+      const context = getDriveExecutionContext(request);
+      const { item, targetParentID, version}= request.body;
+      const myrequest = request;
+      const copiedFile: Partial<DriveFile> = {
+        ...item,
+        id: null,
+        parent_id: targetParentID,
+      }
+      let createdFile: File = null;
+      if (request.isMultipart()) {
+        const file = await request.file();
+        const q = request.query;
+        const options: UploadOptions = {
+          totalChunks: parseInt(q.resumableTotalChunks || q.total_chunks) || 1,
+          totalSize: parseInt(q.resumableTotalSize || q.total_size) || 0,
+          chunkNumber: parseInt(q.resumableChunkNumber || q.chunk_number) || 1,
+          filename: q.resumableFilename || q.filename || file?.filename || undefined,
+          type: q.resumableType || q.type || file?.mimetype || undefined,
+          waitForThumbnail: !!q.thumbnail_sync,
+          ignoreThumbnails: false,
+        };
+
+        createdFile = await globalResolver.services.files.save(null, file, options, context);
+      }
+
+      if (item.is_directory) {
+        const folder = await globalResolver.services.documents.documents.create(
+          createdFile,
+          copiedFile,
+          version,
+          context,
+        );
+        const items = await globalResolver.services.documents.documents.get(item.id, context);
+        for (const child of items.children) {
+          request.body = { item: child, targetParentID: folder.id, version: child.last_version_cache }
+          await this.copy( request as FastifyRequest<{
+            Params: RequestParams;
+            Querystring: Record<string, string>;
+            Body: {
+              item: Partial<DriveFile>;
+              targetParentID: string;
+              version: Partial<FileVersion>;
+            };
+          }>);
+        }
+      } else {
+      return await globalResolver.services.documents.documents.create(
+        createdFile,
+        copiedFile,
+        version,
+        context,
+      );
+      }
+    } catch (error) {
+      logger.error({ error: `${error}` }, "Failed to copy Drive item");
+      CrudException.throwMe(error, new CrudException("Failed to copy Drive item", 500));
+    }
+  };
+
+  /**
    * Deletes a DriveFile item or empty the trash or delete root folder contents
    *
    * @param {FastifyRequest} request

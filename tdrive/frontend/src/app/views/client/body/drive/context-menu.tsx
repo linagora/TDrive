@@ -32,7 +32,7 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
     DriveCurrentFolderAtom({ initialFolderId: initialParentId || 'root' }),
   );
 
-  const { download, downloadZip, update } = useDriveActions();
+  const { download, downloadZip, update, create } = useDriveActions();
   const setCreationModalState = useSetRecoilState(CreateModalAtom);
   const setSelectorModalState = useSetRecoilState(SelectorModalAtom);
   const setConfirmDeleteModalState = useSetRecoilState(ConfirmDeleteModalAtom);
@@ -80,6 +80,30 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
               text: Languages.t('components.item_context_menu.manage_access'),
               hide: access === 'read' || getPublicLinkToken(),
               onClick: () => setAccessModalState({ open: true, id: item.id }),
+            },
+            {
+              type: 'menu',
+              text: Languages.t('components.item_context_menu.copy'),
+              hide: access === 'read',
+              onClick: () =>
+                setSelectorModalState({
+                  open: true,
+                  parent_id: inTrash ? 'root' : item.parent_id,
+                  mode: 'copy',
+                  title:
+                    Languages.t('components.item_context_menu.copy.modal_header') +
+                    ` '${item.name}'`,
+                  onSelected: async ids => {
+                    const targetParentID = ids[0];
+                    const version = item.last_version_cache;
+                    await DriveApiClient.createCopy(
+                      item.company_id,
+                      { item,
+                      targetParentID,
+                      version }
+                    );
+                  },
+                }),
             },
             {
               type: 'menu',
@@ -151,6 +175,32 @@ export const useOnBuildContextMenu = (children: DriveItem[], initialParentId?: s
         if (selectedCount && (selectedCount >= 2 || !item)) {
           // Add selected items related menus
           const newMenuActions: any[] = [
+            {
+              type: 'menu',
+              text: Languages.t('components.item_context_menu.copy_multiple'),
+              hide: parent.access === 'read',
+              onClick: () =>
+                setSelectorModalState({
+                  open: true,
+                  parent_id: inTrash ? 'root' : parent.item!.id,
+                  mode: 'copy',
+                  title:
+                    Languages.t('components.item_context_menu.copy_multiple.modal_header'),
+                  onSelected: async ids => {
+                    for (const item of checked) {
+                      const targetParentID = ids[0];
+                      const version = item.last_version_cache;
+                      await DriveApiClient.createCopy(
+                        item.company_id,
+                        { item,
+                        targetParentID,
+                        version }
+                      );
+                    }
+                    setChecked({});
+                  },
+                }),
+            },
             {
               type: 'menu',
               text: Languages.t('components.item_context_menu.move_multiple'),
@@ -444,7 +494,6 @@ export const useOnBuildFileContextMenu = () => {
   const { open: preview } = useDrivePreview();
   return useCallback(
     (item: DriveItem) => {
-      console.log(item);
       const menuItems = [
         {
           type: 'menu',
